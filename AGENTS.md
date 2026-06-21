@@ -71,10 +71,10 @@ onlinja/
 This section details the UI/UX paradigms, responsive layout boundaries, and local interaction mechanics. The presentation layer must map these rules directly into NativeWind styling implementations.
 
 ### 1. Minimalist Aesthetic & Visual Theme
-- **Color Palette:** Strictly monochromatic high-contrast architecture. Background matrices must utilize deep slates or pure blacks (`bg-slate-950` / `bg-black`) paired with stark white components and borders.
-- **Background Texture:** A persistent, mathematically repeating structural dot-grid layer must render beneath all views across both mobile and web viewpoints.
-- **Interface Controls:** Form triggers, toggle sliders, and state selectors must utilize subtle micro-shadowing transitions and stark geometric outlines rather than heavy skeuomorphic shading blocks.
-- **Board Representation:** The game board must be rendered as a top-down view, where each piece looks like a simple outlined circle, each with distinct visual states to indicate occupancy, selected status, and possible moves, when activated (selected).
+- **Color Palette:** Premium light, high-contrast minimalist layout. Background matrices must utilize crisp off-whites, pure whites (`bg-white`), or subtle radial gradients (`bg-neutral-50` to `bg-neutral-100`) paired with sharp black text (`text-black`) and deep charcoal interactive components.
+- **Background Texture:** A persistent, mathematically repeating structural light-gray dot-grid layer must render seamlessly beneath all core views across both mobile and web viewports.
+- **Interface Controls:** Form triggers, toggle sliders, and state selectors must utilize subtle drop shadows (`shadow-sm` / `shadow-md`) and clean geometric boundaries instead of dark glassmorphic or heavy skeuomorphic shading blocks.
+- **Board Representation:** The game board must visually emulate a physical Linja tactical setup from a top-down perspective. It must render exactly 8 physical horizontal linear lanes (tracks) spaced out sequentially down the vertical layout axis. Pieces must be presented as discrete, round tangible tokens resting directly on top of these track lines rather than abstract numbers or counters boxed inside isolated grid cells.
 
 ### 2. Cross-Platform Responsiveness & Adaptation Matrix
 The application must evaluate runtime platform contexts using React Native `Platform` properties and layout dimension hooks to scale structural proportions seamlessly across varying display configurations:
@@ -88,7 +88,7 @@ The application must evaluate runtime platform contexts using React Native `Plat
 Until the backend services are explicitly authorized for construction, the state store must enforce specific behavioral state flags across the frontend UI presentation:
 
 #### A. Online Matchmaking Interface
-- **The Protocol State:** The "Find Match" selection node must be visually disabled (grayed-out), but existing for future implementations. All pointer events and click interactions must be explicitly deactivated to ensure no network or state logic is triggered.
+- **The Protocol State:** The "Find Match" selection node must be visually disabled (grayed-out/opaque configuration) but present for future expansion. All pointer events and click interactions must be explicitly deactivated to ensure no network or state logic is triggered.
 
 #### B. Autonomous Local Bot Interface
 - **The Engine State:** Fully active. The interface must provide explicit difficulty slider selectors configuring parameters directly parsed by the `BotConfiguration` instance.
@@ -96,6 +96,21 @@ Until the backend services are explicitly authorized for construction, the state
 ### 4. Interactive Motion & Interface Fluidity
 - **Transitions:** All piece shifts, lane hops, and macro-move turn completions must implement lightweight layout spring animations via React Native Animated primitives to visually track the deterministic momentum calculation of the backend simulation logic.
 - **State Feedback:** Phase turn forfeitures or structural game mode violations must communicate instantly to the user via quick, high-contrast border flashes or scale animations without displaying disruptive text modal popups.
+
+### 5. Detailed Screen Hierarchy & UI State Architecture
+The presentation layer must strictly separate the user interface into two mutually exclusive root views managed by a lightweight layout coordinator state. Monolithic all-in-one screens are strictly forbidden.
+
+#### A. Welcome & Configuration View (Main Menu)
+- **Layout Canvas:** A perfectly centered, floating clean white geometric card container featuring sharp boundaries, fine lines (`border border-neutral-200`), and a solid white or soft gray background (`bg-white`) suspended over the light dot-grid pattern.
+- **Header Structure:** The title "Linja" must be rendered in a prominent, bold, heavy geometric sans-serif typeface, centered exactly beneath an inline dual-circle geometric icon component representing interlocking black and white pieces.
+- **Segmented Control Sliders:** Mode selectors (Aggressive, Strategic) must be laid out as a single inline horizontal track. The active selection must feature a solid black high-contrast background (`bg-black` text-white), while inactive items remain perfectly flat with light transparent or soft gray backgrounds.
+- **Action Triggers:** Primary buttons (e.g., "Find Match") must span the full width of the configuration card container, utilizing a solid black background, sharp text, crisp inner margins, and slightly rounded clean edges (`rounded-xl`).
+
+#### B. Active Gameplay View (Match Screen)
+- **Layout Canvas:** The layout must transition smoothly to clean, top-down tactical nodes. Displaying heavy developer dashboard panels, multi-colored button grids, or non-functional control boxes alongside the active board is strictly prohibited.
+- **Scoreboard Frame:** Positioned cleanly at the top of the viewport axis, rendering current point aggregates, active player turn indicators, and match phase states via simple, single-color typographic blocks.
+- **The Linear Board Layout:** The 8 linear lanes must be presented as a clean array of physical track wires. Each wire must physically hold and display its active, dynamically assigned black and white tokens arranged horizontally along its rail. 
+- **Interactive Token Nodes:** Individual game pieces must be rendered exclusively as simple, hollow, or solid monochrome circle vectors positioned along their tracks. Utilizing multi-colored filled shapes (such as solid blue, green, or red blocks) for game controls or decorative panels is completely forbidden. Visual changes during selection states must be represented solely through sharp border thickness shifts or high-contrast color inversions.
 
 ---
 
@@ -254,6 +269,8 @@ export const MatchBanner = ({p1Score, p2Score}: ScoreProps) => {
     }
 
     if (p1Score != 0) {
+        const temp = p1Score
+        
         p1Score = p2Score
         p2Score = p1Score
 
