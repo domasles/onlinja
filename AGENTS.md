@@ -66,6 +66,39 @@ onlinja/
 
 ---
 
+## Visual Design & Cross-Platform Feature Specification
+
+This section details the UI/UX paradigms, responsive layout boundaries, and local interaction mechanics. The presentation layer must map these rules directly into NativeWind styling implementations.
+
+### 1. Minimalist Aesthetic & Visual Theme
+- **Color Palette:** Strictly monochromatic high-contrast architecture. Background matrices must utilize deep slates or pure blacks (`bg-slate-950` / `bg-black`) paired with stark white components and borders.
+- **Background Texture:** A persistent, mathematically repeating structural dot-grid layer must render beneath all views across both mobile and web viewpoints.
+- **Interface Controls:** Form triggers, toggle sliders, and state selectors must utilize subtle micro-shadowing transitions and stark geometric outlines rather than heavy skeuomorphic shading blocks.
+- **Board Representation:** The game board must be rendered as a top-down view, where each piece looks like a simple outlined circle, each with distinct visual states to indicate occupancy, selected status, and possible moves, when activated (selected).
+
+### 2. Cross-Platform Responsiveness & Adaptation Matrix
+The application must evaluate runtime platform contexts using React Native `Platform` properties and layout dimension hooks to scale structural proportions seamlessly across varying display configurations:
+
+| Hardware Engine Layer | Layout Constraint | View Behavior & Scaling Metrics |
+| :--- | :--- | :--- |
+| **Mobile Runtime (iOS/Android)** | Compact Aspect Ratio | Fixed portrait presentation maximizing grid density. Component margins shift dynamically to protect safe-area constraints. |
+| **Desktop Web Viewport** | Expanded Landscape Frame | Centralized structural canvas layout pinned at a maximum content width of 1200px, bordered by symmetrical negative space gutters. |
+
+### 3. Local Phase Feature Layout Matrix
+Until the backend services are explicitly authorized for construction, the state store must enforce specific behavioral state flags across the frontend UI presentation:
+
+#### A. Online Matchmaking Interface
+- **The Protocol State:** The "Find Match" selection node must be visually disabled (grayed-out), but existing for future implementations. All pointer events and click interactions must be explicitly deactivated to ensure no network or state logic is triggered.
+
+#### B. Autonomous Local Bot Interface
+- **The Engine State:** Fully active. The interface must provide explicit difficulty slider selectors configuring parameters directly parsed by the `BotConfiguration` instance.
+
+### 4. Interactive Motion & Interface Fluidity
+- **Transitions:** All piece shifts, lane hops, and macro-move turn completions must implement lightweight layout spring animations via React Native Animated primitives to visually track the deterministic momentum calculation of the backend simulation logic.
+- **State Feedback:** Phase turn forfeitures or structural game mode violations must communicate instantly to the user via quick, high-contrast border flashes or scale animations without displaying disruptive text modal popups.
+
+---
+
 ## Game Domain & Simulation Rules Matrix
 
 This section establishes the formal, mathematical game rules engine for Onlinja. The properties and state logic defined here must be implemented entirely within the domain module.
@@ -177,7 +210,7 @@ You must align your generation algorithms perfectly with this precise format. De
 - **Component Wrapping:** Zero spaces inside self-closing component envelopes. Use `<App/>` and `<View/>` instead of `<App />` or `<View />`.
 
 ### 2. Comments
-- **Rule:** Do not write comments under any circumstances unless explaining a highly dense, non-obvious mathematical formula or board algorithm anomaly. Strip out generic structural or helper text.
+- **Rule:** Do not write comments under any circumstances unless explaining a highly dense, non-obvious mathematical formula or board algorithm anomaly. Strip out generic structural or helper text. If a comment is necessary, ensure it adds value and does not simply restate the code, is concise, but clear. Usage of emojis is strictly prohibited within the entirety of this codebase.
 
 ### 3. Structural Newlines & Padding
 - **Small Code Blocks (<= 2 lines):** Do not insert internal blank lines inside the brackets or flow.
