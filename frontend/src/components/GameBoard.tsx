@@ -1,4 +1,5 @@
-import { View, TouchableOpacity } from "react-native"
+import { useEffect } from "react"
+import { View, TouchableOpacity, Text } from "react-native"
 import Animated, { Layout, FadeIn, FadeOut } from "react-native-reanimated"
 
 import { useGameStore } from "../hooks/useGameStore"
@@ -20,6 +21,15 @@ export const GameBoard = () => {
 
     const h1 = state.history.phase1
     const h2 = state.history.phase2
+    const maxIdx = state.config.laneCount - 1
+    const opponentHomeIndex = state.activePlayer === "WHITE" ? maxIdx : 0
+
+    useEffect(() => {
+        if (state.showExtraTurnEffect) {
+            const timer = setTimeout(() => {state.clearExtraTurnEffect()}, 1500)
+            return () => clearTimeout(timer)
+        }
+    }, [state.showExtraTurnEffect])
 
     return (
         <ScreenWrapper maxWidthClass="max-w-xl">
@@ -31,7 +41,7 @@ export const GameBoard = () => {
                     onLeave={() => state.navigateTo("MAIN_MENU")}
                 />
             ) : (
-                <>
+                <View className="w-full flex-1 relative">
                     <ScoreHeader 
                         whiteScore={scores.whiteScore}
                         blackScore={scores.blackScore}
@@ -39,7 +49,10 @@ export const GameBoard = () => {
                         activePlayer={state.activePlayer}
                     />
 
-                    <View className="w-full bg-white border border-neutral-200/80 rounded-2xl p-4 shadow-xl flex-col">
+                    <View 
+                        style={{ position: "relative", overflow: "hidden" }}
+                        className="w-full bg-white border border-neutral-200/80 rounded-2xl p-4 shadow-xl flex-col"
+                    >
                         {orderedLanes.map((laneIdx, viewIdx) => {
                             const lanePieces = state.board[laneIdx]
                             const isTargetable = validTargets.includes(laneIdx)
@@ -59,12 +72,17 @@ export const GameBoard = () => {
                                         activeOpacity={0.9}
                                         onPress={() => state.selectTargetLane(laneIdx)}
                                         className={`flex-row items-center h-14 w-full px-4 rounded-xl transition-colors ${
-                                            isTargetable ? "bg-neutral-50" : laneHighlightClass
+                                            isTargetable ? "bg-neutral-100" : laneHighlightClass
                                         }`}
                                     >
                                         <View className="flex-row items-center justify-center flex-1 h-full">
                                             {lanePieces.map((piece) => {
                                                 const isSelected = state.selectedPiece?.pieceId === piece.id
+                                                
+                                                const virtualState = { ...state, selectedPiece: { laneIndex: laneIdx, pieceId: piece.id } }
+                                                const hasLegalMoves = GameEngine.getValidTargets(virtualState, laneIdx).length > 0
+                                                const isSelectable = piece.color === state.activePlayer && laneIdx !== opponentHomeIndex && hasLegalMoves
+
                                                 let overlayRingStyle = ""
 
                                                 if (isSelected) {
@@ -92,11 +110,14 @@ export const GameBoard = () => {
                                                         className="justify-center"
                                                     >
                                                         <TouchableOpacity
-                                                            activeOpacity={0.8}
+                                                            activeOpacity={isSelectable ? 0.8 : 1}
+                                                            disabled={!isSelectable}
+
                                                             onPress={(e) => {
                                                                 e.stopPropagation()
                                                                 state.selectPiece(laneIdx, piece.id)
                                                             }}
+
                                                             className={`w-9 h-9 rounded-full mx-1 shadow-xl items-center justify-center ${
                                                                 piece.color === "WHITE" ? "bg-white" : "bg-black"
                                                             } ${overlayRingStyle}`}
@@ -109,6 +130,34 @@ export const GameBoard = () => {
                                 </View>
                             )
                         })}
+
+                        {state.showExtraTurnEffect && (
+                            <Animated.View 
+                                entering={FadeIn.duration(150)}
+                                exiting={FadeOut.duration(200)}
+                                style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
+                                className="bg-neutral-950/10 z-50 items-center justify-center backdrop-blur-[4px]"
+                                importantForAccessibility="no-hide-descendants"
+                            >
+                                <TouchableOpacity 
+                                    activeOpacity={1}
+                                    style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
+                                    onPress={(e) => e.stopPropagation()}
+                                />
+                                <View className="items-center justify-center gap-3 z-50">
+                                    <Animated.View 
+                                        layout={Layout.springify()}
+                                        className="bg-white w-20 h-20 rounded-full items-center justify-center border-4 border-emerald-500 shadow-md relative"
+                                    >
+                                        <View className="w-6 h-1 bg-emerald-500 rounded-full absolute" />
+                                        <View className="w-1 h-6 bg-emerald-500 rounded-full absolute" />
+                                    </Animated.View>
+                                    <Text className="text-sm font-bold text-neutral-800 bg-white/90 px-3 py-1.5 rounded-full shadow-xl border border-neutral-200/50">
+                                        Extra turn awarded to player {state.activePlayer === "WHITE" ? "White" : "Black"}
+                                    </Text>
+                                </View>
+                            </Animated.View>
+                        )}
                     </View>
 
                     <View className="w-full flex-row space-x-3 gap-3 mt-4">
@@ -125,7 +174,7 @@ export const GameBoard = () => {
                             className="px-10 h-12"
                         />
                     </View>
-                </>
+                </View>
             )}
         </ScreenWrapper>
     )

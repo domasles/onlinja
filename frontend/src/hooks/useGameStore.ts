@@ -9,6 +9,7 @@ interface GameStore extends GameState {
     initializeMatch: (mode: "AGGRESSIVE" | "STRATEGIC", side: PlayerColor, config?: GameConfig) => void
     selectPiece: (laneIndex: number, pieceId: string) => void
     selectTargetLane: (targetLaneIndex: number) => void
+    clearExtraTurnEffect: () => void
     resetGame: () => void
 }
 
@@ -26,8 +27,21 @@ export const useGameStore = create<GameStore>((set) => ({
     selectPiece: (laneIndex, pieceId) => set((state) => {
         const lane = state.board[laneIndex]
         const piece = lane.find(p => p.id === pieceId)
+        const maxIdx = state.config.laneCount - 1
 
         if (!piece || piece.color !== state.activePlayer) return {}
+        
+        const opponentHomeIndex = state.activePlayer === "WHITE" ? maxIdx : 0
+        if (laneIndex === opponentHomeIndex) return {}
+
+        const virtualState = {
+            ...state,
+            selectedPiece: { laneIndex, pieceId }
+        }
+
+        const legalTargets = GameEngine.getValidTargets(virtualState, laneIndex)
+
+        if (legalTargets.length === 0) return {}
         if (state.selectedPiece?.pieceId === pieceId) return { selectedPiece: null }
 
         if (state.currentPhase === 2) {
@@ -47,6 +61,8 @@ export const useGameStore = create<GameStore>((set) => ({
 
         if (!validTargets.includes(targetLaneIndex)) return {}
 
+        const isTargetEmptyPrior = state.board[targetLaneIndex].length === 0
+
         const nextBoard = state.board.map((lane) => [...lane])
         const pieceIdx = nextBoard[laneIndex].findIndex(p => p.id === pieceId)
         const [movingPiece] = nextBoard[laneIndex].splice(pieceIdx, 1)
@@ -63,14 +79,15 @@ export const useGameStore = create<GameStore>((set) => ({
                 phase2: null
             }
 
-            if (totalLandingPieces <= 1 || targetLaneIndex === enemyBaseIndex) {
+            if (!state.isExtraTurnActive && (totalLandingPieces <= 1 || targetLaneIndex === enemyBaseIndex)) {
                 return {
                     board: nextBoard,
                     selectedPiece: null,
                     currentPhase: 1,
                     phase1MovedPieceId: null,
                     history: cleanHistory,
-                    activePlayer: state.activePlayer === "WHITE" ? "BLACK" : "WHITE"
+                    activePlayer: state.activePlayer === "WHITE" ? "BLACK" : "WHITE",
+                    isExtraTurnActive: false
                 }
             }
 
@@ -78,29 +95,52 @@ export const useGameStore = create<GameStore>((set) => ({
                 board: nextBoard,
                 selectedPiece: null,
                 currentPhase: 2,
-                phase1LandingCount: totalLandingPieces,
+                phase1LandingCount: Math.max(totalLandingPieces, 2),
                 phase1MovedPieceId: movingPiece.id,
-                history: cleanHistory
+                history: cleanHistory,
+                isExtraTurnActive: state.isExtraTurnActive
             }
         }
 
         if (state.currentPhase === 2) {
+            if (isTargetEmptyPrior && !state.isExtraTurnActive) {
+                return {
+                    board: nextBoard,
+                    selectedPiece: null,
+                    currentPhase: 1,
+                    phase1LandingCount: 0,
+                    phase1MovedPieceId: null,
+
+                    history: {
+                        ...state.history,
+                        phase2: { pieceId: movingPiece.id, targetLane: targetLaneIndex }
+                    },
+
+                    showExtraTurnEffect: true,
+                    isExtraTurnActive: true
+                }
+            }
+
             return {
                 board: nextBoard,
                 selectedPiece: null,
                 currentPhase: 1,
                 phase1LandingCount: 0,
                 phase1MovedPieceId: null,
+
                 history: {
                     ...state.history,
                     phase2: { pieceId: movingPiece.id, targetLane: targetLaneIndex }
                 },
-                activePlayer: state.activePlayer === "WHITE" ? "BLACK" : "WHITE"
+
+                activePlayer: state.activePlayer === "WHITE" ? "BLACK" : "WHITE",
+                isExtraTurnActive: false
             }
         }
 
         return {}
     }),
 
+    clearExtraTurnEffect: () => set(() => ({ showExtraTurnEffect: false })),
     resetGame: () => set((state) => GameEngine.generateInitialState(state.gameMode, state.playerSide, state.config))
 }))

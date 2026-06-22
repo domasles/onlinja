@@ -23,6 +23,8 @@ export interface GameState {
     phase1MovedPieceId: string | null
     history: MoveHistory
     config: GameConfig
+    showExtraTurnEffect: boolean
+    isExtraTurnActive: boolean
 }
 
 export class GameEngine {
@@ -35,13 +37,13 @@ export class GameEngine {
         let idCounter = 0
 
         for (let i = 0; i < config.piecesPerBase; i++) {
-            board[0].push({ id: `p-${idCounter++}`, color: config.colors.player1 as PlayerColor })
-            board[config.laneCount - 1].push({ id: `p-${idCounter++}`, color: config.colors.player2 as PlayerColor })
+            board[0].push({ id: `p-${idCounter++}`, color: "WHITE" })
+            board[config.laneCount - 1].push({ id: `p-${idCounter++}`, color: "BLACK" })
         }
 
         for (let l = 1; l < config.laneCount - 1; l++) {
-            board[l].push({ id: `p-${idCounter++}`, color: config.colors.player1 as PlayerColor })
-            board[l].push({ id: `p-${idCounter++}`, color: config.colors.player2 as PlayerColor })
+            board[l].push({ id: `p-${idCounter++}`, color: "WHITE" })
+            board[l].push({ id: `p-${idCounter++}`, color: "BLACK" })
         }
 
         return {
@@ -54,22 +56,26 @@ export class GameEngine {
             playerSide: side,
             phase1MovedPieceId: null,
             history: { phase1: null, phase2: null },
-            config
+            config,
+            showExtraTurnEffect: false,
+            isExtraTurnActive: false
         }
     }
 
     static getValidTargets(state: GameState, laneIndex: number): number[] {
-        const piece = state.board[laneIndex].find(p => state.selectedPiece && p.id === state.selectedPiece.pieceId)
-        if (!piece) return []
-
-        const isWhite = piece.color === "WHITE"
+        const piece = state.board[laneIndex].find(p => p.id === state.selectedPiece?.pieceId || p.id === state.phase1MovedPieceId)
+        const pieceColor = piece ? piece.color : state.activePlayer
+        const isWhite = pieceColor === "WHITE"
         const maxIdx = state.config.laneCount - 1
+        const maxCapacity = state.config.maxLaneCapacity || 6
+        const potentialTargets: number[] = []
 
         if (state.currentPhase === 1) {
             const target = isWhite ? laneIndex + 1 : laneIndex - 1
-            if (target >= 0 && target <= maxIdx) return [target]
 
-            return []
+            if (target >= 0 && target <= maxIdx) {
+                potentialTargets.push(target)
+            }
         }
 
         if (state.currentPhase === 2) {
@@ -77,12 +83,21 @@ export class GameEngine {
             if (steps <= 0) return []
 
             const rawTarget = isWhite ? laneIndex + steps : laneIndex - steps
-            if (isWhite) return [Math.min(rawTarget, maxIdx)]
+            const boundedTarget = isWhite ? Math.min(rawTarget, maxIdx) : Math.max(rawTarget, 0)
 
-            return [Math.max(rawTarget, 0)]
+            potentialTargets.push(boundedTarget)
         }
 
-        return []
+        const validTargets: number[] = []
+
+        for (const targetLane of potentialTargets) {
+            const isHomeLane = targetLane === 0 || targetLane === maxIdx
+            if (!isHomeLane && state.board[targetLane].length >= maxCapacity) continue
+
+            validTargets.push(targetLane)
+        }
+
+        return validTargets
     }
 
     static calculateScores(board: GamePiece[][], config: GameConfig) {
