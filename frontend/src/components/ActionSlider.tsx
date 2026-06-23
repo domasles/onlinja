@@ -36,7 +36,7 @@ export const ActionSlider = <T extends string>({ options, selectedValue, onSelec
                     onPress={() => onSelect(opt.value)}
                     className="w-[136px] h-full justify-center items-center z-10"
                 >
-                    <Text className={`text-xs font-bold ${selectedValue === opt.value ? "text-white" : "text-neutral-500"}`}>
+                    <Text className={`text-xs font-button ${selectedValue === opt.value ? "text-white" : "text-neutral-500"}`}>
                         {opt.label}
                     </Text>
                 </TouchableOpacity>

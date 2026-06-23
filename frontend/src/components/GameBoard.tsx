@@ -152,7 +152,7 @@ export const GameBoard = () => {
                                         <View className="w-6 h-1 bg-emerald-500 rounded-full absolute"/>
                                         <View className="w-1 h-6 bg-emerald-500 rounded-full absolute"/>
                                     </Animated.View>
-                                    <Text className="text-sm font-bold text-neutral-800 bg-white/90 px-3 py-1.5 rounded-full shadow-xl border border-neutral-200/50">
+                                    <Text className="text-sm font-desc text-neutral-800 bg-white/90 px-3 py-1.5 rounded-full shadow-xl border border-neutral-200/50">
                                         Extra turn awarded to player {state.activePlayer === "WHITE" ? "White" : "Black"}
                                     </Text>
                                 </View>

@@ -3,3 +3,40 @@
 @import "tailwindcss/utilities.css";
 
 @import "nativewind/theme";
+
+.font-logo {
+    font-family: "Space-Grotesk";
+}
+
+.font-subheader {
+    font-family: "Oswald";
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.font-button {
+    font-family: "Inter";
+    font-weight: bold;
+}
+
+.font-desc {
+    font-family: "Inter";
+}
+
+.font-score {
+    font-family: "Inter";
+    font-weight: bold;
+}
+
+.font-status {
+    font-family: "Oswald";
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.font-label {
+    font-family: "Oswald";
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}

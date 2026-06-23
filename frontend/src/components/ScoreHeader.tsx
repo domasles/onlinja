@@ -10,20 +10,20 @@ interface ScoreHeaderProps {
 export const ScoreHeader = ({ whiteScore, blackScore, currentPhase, activePlayer }: ScoreHeaderProps) => {
     return (
         <View className="w-full flex-row justify-between items-center bg-white p-4 rounded-2xl shadow-xl border border-neutral-200/60 mb-4">
-            <View className="items-start">
-                <Text className="text-[10px] font-black text-neutral-400 tracking-wider">WHITE</Text>
-                <Text className="text-2xl font-black text-black">{whiteScore}</Text>
+            <View className="items-start m-1">
+                <Text className="text-xs font-label text-neutral-400 tracking-wider">WHITE</Text>
+                <Text className="text-2xl font-score text-black">{whiteScore}</Text>
             </View>
 
             <View className="bg-neutral-100 px-4 py-1.5 rounded-full">
-                <Text className="text-[11px] font-bold text-black tracking-wider uppercase">
+                <Text className="text-sm font-status text-black tracking-wider uppercase">
                     Phase {currentPhase} - {activePlayer}'s Turn
                 </Text>
             </View>
 
-            <View className="items-end">
-                <Text className="text-[10px] font-black text-neutral-400 tracking-wider">BLACK</Text>
-                <Text className="text-2xl font-black text-black">{blackScore}</Text>
+            <View className="items-end m-1">
+                <Text className="text-xs font-label text-neutral-400 tracking-wider">BLACK</Text>
+                <Text className="text-2xl font-score text-black">{blackScore}</Text>
             </View>
         </View>
     )

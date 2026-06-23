@@ -19,13 +19,13 @@ export const MainMenu = () => {
                     <View className="w-6 h-6 rounded-full bg-white border border-neutral-300"/>
                 </View>
 
-                <Text className="text-4xl font-black text-black tracking-tighter mb-2">Onlinja</Text>
-                <Text className="text-xs text-neutral-400 text-center mb-8 px-4">
-                    Slide your pieces across tracks and outmaneuver your opponent.
+                <Text className="font-logo text-5xl text-black tracking-tight m-5 mt-3">Onlinja</Text>
+                <Text className="font-desc text-sm text-neutral-400 text-center mb-6 px-4">
+                    Your favorite abstract board game, but digital.
                 </Text>
                 
                 <View className="w-full mb-5">
-                    <Text className="text-[10px] font-black text-neutral-400 uppercase tracking-widest mb-2 self-center">- Choose mode -</Text>
+                    <Text className="text-xs font-subheader text-neutral-400 uppercase tracking-widest mb-2 self-center">- Choose mode -</Text>
                     <ActionSlider 
                         options={[
                             { label: "Strategic", value: "STRATEGIC" },
@@ -37,7 +37,7 @@ export const MainMenu = () => {
                 </View>
 
                 <View className="w-full mb-8">
-                    <Text className="text-[10px] font-black text-neutral-400 uppercase tracking-widest mb-2 self-center">- Choose side -</Text>
+                    <Text className="text-xs font-subheader text-neutral-400 uppercase tracking-widest mb-2 self-center">- Choose side -</Text>
                     <ActionSlider 
                         options={[
                             { label: "White", value: "WHITE" },
