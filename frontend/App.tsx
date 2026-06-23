@@ -1,4 +1,5 @@
-import { SafeAreaView, StatusBar } from "react-native"
+import { SafeAreaProvider } from "react-native-safe-area-context"
+import { StatusBar } from "react-native"
 
 import { useGameStore } from "./src/hooks/useGameStore"
 import { MainMenu } from "./src/components/MainMenu"
@@ -10,9 +11,9 @@ export default function App() {
     const currentScreen = useGameStore((state) => state.currentScreen)
 
     return (
-        <SafeAreaView className="flex-1 bg-neutral-50">
+        <SafeAreaProvider className="flex-1 bg-neutral-50">
             <StatusBar barStyle="dark-content"/>
             {currentScreen === "MAIN_MENU" ? <MainMenu/> : <GameBoard/>}
-        </SafeAreaView>
+        </SafeAreaProvider>
     )
 }

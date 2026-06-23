@@ -93,7 +93,7 @@ Until backend services are explicitly authorized for construction, the state sto
 - **The Engine State:** Fully active. The interface provides explicit slider selectors configuring difficulty parameters directly parsed by a local evaluation engine.
 
 ### 4. Interactive Motion & Interface Fluidity
-- **Transitions:** All piece shifts, track updates, and macro-move animations implement lightweight layout spring configurations (`Layout.springify()`) and alpha transitions (`FadeIn`, `FadeOut`) via React Native Reanimated to visually track mechanical continuity.
+- **Transitions:** All piece shifts, track updates, and macro-move animations implement lightweight layout spring configurations (`LinearTransition.springify()`) and alpha transitions (`FadeIn`, `FadeOut`) via React Native Reanimated to visually track mechanical continuity.
 - **State Feedback:** Phase updates, turn sequences, and legal action indicators communicate instantly to the user via high-contrast border thickness shifts, custom color rings, and translucent overlay backgrounds.
 
 ### 5. Detailed Screen Hierarchy & UI State Architecture

@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { View, TouchableOpacity, Text } from "react-native"
-import Animated, { Layout, FadeIn, FadeOut } from "react-native-reanimated"
+import Animated, { LinearTransition, FadeIn, FadeOut } from "react-native-reanimated"
 
 import { useGameStore } from "../hooks/useGameStore"
 import { GameEngine } from "../domain/engine"
@@ -104,9 +104,9 @@ export const GameBoard = () => {
                                                 return (
                                                     <Animated.View
                                                         key={piece.id}
-                                                        layout={Layout.springify().damping(15).stiffness(240)}
-                                                        entering={FadeIn.duration(30)}
-                                                        exiting={FadeOut.duration(30)}
+                                                        layout={LinearTransition.springify()}
+                                                        entering={FadeIn.duration(300)}
+                                                        exiting={FadeOut.duration(300)}
                                                         className="justify-center"
                                                     >
                                                         <TouchableOpacity
@@ -134,7 +134,7 @@ export const GameBoard = () => {
                         {state.showExtraTurnEffect && (
                             <Animated.View 
                                 entering={FadeIn.duration(150)}
-                                exiting={FadeOut.duration(200)}
+                                exiting={FadeOut.duration(300)}
                                 style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
                                 className="bg-neutral-950/10 z-50 items-center justify-center backdrop-blur-[4px]"
                                 importantForAccessibility="no-hide-descendants"
@@ -146,7 +146,7 @@ export const GameBoard = () => {
                                 />
                                 <View className="items-center justify-center gap-3 z-50">
                                     <Animated.View 
-                                        layout={Layout.springify()}
+                                        layout={LinearTransition.springify()}
                                         className="bg-white w-20 h-20 rounded-full items-center justify-center border-4 border-emerald-500 shadow-md relative"
                                     >
                                         <View className="w-6 h-1 bg-emerald-500 rounded-full absolute"/>
