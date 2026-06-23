@@ -31,7 +31,7 @@ export const GameOverView = ({ whiteScore, blackScore, onRestart, onLeave }: Gam
                     <Text className="text-4xl font-black text-black mt-1">{whiteScore}</Text>
                 </View>
                 
-                <View className="h-10 w-[1px] bg-neutral-200" />
+                <View className="h-10 w-[1px] bg-neutral-200"/>
                 
                 <View className="items-center">
                     <Text className="text-[10px] font-black text-neutral-400 tracking-wider uppercase">Black</Text>

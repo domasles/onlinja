@@ -66,38 +66,41 @@ export class GameEngine {
         const piece = state.board[laneIndex].find(p => p.id === state.selectedPiece?.pieceId || p.id === state.phase1MovedPieceId)
         const pieceColor = piece ? piece.color : state.activePlayer
         const isWhite = pieceColor === "WHITE"
+        const direction = isWhite ? 1 : -1
         const maxIdx = state.config.laneCount - 1
         const maxCapacity = state.config.maxLaneCapacity || 6
-        const potentialTargets: number[] = []
 
-        if (state.currentPhase === 1) {
-            const target = isWhite ? laneIndex + 1 : laneIndex - 1
+        let currentIndex = laneIndex
+        let totalSteps = state.currentPhase === 1 ? 1 : state.phase1LandingCount - 1
 
-            if (target >= 0 && target <= maxIdx) {
-                potentialTargets.push(target)
+        if (state.currentPhase === 2 && totalSteps <= 0) return []
+
+        for (let i = 0; i < totalSteps; i++) {
+            currentIndex += direction
+
+            if (isWhite && currentIndex >= maxIdx) {
+                currentIndex = maxIdx
+                break
+            }
+
+            if (!isWhite && currentIndex <= 0) {
+                currentIndex = 0
+                break
             }
         }
 
-        if (state.currentPhase === 2) {
-            const steps = state.phase1LandingCount - 1
-            if (steps <= 0) return []
-
-            const rawTarget = isWhite ? laneIndex + steps : laneIndex - steps
-            const boundedTarget = isWhite ? Math.min(rawTarget, maxIdx) : Math.max(rawTarget, 0)
-
-            potentialTargets.push(boundedTarget)
+        while (
+            currentIndex > 0 && 
+            currentIndex < maxIdx && 
+            state.board[currentIndex].length >= maxCapacity
+        ) {
+            currentIndex += direction
         }
 
-        const validTargets: number[] = []
+        if (isWhite && currentIndex > maxIdx) return []
+        if (!isWhite && currentIndex < 0) return []
 
-        for (const targetLane of potentialTargets) {
-            const isHomeLane = targetLane === 0 || targetLane === maxIdx
-            if (!isHomeLane && state.board[targetLane].length >= maxCapacity) continue
-
-            validTargets.push(targetLane)
-        }
-
-        return validTargets
+        return [currentIndex]
     }
 
     static calculateScores(board: GamePiece[][], config: GameConfig) {
@@ -111,18 +114,16 @@ export class GameEngine {
             for (let p = 0; p < pieces.length; p++) {
                 if (pieces[p].color === "WHITE") {
                     if (l === maxIdx) whiteScore += 5
-                    else if (l === maxIdx - 1) whiteScore += 3
-                    else if (l === maxIdx - 2) whiteScore += 2
-                    else if (l === maxIdx - 3) whiteScore += 1
+                    else if (l === maxIdx - 1 && l >= 0) whiteScore += 3
+                    else if (l === maxIdx - 2 && l >= 0) whiteScore += 2
+                    else if (l === maxIdx - 3 && l >= 0) whiteScore += 1
                 }
 
                 if (pieces[p].color === "BLACK") {
-                    const invertedLane = maxIdx - l
-
-                    if (invertedLane === maxIdx) blackScore += 5
-                    else if (invertedLane === maxIdx - 1) blackScore += 3
-                    else if (invertedLane === maxIdx - 2) blackScore += 2
-                    else if (invertedLane === maxIdx - 3) blackScore += 1
+                    if (l === 0) blackScore += 5
+                    else if (l === 1 && l <= maxIdx) blackScore += 3
+                    else if (l === 2 && l <= maxIdx) blackScore += 2
+                    else if (l === 3 && l <= maxIdx) blackScore += 1
                 }
             }
         }

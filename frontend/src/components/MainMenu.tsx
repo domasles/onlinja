@@ -15,8 +15,8 @@ export const MainMenu = () => {
         <ScreenWrapper maxWidthClass="max-w-md">
             <View className="w-full bg-white border border-neutral-200/80 p-8 rounded-3xl shadow-xl items-center">
                 <View className="flex-row items-center space-x-2 gap-2 mb-2">
-                    <View className="w-6 h-6 rounded-full bg-black border border-black" />
-                    <View className="w-6 h-6 rounded-full bg-white border border-neutral-300" />
+                    <View className="w-6 h-6 rounded-full bg-black border border-black"/>
+                    <View className="w-6 h-6 rounded-full bg-white border border-neutral-300"/>
                 </View>
 
                 <Text className="text-4xl font-black text-black tracking-tighter mb-2">Onlinja</Text>

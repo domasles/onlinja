@@ -65,7 +65,7 @@ export const GameBoard = () => {
                             return (
                                 <View key={laneIdx} className="w-full flex-col">
                                     {viewIdx > 0 && (
-                                        <View className="h-[1px] bg-neutral-200 w-[96%] self-center my-0.5" />
+                                        <View className="h-[1px] bg-neutral-200 w-[96%] self-center my-0.5"/>
                                     )}
 
                                     <TouchableOpacity 
@@ -149,8 +149,8 @@ export const GameBoard = () => {
                                         layout={Layout.springify()}
                                         className="bg-white w-20 h-20 rounded-full items-center justify-center border-4 border-emerald-500 shadow-md relative"
                                     >
-                                        <View className="w-6 h-1 bg-emerald-500 rounded-full absolute" />
-                                        <View className="w-1 h-6 bg-emerald-500 rounded-full absolute" />
+                                        <View className="w-6 h-1 bg-emerald-500 rounded-full absolute"/>
+                                        <View className="w-1 h-6 bg-emerald-500 rounded-full absolute"/>
                                     </Animated.View>
                                     <Text className="text-sm font-bold text-neutral-800 bg-white/90 px-3 py-1.5 rounded-full shadow-xl border border-neutral-200/50">
                                         Extra turn awarded to player {state.activePlayer === "WHITE" ? "White" : "Black"}

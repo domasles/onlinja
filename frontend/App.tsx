@@ -11,8 +11,8 @@ export default function App() {
 
     return (
         <SafeAreaView className="flex-1 bg-neutral-50">
-            <StatusBar barStyle="dark-content" />
-            {currentScreen === "MAIN_MENU" ? <MainMenu /> : <GameBoard />}
+            <StatusBar barStyle="dark-content"/>
+            {currentScreen === "MAIN_MENU" ? <MainMenu/> : <GameBoard/>}
         </SafeAreaView>
     )
 }

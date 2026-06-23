@@ -5,7 +5,7 @@ export interface GameConfig {
 }
 
 export const DEFAULT_LINJA_CONFIG: GameConfig = {
-    laneCount: 7,
+    laneCount: 8,
     piecesPerBase: 6,
     maxLaneCapacity: 6
 }
