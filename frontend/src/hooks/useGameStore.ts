@@ -79,7 +79,7 @@ export const useGameStore = create<GameStore>((set) => ({
                 phase2: null
             }
 
-            if (!state.isExtraTurnActive && (totalLandingPieces <= 1 || targetLaneIndex === enemyBaseIndex)) {
+            if (totalLandingPieces <= 1 || targetLaneIndex === enemyBaseIndex) {
                 return {
                     board: nextBoard,
                     selectedPiece: null,

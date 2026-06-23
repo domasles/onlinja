@@ -9,10 +9,17 @@ import { ScoreHeader } from "./ScoreHeader"
 import { GameButton } from "./GameButton"
 import { GameOverView } from "./GameOverView"
 
+interface RenderItem {
+    type: "SINGLE" | "MERGED"
+    color: "WHITE" | "BLACK"
+    count: number
+    pieceId: string
+    allIds: string[]
+}
+
 export const GameBoard = () => {
     const state = useGameStore()
     const scores = GameEngine.calculateScores(state.board, state.config)
-
     const isGameOver = GameEngine.isMatchFinished(state.board)
 
     const laneIndices = Array.from({ length: state.config.laneCount }, (_, i) => i)
@@ -26,7 +33,7 @@ export const GameBoard = () => {
 
     useEffect(() => {
         if (state.showExtraTurnEffect) {
-            const timer = setTimeout(() => {state.clearExtraTurnEffect()}, 1500)
+            const timer = setTimeout(() => { state.clearExtraTurnEffect() }, 1500)
             return () => clearTimeout(timer)
         }
     }, [state.showExtraTurnEffect])
@@ -56,6 +63,74 @@ export const GameBoard = () => {
                         {orderedLanes.map((laneIdx, viewIdx) => {
                             const lanePieces = state.board[laneIdx]
                             const isTargetable = validTargets.includes(laneIdx)
+                            const isHomeLane = laneIdx === 0 || laneIdx === maxIdx
+
+                            let displayItems: RenderItem[] = []
+
+                            if (isHomeLane) {
+                                const rawGroups: { color: "WHITE" | "BLACK"; pieces: typeof lanePieces }[] = []
+
+                                lanePieces.forEach(p => {
+                                    const lastGroup = rawGroups[rawGroups.length - 1]
+
+                                    if (lastGroup && lastGroup.color === p.color) {
+                                        lastGroup.pieces.push(p)
+                                    }
+
+                                    else {
+                                        rawGroups.push({ color: p.color, pieces: [p] })
+                                    }
+                                })
+
+                                rawGroups.forEach(g => {
+                                    g.pieces.forEach(p => {
+                                        displayItems.push({
+                                            type: "SINGLE",
+                                            color: g.color,
+                                            count: 1,
+                                            pieceId: p.id,
+                                            allIds: [p.id]
+                                        })
+                                    })
+                                })
+
+                                const maxCap = state.config.maxLaneCapacity
+
+                                while (displayItems.length > maxCap) {
+                                    let merged = false
+
+                                    for (let i = 0; i < displayItems.length - 1; i++) {
+                                        if (displayItems[i].color === displayItems[i + 1].color) {
+                                            displayItems[i] = {
+                                                type: "MERGED",
+                                                color: displayItems[i].color,
+                                                count: displayItems[i].count + displayItems[i + 1].count,
+                                                pieceId: displayItems[i].pieceId,
+                                                allIds: [...displayItems[i].allIds, ...displayItems[i + 1].allIds]
+                                            }
+
+                                            displayItems.splice(i + 1, 1)
+                                            merged = true
+
+                                            break
+                                        }
+                                    }
+
+                                    if (!merged) break
+                                }
+                            }
+
+                            else {
+                                lanePieces.forEach(p => {
+                                    displayItems.push({
+                                        type: "SINGLE",
+                                        color: p.color,
+                                        count: 1,
+                                        pieceId: p.id,
+                                        allIds: [p.id]
+                                    })
+                                })
+                            }
 
                             let laneHighlightClass = "bg-transparent"
 
@@ -76,34 +151,25 @@ export const GameBoard = () => {
                                         }`}
                                     >
                                         <View className="flex-row items-center justify-center flex-1 h-full">
-                                            {lanePieces.map((piece) => {
-                                                const isSelected = state.selectedPiece?.pieceId === piece.id
-                                                
-                                                const virtualState = { ...state, selectedPiece: { laneIndex: laneIdx, pieceId: piece.id } }
+                                            {displayItems.map((item) => {
+                                                const isSelected = state.selectedPiece && item.allIds.includes(state.selectedPiece.pieceId)
+                                                const activeId = isSelected ? state.selectedPiece!.pieceId : item.pieceId
+
+                                                const virtualState = { ...state, selectedPiece: { laneIndex: laneIdx, pieceId: activeId } }
                                                 const hasLegalMoves = GameEngine.getValidTargets(virtualState, laneIdx).length > 0
-                                                const isSelectable = piece.color === state.activePlayer && laneIdx !== opponentHomeIndex && hasLegalMoves
+                                                const isSelectable = item.color === state.activePlayer && laneIdx !== opponentHomeIndex && hasLegalMoves
 
-                                                let overlayRingStyle = ""
-
-                                                if (isSelected) {
-                                                    overlayRingStyle = "border-[4px] border-neutral-400 scale-105"
-                                                }
-
-                                                else if (h2 && h2.pieceId === piece.id) {
-                                                    overlayRingStyle = "border-[3px] border-emerald-400"
-                                                }
-
-                                                else if (h1 && h1.pieceId === piece.id) {
-                                                    overlayRingStyle = "border-[3px] border-amber-400"
-                                                }
-
-                                                else {
-                                                    overlayRingStyle = `border-2 ${piece.color === "WHITE" ? "border-black" : "border-neutral-800"}`
-                                                }
+                                                let overlayRingStyle = isSelected
+                                                    ? "border-[4px] border-neutral-400 scale-105"
+                                                    : item.allIds.some(id => h2 && h2.pieceId === id)
+                                                    ? "border-[3px] border-emerald-400"
+                                                    : item.allIds.some(id => h1 && h1.pieceId === id)
+                                                    ? "border-[3px] border-amber-400"
+                                                    : `border-2 ${item.color === "WHITE" ? "border-black" : "border-neutral-800"}`
 
                                                 return (
                                                     <Animated.View
-                                                        key={piece.id}
+                                                        key={item.pieceId}
                                                         layout={LinearTransition.springify()}
                                                         entering={FadeIn.duration(300)}
                                                         exiting={FadeOut.duration(300)}
@@ -112,16 +178,24 @@ export const GameBoard = () => {
                                                         <TouchableOpacity
                                                             activeOpacity={isSelectable ? 0.8 : 1}
                                                             disabled={!isSelectable}
-
+                                                            
                                                             onPress={(e) => {
                                                                 e.stopPropagation()
-                                                                state.selectPiece(laneIdx, piece.id)
+                                                                state.selectPiece(laneIdx, activeId)
                                                             }}
 
                                                             className={`w-9 h-9 rounded-full mx-1 shadow-xl items-center justify-center ${
-                                                                piece.color === "WHITE" ? "bg-white" : "bg-black"
+                                                                item.color === "WHITE" ? "bg-white" : "bg-black"
                                                             } ${overlayRingStyle}`}
-                                                        />
+                                                        >
+                                                            {item.type === "MERGED" && (
+                                                                <Text className={`font-status text-xs font-bold ${
+                                                                    item.color === "WHITE" ? "text-neutral-900" : "text-white"
+                                                                }`}>
+                                                                    +{item.count}
+                                                                </Text>
+                                                            )}
+                                                        </TouchableOpacity>
                                                     </Animated.View>
                                                 )
                                             })}
