@@ -1,0 +1,22 @@
+---
+name: ui-presentation
+description: Use when compiling layout blocks, style engines, custom action controllers, lane selection overlays, dropdown menus, animations, or modal overlays.
+---
+
+# Skill: Visual Design & Presentation Components
+
+This skill guides visual rendering inside the presentation components folder.
+
+## Design Layout Properties
+- **Theme:** Premium light, minimalist contrast (bg-white, bg-neutral-50, text-black).
+- **Borders:** Thin line weights (border border-neutral-200), explicit corner radius rules (rounded-xl), and soft shadow effects (shadow-sm).
+- **Typography Matrix:** Standard typography strings must map directly to raw pre-compiled global hooks (font-logo, font-subheader, font-desc, font-status, font-score). No inline weight synthesis variants are allowed.
+
+## Interactive Navigation & Controls
+- **Dynamic Lane Highlighting:** Render contextual indicator borders or translucent overlays when a lane index matches a target coordinate in `getValidTargets()`. Use `border-amber-400` for Phase 1 highlights and `border-emerald-400` for Phase 2 paths.
+- **Configuration Dropdown Controllers:** Menu selection structures for difficulty parameters (`BotDifficulty`) utilize clean custom dropdown blocks instead of native system modals. Apply flat geometric outlines (`border border-neutral-200 bg-white rounded-xl`), clean layout offsets, and dedicated selection item mapping.
+
+## Layout Interaction Overlays
+- **Token Compression:** Lanes packed to baseline limits combine tokens visually into a single node with a numeric tracking indicator (+count).
+- **Extra Turn Interrupt:** When isExtraTurnActive triggers, a layer interceptor locks screen navigation using pointerEvents. Renders a translucent canvas overlay using backdrop-blur-[4px] around a structured notification container.
+- **Transitions:** Layout alterations, piece reposition paths, and modal screens utilize standard spring engines (LinearTransition.springify()).
