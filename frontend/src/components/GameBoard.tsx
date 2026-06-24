@@ -1,13 +1,14 @@
-import { useEffect } from "react"
-import { View, TouchableOpacity, Text } from "react-native"
 import Animated, { LinearTransition, FadeIn, FadeOut } from "react-native-reanimated"
+import { View, TouchableOpacity, Text } from "react-native"
+import { useEffect } from "react"
 
+import { BOT_PRESETS, BotAgent } from "../bot/botAgent"
 import { useGameStore } from "../hooks/useGameStore"
-import { GameEngine } from "../domain/engine"
 import { ScreenWrapper } from "./ScreenWrapper"
+import { GameOverView } from "./GameOverView"
+import { GameEngine } from "../domain/engine"
 import { ScoreHeader } from "./ScoreHeader"
 import { GameButton } from "./GameButton"
-import { GameOverView } from "./GameOverView"
 
 interface RenderItem {
     type: "SINGLE" | "MERGED"
@@ -31,6 +32,40 @@ export const GameBoard = () => {
     const maxIdx = state.config.laneCount - 1
     const opponentHomeIndex = state.activePlayer === "WHITE" ? maxIdx : 0
 
+    const activeControllerType = state.controllers?.[state.activePlayer] ?? "HUMAN"
+    const isLocalHumanTurn = !isGameOver && activeControllerType === "HUMAN"
+    const isBotTurn = !isGameOver && activeControllerType === "BOT"
+
+    useEffect(() => {
+        if (!isBotTurn) return
+
+        if (state.currentPhase !== 1) return
+        if (state.showExtraTurnEffect) return
+
+        const executeBotTurn = async () => {
+            const activeProfile = BOT_PRESETS[state.botDifficulty]
+            const botMove = BotAgent.computeMove(state, activeProfile)
+
+            if (!botMove) return
+
+            await new Promise((resolve) => setTimeout(resolve, 600))
+            state.selectPiece(botMove.p1Lane, botMove.p1PieceId)
+
+            await new Promise((resolve) => setTimeout(resolve, 400))
+            state.selectTargetLane(botMove.p1Target)
+
+            if (botMove.p2Lane !== -1) {
+                await new Promise((resolve) => setTimeout(resolve, 600))
+                state.selectPiece(botMove.p2Lane, botMove.p2PieceId)
+
+                await new Promise((resolve) => setTimeout(resolve, 400))
+                state.selectTargetLane(botMove.p2Target)
+            }
+        }
+
+        executeBotTurn()
+    }, [isBotTurn, state.activePlayer, state.isExtraTurnActive, state.showExtraTurnEffect])
+
     useEffect(() => {
         if (state.showExtraTurnEffect) {
             const timer = setTimeout(() => { state.clearExtraTurnEffect() }, 1500)
@@ -48,7 +83,7 @@ export const GameBoard = () => {
                     onLeave={() => state.navigateTo("MAIN_MENU")}
                 />
             ) : (
-                <View className="w-full flex-1 relative">
+                <View className="w-full flex-1 relative" pointerEvents={isLocalHumanTurn ? "auto" : "none"}>
                     <ScoreHeader 
                         whiteScore={scores.whiteScore}
                         blackScore={scores.blackScore}
@@ -134,8 +169,8 @@ export const GameBoard = () => {
 
                             let laneHighlightClass = "bg-transparent"
 
-                            if (h1 && h1.targetLane === laneIdx) laneHighlightClass = "bg-yellow-500/10"
-                            if (h2 && h2.targetLane === laneIdx) laneHighlightClass = "bg-emerald-500/10"
+                            if (h1 && h1.originLane === laneIdx) laneHighlightClass = "bg-yellow-500/10"
+                            if (h2 && h2.originLane === laneIdx) laneHighlightClass = "bg-emerald-500/10"
 
                             return (
                                 <View key={laneIdx} className="w-full flex-col">
@@ -157,7 +192,7 @@ export const GameBoard = () => {
 
                                                 const virtualState = { ...state, selectedPiece: { laneIndex: laneIdx, pieceId: activeId } }
                                                 const hasLegalMoves = GameEngine.getValidTargets(virtualState, laneIdx).length > 0
-                                                const isSelectable = item.color === state.activePlayer && laneIdx !== opponentHomeIndex && hasLegalMoves
+                                                const isSelectable = isLocalHumanTurn && item.color === state.activePlayer && laneIdx !== opponentHomeIndex && hasLegalMoves
 
                                                 let overlayRingStyle = isSelected
                                                     ? "border-[4px] border-neutral-400 scale-105"

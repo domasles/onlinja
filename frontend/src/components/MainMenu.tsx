@@ -1,15 +1,19 @@
-import { useState } from "react"
 import { View, Text } from "react-native"
+import { useState } from "react"
 
 import { useGameStore } from "../hooks/useGameStore"
-import { ActionSlider } from "./ActionSlider"
 import { ScreenWrapper } from "./ScreenWrapper"
+import { ActionSlider } from "./ActionSlider"
 import { GameButton } from "./GameButton"
+import { Dropdown } from "./Dropdown"
+
+export type BotDifficulty = "ROOKIE" | "RUNNER-UP" | "CHAMPION"
 
 export const MainMenu = () => {
     const { initializeMatch } = useGameStore()
     const [selectedMode, setSelectedMode] = useState<"STRATEGIC" | "AGGRESSIVE">("STRATEGIC")
     const [selectedSide, setSelectedSide] = useState<"WHITE" | "BLACK">("WHITE")
+    const [difficulty, setDifficulty] = useState<BotDifficulty>("RUNNER-UP")
 
     return (
         <ScreenWrapper maxWidthClass="max-w-md">
@@ -36,7 +40,7 @@ export const MainMenu = () => {
                     />
                 </View>
 
-                <View className="w-full mb-8">
+                <View className="w-full mb-5">
                     <Text className="text-xs font-subheader text-neutral-400 uppercase tracking-widest mb-2 self-center">- Choose side -</Text>
                     <ActionSlider 
                         options={[
@@ -48,8 +52,21 @@ export const MainMenu = () => {
                     />
                 </View>
 
+                <View style={{ zIndex: 50 }} className="w-full mb-8">
+                    <Text className="text-xs font-subheader text-neutral-400 uppercase tracking-widest mb-2 self-center">- Bot Difficulty -</Text>
+                    <Dropdown
+                        options={[
+                            { label: "Rookie", value: "ROOKIE" },
+                            { label: "Runner-Up", value: "RUNNER-UP" },
+                            { label: "Champion", value: "CHAMPION" }
+                        ]}
+                        selectedValue={difficulty}
+                        onSelect={setDifficulty}
+                    />
+                </View>
+
                 <GameButton 
-                    label="Play vs Local Mirror" 
+                    label="Play vs Bot" 
                     onPress={() => initializeMatch(selectedMode, selectedSide)}
                     variant="primary"
                     className="w-full h-12"

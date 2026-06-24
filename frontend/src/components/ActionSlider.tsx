@@ -1,6 +1,6 @@
-import { useEffect } from "react"
-import { View, Text, TouchableOpacity } from "react-native"
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, Easing } from "react-native-reanimated"
+import { View, Text, TouchableOpacity } from "react-native"
+import { useEffect } from "react"
 
 interface ActionSliderProps<T extends string> {
     options: { label: string; value: T }[]

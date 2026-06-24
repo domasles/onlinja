@@ -1,6 +1,8 @@
 import { GameConfig, DEFAULT_LINJA_CONFIG } from "../utils/config"
+import { BotDifficulty } from "../components/MainMenu"
 
 export type PlayerColor = "WHITE" | "BLACK"
+export type ControllerType = "HUMAN" | "BOT" | "ONLINE"
 
 export interface GamePiece {
     id: string
@@ -8,8 +10,8 @@ export interface GamePiece {
 }
 
 export interface MoveHistory {
-    phase1: { pieceId: string; targetLane: number } | null
-    phase2: { pieceId: string; targetLane: number } | null
+    phase1: { pieceId: string; originLane: number; targetLane: number } | null
+    phase2: { pieceId: string; originLane: number; targetLane: number } | null
 }
 
 export interface GameState {
@@ -20,18 +22,25 @@ export interface GameState {
     selectedPiece: { laneIndex: number; pieceId: string } | null
     gameMode: "AGGRESSIVE" | "STRATEGIC"
     playerSide: PlayerColor
+    botDifficulty: BotDifficulty
     phase1MovedPieceId: string | null
     history: MoveHistory
     config: GameConfig
     showExtraTurnEffect: boolean
     isExtraTurnActive: boolean
+
+    controllers: {
+        WHITE: ControllerType
+        BLACK: ControllerType
+    }
 }
 
 export class GameEngine {
     static generateInitialState(
         mode: "AGGRESSIVE" | "STRATEGIC" = "STRATEGIC",
         side: PlayerColor = "WHITE",
-        config: GameConfig = DEFAULT_LINJA_CONFIG
+        config: GameConfig = DEFAULT_LINJA_CONFIG,
+        controllers?: { WHITE: ControllerType; BLACK: ControllerType }
     ): GameState {
         const board: GamePiece[][] = Array.from({ length: config.laneCount }, () => [])
         let idCounter = 0
@@ -46,6 +55,11 @@ export class GameEngine {
             board[l].push({ id: `p-${idCounter++}`, color: "BLACK" })
         }
 
+        const resolvedControllers = controllers ?? {
+            WHITE: side === "WHITE" ? "HUMAN" : "BOT",
+            BLACK: side === "BLACK" ? "HUMAN" : "BOT",
+        }
+
         return {
             board,
             activePlayer: "WHITE",
@@ -54,11 +68,13 @@ export class GameEngine {
             selectedPiece: null,
             gameMode: mode,
             playerSide: side,
+            botDifficulty: "RUNNER-UP",
             phase1MovedPieceId: null,
             history: { phase1: null, phase2: null },
             config,
             showExtraTurnEffect: false,
-            isExtraTurnActive: false
+            isExtraTurnActive: false,
+            controllers: resolvedControllers
         }
     }
 

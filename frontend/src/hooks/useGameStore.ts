@@ -75,7 +75,7 @@ export const useGameStore = create<GameStore>((set) => ({
             const enemyBaseIndex = movingPiece.color === "WHITE" ? maxIdx : 0
 
             const cleanHistory = {
-                phase1: { pieceId: movingPiece.id, targetLane: targetLaneIndex },
+                phase1: { pieceId: movingPiece.id, originLane: laneIndex, targetLane: targetLaneIndex },
                 phase2: null
             }
 
@@ -113,7 +113,7 @@ export const useGameStore = create<GameStore>((set) => ({
 
                     history: {
                         ...state.history,
-                        phase2: { pieceId: movingPiece.id, targetLane: targetLaneIndex }
+                        phase2: { pieceId: movingPiece.id, originLane: laneIndex, targetLane: targetLaneIndex }
                     },
 
                     showExtraTurnEffect: true,
@@ -130,7 +130,7 @@ export const useGameStore = create<GameStore>((set) => ({
 
                 history: {
                     ...state.history,
-                    phase2: { pieceId: movingPiece.id, targetLane: targetLaneIndex }
+                    phase2: { pieceId: movingPiece.id, originLane: laneIndex, targetLane: targetLaneIndex }
                 },
 
                 activePlayer: state.activePlayer === "WHITE" ? "BLACK" : "WHITE",
