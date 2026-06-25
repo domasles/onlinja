@@ -38,8 +38,8 @@ export const MainMenuCard = ({ activeTab, onStartGame }: MainMenuCardProps) => {
     }
 
     return (
-        <View
-            style={{ overflow: isDropdownActive ? "visible" : "hidden" }}
+        <MotiView
+            style={{ overflow: isDropdownActive ? ("visible" as const) : ("hidden" as const) }}
             className="w-full bg-white border border-neutral-200/80 p-8 rounded-b-3xl rounded-tr-3xl shadow-xl items-center z-30"
         >
             <View className="flex-row items-center space-x-2 gap-2 mb-2">
@@ -65,21 +65,21 @@ export const MainMenuCard = ({ activeTab, onStartGame }: MainMenuCardProps) => {
                 />
             </View>
 
-            <AnimatePresence>
+            <AnimatePresence initial={false}>
                 {activeTab === "BOT" && (
                     <MotiView
                         from={{ opacity: 0, height: 0, marginBottom: 0 }}
                         animate={{ opacity: 1, height: 160, marginBottom: 20 }}
                         exit={{ opacity: 0, height: 0, marginBottom: 0 }}
                         transition={{ type: "timing", duration: 220 }}
-                        style={{ width: "100%", overflow: isDropdownActive ? "visible" : "hidden", zIndex: 40 }}
+                        style={{ width: "100%", overflow: isDropdownActive ? ("visible" as const) : ("hidden" as const), zIndex: 40 }}
                     >
                         <MotiView
                             from={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ type: "timing", duration: 150, delay: 50 }}
-                            style={{ width: "100%", overflow: isDropdownActive ? "visible" : "hidden" }}
+                            style={{ width: "100%", overflow: isDropdownActive ? ("visible" as const) : ("hidden" as const) }}
                         >
                             <View className="w-full mb-5">
                                 <Text className="text-xs font-subheader text-neutral-400 uppercase tracking-widest mb-2 self-center">- Choose side -</Text>
@@ -121,6 +121,6 @@ export const MainMenuCard = ({ activeTab, onStartGame }: MainMenuCardProps) => {
                     className="w-full h-12"
                 />
             </View>
-        </View>
+        </MotiView>
     )
 }

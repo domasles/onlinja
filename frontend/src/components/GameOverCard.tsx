@@ -20,8 +20,8 @@ export const GameOverCard = ({ whiteScore, blackScore, onRestart, onLeave }: Gam
 
     return (
         <MotiView
-            from={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
+            from={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ type: "timing", duration: 250 }}
             className="w-full bg-white border border-neutral-200/90 p-8 rounded-3xl shadow-xl items-center my-auto"
         >

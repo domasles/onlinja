@@ -2,9 +2,9 @@ import { SafeAreaProvider } from "react-native-safe-area-context"
 import { StatusBar } from "react-native"
 import { useFonts } from "expo-font"
 
+import { MainMenuScreen } from "./src/screens/MainMenuScreen"
 import { useGameStore } from "./src/hooks/useGameStore"
-import { MainMenu } from "./src/components/MainMenu"
-import { GameBoard } from "./src/components/GameBoard"
+import { GameScreen } from "./src/screens/GameScreen"
 
 import "./global.css"
 
@@ -23,7 +23,7 @@ export const App = () => {
     return (
         <SafeAreaProvider className="flex-1 bg-neutral-50">
             <StatusBar barStyle="dark-content"/>
-            {currentScreen === "MAIN_MENU" ? <MainMenu/> : <GameBoard/>}
+            {currentScreen === "MAIN_MENU" ? <MainMenuScreen/> : <GameScreen/>}
         </SafeAreaProvider>
     )
 }

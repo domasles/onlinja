@@ -108,6 +108,48 @@ export const useGameStore = create<GameStore>((set) => ({
                 }
             }
 
+            const proposedState = {
+                ...state,
+                board: nextBoard,
+                currentMove: 2 as const,
+                move1LandingCount: Math.max(totalLandingPieces, 2),
+                move1MovedPieceId: movingPiece.id,
+                history: cleanHistory,
+            }
+
+            let holdsAnyLegalMove2 = false
+
+            for (let l = 0; l <= maxIdx; l++) {
+                for (const p of nextBoard[l]) {
+                    if (p.player !== state.activePlayer) continue
+
+                    if (state.gameMode === "AGGRESSIVE" && p.id !== movingPiece.id) continue
+                    if (state.gameMode === "STRATEGIC" && p.id === movingPiece.id) continue
+
+                    const testState = { ...proposedState, selectedPiece: { laneIndex: l, pieceId: p.id } }
+
+                    if (GameEngine.getValidTargets(testState, l).length > 0) {
+                        holdsAnyLegalMove2 = true
+                        break
+                    }
+                }
+
+                if (holdsAnyLegalMove2) break
+            }
+
+            if (!holdsAnyLegalMove2) {
+                return {
+                    board: nextBoard,
+                    selectedPiece: null,
+                    currentMove: 1,
+                    move1LandingCount: 0,
+                    move1MovedPieceId: null,
+                    history: cleanHistory,
+                    activePlayer: state.activePlayer === "WHITE" ? "BLACK" : "WHITE",
+                    isExtraTurnActive: false
+                }
+            }
+
             return {
                 board: nextBoard,
                 selectedPiece: null,

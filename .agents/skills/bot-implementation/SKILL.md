@@ -57,7 +57,7 @@ export interface UnifiedTurnAction {
     p1Target: number
     p2Lane: number
     p2PieceId: string
-    p2Target: number
+    p2Target: number // Note: Set to -1 alongside p2Lane when Move 2 is physically unavailable or blocked
 }
 
 export class Minimax {
@@ -141,9 +141,10 @@ export class BotAgent {
 - **RUNNER-UP:** Lookahead 2 turns, 0.15 blunder rate. Medium lookahead, occasional mistakes.
 - **CHAMPION:** Lookahead 3 turns, 0.00 blunder rate. Deep lookahead, perfect play.
 
-## Cooperative Event Loop Interception
-- Thread Yielding: The Minimax tree search uses a threshold tracker (operationCount). Every 400 node evaluations, it must execute await new Promise((resolve) => setTimeout(resolve, 0)) to allow the React Native event loop to process layout frames and click interactions.
-- Async Execution Vectors: Any call stack interacting with BotAgent.computeMove must be flagged as async and explicitly awaited.
+## Symmetrical Move Fallbacks
+- **Turn Autopass Alignment:** The branch generator (`generateLegalActions`) must actively track if a chosen Move 1 forces a second move state (`currentMove: 2`) but possesses zero valid second targets under the current `gameMode` criteria.
+- **Single-Move Fallback Injection:** If no legal second move exists, the generator must append a fallback action configuring `p2Lane: -1` and `p2Target: -1`.
+- **State Transition Sync:** During full turn simulation (`simulateFullMove`), encountering a `-1` fallback action must instantly trigger an opponent turn switch and completely reset all `move1` parameters, mirroring the store's exact behavior.
 
 ## Verification Checklist
 - [ ] All classes use named exports only
@@ -152,3 +153,4 @@ export class BotAgent {
 - [ ] No semicolons at end of statements
 - [ ] 4-space indentation
 - [ ] Files separated by concern (types, evaluation, search, humanizer, agent)
+- [ ] Move 2 fallback structures precisely replicate Zustand store turn transitions

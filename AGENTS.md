@@ -24,6 +24,7 @@ onlinja/
     └─── src/
         ├── bot/         # Autonomous Bot Logic (Pure algorithmic layer)
         ├── components/  # Presentation Components
+        ├── screens/     # Page Screens
         ├── domain/      # Game Domain Logic (Rules for players and bots to follow)
         ├── hooks/       # React Hooks & Zustand Store (State management orchestrator)
         └── utils/       # Utility Functions & Helpers

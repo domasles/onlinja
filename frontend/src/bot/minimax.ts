@@ -46,13 +46,14 @@ export class Minimax {
 
                 for (const t1 of targets1) {
                     if (t1 === l1) continue
-
                     const stateAfterP1 = this.simulatedMove1(state, l1, p1.id, t1)
 
                     if (stateAfterP1.activePlayer !== state.activePlayer) {
                         moves.push({ p1Lane: l1, p1PieceId: p1.id, p1Target: t1, p2Lane: -1, p2PieceId: "", p2Target: -1 })
                         continue
                     }
+
+                    let foundValidMove2 = false
 
                     for (let l2 = 0; l2 <= maxIdx; l2++) {
                         const lane2 = stateAfterP1.board[l2]
@@ -74,8 +75,13 @@ export class Minimax {
                             for (const t2 of targets2) {
                                 if (t2 === l2) continue
                                 moves.push({ p1Lane: l1, p1PieceId: p1.id, p1Target: t1, p2Lane: l2, p2PieceId: p2.id, p2Target: t2 })
+                                foundValidMove2 = true
                             }
                         }
+                    }
+
+                    if (!foundValidMove2) {
+                        moves.push({ p1Lane: l1, p1PieceId: p1.id, p1Target: t1, p2Lane: -1, p2PieceId: "", p2Target: -1 })
                     }
                 }
             }
@@ -198,7 +204,19 @@ export class Minimax {
 
     private static simulateFullMove(state: GameState, action: UnifiedTurnAction): GameState {
         let ongoing = this.simulatedMove1(state, action.p1Lane, action.p1PieceId, action.p1Target)
-        if (ongoing.currentMove === 1 || action.p2Lane === -1) return ongoing
+
+        if (action.p2Lane === -1) {
+            return {
+                ...ongoing,
+                currentMove: 1,
+                move1LandingCount: 0,
+                move1MovedPieceId: null,
+                activePlayer: state.activePlayer === "WHITE" ? "BLACK" : "WHITE",
+                isExtraTurnActive: false
+            }
+        }
+
+        if (ongoing.currentMove === 1) return ongoing
 
         const nextBoard = ongoing.board.map((l) => [...l])
         const pIdx = nextBoard[action.p2Lane].findIndex((p) => p.id === action.p2PieceId)
