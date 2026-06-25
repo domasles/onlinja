@@ -111,8 +111,8 @@ export class GameEngine {
         }
 
         while (
-            currentIndex > 0 && 
-            currentIndex < maxIdx && 
+            currentIndex > 0 &&
+            currentIndex < maxIdx &&
             state.board[currentIndex].length >= maxCapacity
         ) {
             currentIndex += direction
@@ -190,6 +190,7 @@ export class GameEngine {
                     if (targets.length > 0) blackHasMoves = true
                 }
             }
+
             if (whiteHasMoves && blackHasMoves) break
         }
 

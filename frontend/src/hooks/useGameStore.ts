@@ -46,7 +46,7 @@ export const useGameStore = create<GameStore>((set) => ({
         const maxIdx = state.config.laneCount - 1
 
         if (!piece || piece.player !== state.activePlayer) return {}
-        
+
         const opponentHomeIndex = state.activePlayer === "WHITE" ? maxIdx : 0
         if (laneIndex === opponentHomeIndex) return {}
 

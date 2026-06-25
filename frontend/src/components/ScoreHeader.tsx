@@ -1,4 +1,6 @@
 import { View, Text } from "react-native"
+import { MotiView } from "moti"
+
 import { PlayerColor } from "../domain/engine"
 
 interface ScoreHeaderProps {
@@ -10,7 +12,12 @@ interface ScoreHeaderProps {
 
 export const ScoreHeader = ({ whiteScore, blackScore, currentMove, activePlayer }: ScoreHeaderProps) => {
     return (
-        <View className="w-full flex-row justify-between items-center bg-white p-4 rounded-2xl shadow-xl border border-neutral-200/60 mb-4">
+        <MotiView
+            from={{ opacity: 0, translateY: -10 }}
+            animate={{ opacity: 1, translateY: 0 }}
+            transition={{ type: "timing", duration: 200 }}
+            className="w-full flex-row justify-between items-center bg-white p-4 rounded-2xl shadow-xl border border-neutral-200/60 mb-4"
+        >
             <View className="items-start m-1">
                 <Text className="text-xs font-label text-neutral-400 tracking-wider">WHITE</Text>
                 <Text className="text-2xl font-score text-black">{whiteScore}</Text>
@@ -26,6 +33,6 @@ export const ScoreHeader = ({ whiteScore, blackScore, currentMove, activePlayer 
                 <Text className="text-xs font-label text-neutral-400 tracking-wider">BLACK</Text>
                 <Text className="text-2xl font-score text-black">{blackScore}</Text>
             </View>
-        </View>
+        </MotiView>
     )
 }

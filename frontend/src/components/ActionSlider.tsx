@@ -25,13 +25,13 @@ export const ActionSlider = <T extends string>({ options, selectedValue, onSelec
 
     return (
         <View className="flex-row bg-neutral-100 p-1 rounded-xl relative h-11 items-center w-[280px] self-center">
-            <Animated.View 
-                style={[animatedSliderStyle]} 
+            <Animated.View
+                style={[animatedSliderStyle]}
                 className="absolute left-1 top-1 bottom-1 w-[136px] bg-black rounded-lg shadow-xl"
             />
 
             {options.map((opt) => (
-                <TouchableOpacity 
+                <TouchableOpacity
                     key={opt.value}
                     onPress={() => onSelect(opt.value)}
                     className="w-[136px] h-full justify-center items-center z-10"

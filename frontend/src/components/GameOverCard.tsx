@@ -1,4 +1,6 @@
 import { View, Text } from "react-native"
+import { MotiView } from "moti"
+
 import { GameButton } from "./GameButton"
 
 interface GameOverCardProps {
@@ -17,7 +19,12 @@ export const GameOverCard = ({ whiteScore, blackScore, onRestart, onLeave }: Gam
     }
 
     return (
-        <View className="w-full bg-white border border-neutral-200/90 p-8 rounded-3xl shadow-xl items-center my-auto">
+        <MotiView
+            from={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ type: "timing", duration: 250 }}
+            className="w-full bg-white border border-neutral-200/90 p-8 rounded-3xl shadow-xl items-center my-auto"
+        >
             <Text className="text-xs font-subheader text-neutral-400 uppercase tracking-widest mb-2">
                 Match Finished
             </Text>
@@ -30,9 +37,9 @@ export const GameOverCard = ({ whiteScore, blackScore, onRestart, onLeave }: Gam
                     <Text className="text-xs font-subheader text-neutral-400 tracking-wider uppercase">White</Text>
                     <Text className="text-4xl font-score text-black mt-1">{whiteScore}</Text>
                 </View>
-                
+
                 <View className="h-10 w-[1px] bg-neutral-200"/>
-                
+
                 <View className="items-center">
                     <Text className="text-xs font-subheader text-neutral-400 tracking-wider uppercase">Black</Text>
                     <Text className="text-4xl font-score text-black mt-1">{blackScore}</Text>
@@ -53,6 +60,6 @@ export const GameOverCard = ({ whiteScore, blackScore, onRestart, onLeave }: Gam
                     className="w-full h-12"
                 />
             </View>
-        </View>
+        </MotiView>
     )
 }

@@ -6,6 +6,7 @@
     "expo": "~56.0.12",
     "expo-font": "~56.0.7",
     "expo-status-bar": "~56.0.4",
+    "moti": "^0.30.0",
     "nativewind": "^5.0.0-preview.4",
     "react": "19.2.3",
     "react-dom": "19.2.3",

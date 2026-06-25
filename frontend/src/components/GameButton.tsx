@@ -14,7 +14,7 @@ export const GameButton = ({ label, onPress, variant = "primary", className = ""
         : "bg-white text-neutral-500"
 
     return (
-        <TouchableOpacity 
+        <TouchableOpacity
             onPress={onPress}
             className={`${baseStyles} ${variantStyles} ${className}`}
         >

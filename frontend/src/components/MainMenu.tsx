@@ -12,12 +12,12 @@ export const MainMenu = () => {
     return (
         <ScreenWrapper maxWidthClass="max-w-md">
             <View className="w-full flex-row justify-start px-4 -mb-[1px] z-10 gap-1">
-                <TouchableOpacity 
+                <TouchableOpacity
                     activeOpacity={0.9}
                     onPress={() => setActiveTab("BOT")}
                     className={`px-6 py-2.5 rounded-t-2xl border-t border-x ${
                         activeTab === "BOT" 
-                            ? "bg-white border-neutral-200/80" 
+                            ? "bg-white border-neutral-200/80"
                             : "bg-neutral-100 border-transparent"
                     }`}
                 >
@@ -27,12 +27,12 @@ export const MainMenu = () => {
                         VS Bot
                     </Text>
                 </TouchableOpacity>
-                <TouchableOpacity 
+                <TouchableOpacity
                     activeOpacity={0.9}
                     onPress={() => setActiveTab("LOCAL")}
                     className={`px-6 py-2.5 rounded-t-2xl border-t border-x ${
                         activeTab === "LOCAL" 
-                            ? "bg-white border-neutral-200/80" 
+                            ? "bg-white border-neutral-200/80"
                             : "bg-neutral-100 border-transparent"
                     }`}
                 >
@@ -44,8 +44,8 @@ export const MainMenu = () => {
                 </TouchableOpacity>
             </View>
 
-            <MainMenuCard 
-                activeTab={activeTab} 
+            <MainMenuCard
+                activeTab={activeTab}
                 onStartGame={(mode, side, controllers, difficulty) => {
                     initializeMatch(mode, side, controllers, difficulty)
                 }}

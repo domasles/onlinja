@@ -36,10 +36,10 @@ export class Minimax {
             for (const p1 of lane) {
                 if (p1.player !== state.activePlayer) continue
 
-                const vState1 = { 
-                    ...state, 
+                const vState1 = {
+                    ...state,
                     currentMove: 1 as const,
-                    selectedPiece: { laneIndex: l1, pieceId: p1.id } 
+                    selectedPiece: { laneIndex: l1, pieceId: p1.id }
                 }
 
                 const targets1 = GameEngine.getValidTargets(vState1, l1)
@@ -63,10 +63,10 @@ export class Minimax {
                             if (stateAfterP1.gameMode === "AGGRESSIVE" && p2.id !== stateAfterP1.move1MovedPieceId) continue
                             if (stateAfterP1.gameMode === "STRATEGIC" && p2.id === stateAfterP1.move1MovedPieceId) continue
 
-                            const vState2 = { 
-                                ...stateAfterP1, 
+                            const vState2 = {
+                                ...stateAfterP1,
                                 currentMove: 2 as const,
-                                selectedPiece: { laneIndex: l2, pieceId: p2.id } 
+                                selectedPiece: { laneIndex: l2, pieceId: p2.id }
                             }
 
                             const targets2 = GameEngine.getValidTargets(vState2, l2)

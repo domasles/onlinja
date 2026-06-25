@@ -1,6 +1,7 @@
 import Animated, { LinearTransition, FadeIn, FadeOut } from "react-native-reanimated"
 import { View, TouchableOpacity, Text, ActivityIndicator } from "react-native"
 import { useEffect, useState, useRef } from "react"
+import { MotiView } from "moti"
 
 import { GameEngine, PlayerColor } from "../domain/engine"
 import { BOT_PRESETS, BotAgent } from "../bot/botAgent"
@@ -90,7 +91,7 @@ export const GameBoard = () => {
     return (
         <ScreenWrapper maxWidthClass="max-w-xl">
             {isGameOver ? (
-                <GameOverCard 
+                <GameOverCard
                     whiteScore={scores.whiteScore}
                     blackScore={scores.blackScore}
 
@@ -111,18 +112,22 @@ export const GameBoard = () => {
                     }}
                 />
             ) : (
-                <View className="w-full flex-1 relative">
-                    <ScoreHeader 
+                <MotiView
+                    from={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ type: "timing", duration: 200 }}
+                    className="w-full flex-1 relative"
+                >
+                    <ScoreHeader
                         whiteScore={scores.whiteScore}
                         blackScore={scores.blackScore}
                         currentMove={state.currentMove}
                         activePlayer={state.activePlayer}
                     />
 
-                    <View style={{ position: "relative", overflow: "hidden" }} className="w-full rounded-2xl">
-                        <View 
+                    <View style={{ position: "relative", overflow: "hidden" }} className="w-full bg-white border border-neutral-200/80 rounded-2xl p-4 shadow-xl flex-col">
+                        <View
                             pointerEvents={isLocalHumanTurn && !isThinking ? "auto" : "none"}
-                            className="w-full bg-white border border-neutral-200/80 rounded-2xl p-4 shadow-xl flex-col"
                         >
                             {orderedLanes.map((laneIdx, viewIdx) => {
                                 const lanePieces = state.board[laneIdx]
@@ -207,7 +212,7 @@ export const GameBoard = () => {
                                             <View className="h-[1px] bg-neutral-200 w-[96%] self-center my-0.5"/>
                                         )}
 
-                                        <TouchableOpacity 
+                                        <TouchableOpacity
                                             activeOpacity={0.9}
                                             onPress={() => state.selectTargetLane(laneIdx)}
                                             className={`flex-row items-center h-14 w-full px-4 rounded-xl transition-colors ${
@@ -283,7 +288,7 @@ export const GameBoard = () => {
 
                         {state.showExtraTurnEffect && (
                             <StatusOverlay isVisible={state.showExtraTurnEffect}>
-                                <Animated.View 
+                                <Animated.View
                                     layout={LinearTransition.springify()}
                                     className="bg-white w-20 h-20 rounded-full items-center justify-center border-4 border-emerald-500 shadow-md relative"
                                 >
@@ -298,7 +303,7 @@ export const GameBoard = () => {
                     </View>
 
                     <View className="w-full flex-row space-x-3 gap-3 mt-4">
-                        <GameButton 
+                        <GameButton
                             label="Leave Match"
 
                             onPress={() => {
@@ -310,7 +315,7 @@ export const GameBoard = () => {
                             variant="secondary"
                             className="flex-1 h-12"
                         />
-                        <GameButton 
+                        <GameButton
                             label="Reset"
 
                             onPress={() => {
@@ -327,7 +332,7 @@ export const GameBoard = () => {
                             className="px-10 h-12"
                         />
                     </View>
-                </View>
+                </MotiView>
             )}
         </ScreenWrapper>
     )
