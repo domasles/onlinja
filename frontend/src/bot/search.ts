@@ -28,7 +28,12 @@ export class MinimaxOptimizer {
             for (const p1 of lane) {
                 if (p1.color !== state.activePlayer) continue
 
-                const vState1 = { ...state, selectedPiece: { laneIndex: l1, pieceId: p1.id } }
+                const vState1 = { 
+                    ...state, 
+                    currentPhase: 1 as const,
+                    selectedPiece: { laneIndex: l1, pieceId: p1.id } 
+                }
+
                 const targets1 = GameEngine.getValidTargets(vState1, l1)
 
                 for (const t1 of targets1) {
@@ -50,7 +55,12 @@ export class MinimaxOptimizer {
                             if (stateAfterP1.gameMode === "AGGRESSIVE" && p2.id !== stateAfterP1.phase1MovedPieceId) continue
                             if (stateAfterP1.gameMode === "STRATEGIC" && p2.id === stateAfterP1.phase1MovedPieceId) continue
 
-                            const vState2 = { ...stateAfterP1, selectedPiece: { laneIndex: l2, pieceId: p2.id } }
+                            const vState2 = { 
+                                ...stateAfterP1, 
+                                currentPhase: 2 as const,
+                                selectedPiece: { laneIndex: l2, pieceId: p2.id } 
+                            }
+
                             const targets2 = GameEngine.getValidTargets(vState2, l2)
 
                             for (const t2 of targets2) {

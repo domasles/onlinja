@@ -93,6 +93,9 @@ export class BotAgent {
 - **RUNNER-UP:** Depth 2, 0.15 error rate. Medium lookahead, occasional mistakes.
 - **CHAMPION:** Depth 4, 0.00 error rate. Deep lookahead, perfect play.
 
+## Async Loop Interception
+- The bot execution thread checks the global board state before phase transitions to prevent parallel asynchronous execution tasks if structural win parameters are already matched.
+
 ## Verification Checklist
 - [ ] All classes use named exports only
 - [ ] No any types used

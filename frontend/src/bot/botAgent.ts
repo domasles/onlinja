@@ -1,5 +1,5 @@
 import { MinimaxOptimizer, UnifiedTurnAction } from "./search"
-import { BotDifficulty } from "../components/MainMenu"
+import { BotDifficulty } from "../components/MainMenuCard"
 import { GameState } from "../domain/engine"
 import { Humanizer } from "./humanizer"
 
@@ -11,7 +11,7 @@ export interface BotProfile {
 export const BOT_PRESETS: Record<BotDifficulty, BotProfile> = {
     "ROOKIE": { depth: 1, errorRate: 0.65 },
     "RUNNER-UP": { depth: 2, errorRate: 0.15 },
-    "CHAMPION": { depth: 4, errorRate: 0.0 }
+    "CHAMPION": { depth: 3, errorRate: 0.0 }
 }
 
 export class BotAgent {

@@ -1,12 +1,21 @@
 import { create } from "zustand"
 
-import { GameState, GameEngine, PlayerColor } from "../domain/engine"
+import { GameState, GameEngine, PlayerColor, ControllerType } from "../domain/engine"
 import { GameConfig, DEFAULT_LINJA_CONFIG } from "../utils/config"
+import { BotDifficulty } from "../components/MainMenuCard"
 
 interface GameStore extends GameState {
     currentScreen: "MAIN_MENU" | "GAMEPLAY"
     navigateTo: (screen: "MAIN_MENU" | "GAMEPLAY") => void
-    initializeMatch: (mode: "AGGRESSIVE" | "STRATEGIC", side: PlayerColor, config?: GameConfig) => void
+
+    initializeMatch: (
+        mode: "AGGRESSIVE" | "STRATEGIC", 
+        side: PlayerColor, 
+        controllers?: Record<PlayerColor, ControllerType>,
+        difficulty?: BotDifficulty,
+        config?: GameConfig
+    ) => void
+
     selectPiece: (laneIndex: number, pieceId: string) => void
     selectTargetLane: (targetLaneIndex: number) => void
     clearExtraTurnEffect: () => void
@@ -19,10 +28,17 @@ export const useGameStore = create<GameStore>((set) => ({
 
     navigateTo: (screen) => set(() => ({ currentScreen: screen })),
 
-    initializeMatch: (mode, side, config) => set(() => ({
-        ...GameEngine.generateInitialState(mode, side, config || DEFAULT_LINJA_CONFIG),
-        currentScreen: "GAMEPLAY"
-    })),
+    initializeMatch: (mode, side, controllers, difficulty, config) => set(() => {
+        const initialState = GameEngine.generateInitialState(mode, side, config || DEFAULT_LINJA_CONFIG)
+
+        return {
+            ...initialState,
+            currentScreen: "GAMEPLAY",
+            playerSide: side,
+            ...(controllers && { controllers }),
+            ...(difficulty && { botDifficulty: difficulty })
+        }
+    }),
 
     selectPiece: (laneIndex, pieceId) => set((state) => {
         const lane = state.board[laneIndex]

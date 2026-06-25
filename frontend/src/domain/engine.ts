@@ -1,5 +1,5 @@
 import { GameConfig, DEFAULT_LINJA_CONFIG } from "../utils/config"
-import { BotDifficulty } from "../components/MainMenu"
+import { BotDifficulty } from "../components/MainMenuCard"
 
 export type PlayerColor = "WHITE" | "BLACK"
 export type ControllerType = "HUMAN" | "BOT" | "ONLINE"
@@ -40,7 +40,8 @@ export class GameEngine {
         mode: "AGGRESSIVE" | "STRATEGIC" = "STRATEGIC",
         side: PlayerColor = "WHITE",
         config: GameConfig = DEFAULT_LINJA_CONFIG,
-        controllers?: { WHITE: ControllerType; BLACK: ControllerType }
+        controllers?: { WHITE: ControllerType; BLACK: ControllerType },
+        difficulty: BotDifficulty = "RUNNER-UP"
     ): GameState {
         const board: GamePiece[][] = Array.from({ length: config.laneCount }, () => [])
         let idCounter = 0
@@ -68,7 +69,7 @@ export class GameEngine {
             selectedPiece: null,
             gameMode: mode,
             playerSide: side,
-            botDifficulty: "RUNNER-UP",
+            botDifficulty: difficulty,
             phase1MovedPieceId: null,
             history: { phase1: null, phase2: null },
             config,
@@ -79,11 +80,15 @@ export class GameEngine {
     }
 
     static getValidTargets(state: GameState, laneIndex: number): number[] {
+        const maxIdx = state.config.laneCount - 1
         const piece = state.board[laneIndex].find(p => p.id === state.selectedPiece?.pieceId || p.id === state.phase1MovedPieceId)
         const pieceColor = piece ? piece.color : state.activePlayer
         const isWhite = pieceColor === "WHITE"
+
+        const opponentHomeIndex = isWhite ? maxIdx : 0
+        if (laneIndex === opponentHomeIndex) return []
+
         const direction = isWhite ? 1 : -1
-        const maxIdx = state.config.laneCount - 1
         const maxCapacity = state.config.maxLaneCapacity || 6
 
         let currentIndex = laneIndex
@@ -155,6 +160,8 @@ export class GameEngine {
         const blackLanes = board
             .map((lane, idx) => lane.some(p => p.color === "BLACK") ? idx : -1)
             .filter(idx => idx !== -1)
+
+        if (whiteLanes.length === 0 || blackLanes.length === 0) return true
 
         const maxWhite = Math.max(...whiteLanes)
         const minWhite = Math.min(...whiteLanes)

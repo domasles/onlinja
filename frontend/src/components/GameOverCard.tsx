@@ -1,14 +1,14 @@
 import { View, Text } from "react-native"
 import { GameButton } from "./GameButton"
 
-interface GameOverViewProps {
+interface GameOverCardProps {
     whiteScore: number
     blackScore: number
     onRestart: () => void
     onLeave: () => void
 }
 
-export const GameOverView = ({ whiteScore, blackScore, onRestart, onLeave }: GameOverViewProps) => {
+export const GameOverCard = ({ whiteScore, blackScore, onRestart, onLeave }: GameOverCardProps) => {
     const getWinnerLabel = () => {
         if (whiteScore > blackScore) return "WHITE WINS!"
         if (blackScore > whiteScore) return "BLACK WINS!"

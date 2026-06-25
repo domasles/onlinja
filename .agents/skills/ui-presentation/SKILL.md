@@ -16,6 +16,10 @@ This skill guides visual rendering inside the presentation components folder.
 - **Dynamic Lane Highlighting:** Render contextual indicator borders or translucent overlays when a lane index matches a target coordinate in `getValidTargets()`. Use `border-amber-400` for Phase 1 highlights and `border-emerald-400` for Phase 2 paths.
 - **Configuration Dropdown Controllers:** Menu selection structures for difficulty parameters (`BotDifficulty`) utilize clean custom dropdown blocks instead of native system modals. Apply flat geometric outlines (`border border-neutral-200 bg-white rounded-xl`), clean layout offsets, and dedicated selection item mapping.
 
+## View Decomposition
+- **`MainMenuCard` Component Isolation:** Form selection views and state sliders are decoupled completely from root container components to ensure view presentation models stay highly modularized.
+- **Pass & Play Layout State:** Form layouts hide side orientation options natively when a local human-to-human interface tab context is mounted.
+
 ## Layout Interaction Overlays
 - **Token Compression:** Lanes packed to baseline limits combine tokens visually into a single node with a numeric tracking indicator (+count).
 - **Extra Turn Interrupt:** When isExtraTurnActive triggers, a layer interceptor locks screen navigation using pointerEvents. Renders a translucent canvas overlay using backdrop-blur-[4px] around a structured notification container.
