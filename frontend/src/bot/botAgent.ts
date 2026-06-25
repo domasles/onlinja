@@ -63,8 +63,8 @@ export const BOT_PRESETS: Record<BotDifficulty, BotProfile> = {
 }
 
 export class BotAgent {
-    public static computeMove(state: GameState, profile: BotProfile): UnifiedTurnAction | null {
-        const optimal = Minimax.optimize(state, profile)
+    public static async computeMove(state: GameState, profile: BotProfile): Promise<UnifiedTurnAction | null> {
+        const optimal = await Minimax.optimize(state, profile)
         if (!optimal) return null
 
         if (profile.blunderRate > 0) {

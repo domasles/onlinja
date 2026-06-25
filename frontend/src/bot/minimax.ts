@@ -19,6 +19,13 @@ export interface UnifiedTurnAction {
 }
 
 export class Minimax {
+    private static operationCount = 0;
+    private static readonly YIELD_THRESHOLD = 400;
+
+    private static async yieldToMainThread(): Promise<void> {
+        return new Promise((resolve) => setTimeout(resolve, 0));
+    }
+
     public static generateLegalActions(state: GameState): UnifiedTurnAction[] {
         const moves: UnifiedTurnAction[] = []
         const maxIdx = state.config.laneCount - 1
@@ -77,7 +84,9 @@ export class Minimax {
         return moves
     }
 
-    public static optimize(state: GameState, profile: BotProfile): UnifiedTurnAction | null {
+    public static async optimize(state: GameState, profile: BotProfile): Promise<UnifiedTurnAction | null> {
+        this.operationCount = 0;
+
         const actions = this.generateLegalActions(state)
         if (actions.length === 0) return null
 
@@ -89,7 +98,7 @@ export class Minimax {
         for (const action of actions) {
             const nextState = this.simulateFullMove(state, action)
             const nextIsMaximizing = nextState.activePlayer === player
-            const score = this.minimax(nextState, profile.lookaheadTurns - 1, -Infinity, Infinity, nextIsMaximizing, player, profile)
+            const score = await this.minimax(nextState, profile.lookaheadTurns - 1, -Infinity, Infinity, nextIsMaximizing, player, profile)
 
             if (score > bestScore) {
                 bestScore = score
@@ -100,7 +109,13 @@ export class Minimax {
         return bestAction
     }
 
-    private static minimax(state: GameState, depth: number, alpha: number, beta: number, isMaximizing: boolean, player: "WHITE" | "BLACK", profile: BotProfile): number {
+    private static async minimax(state: GameState, depth: number, alpha: number, beta: number, isMaximizing: boolean, player: "WHITE" | "BLACK", profile: BotProfile): Promise<number> {
+        this.operationCount++;
+
+        if (this.operationCount % this.YIELD_THRESHOLD === 0) {
+            await this.yieldToMainThread();
+        }
+
         if (depth === 0 || GameEngine.isMatchFinished(state)) {
             return EvaluationEngine.evaluate(state, player, profile)
         }
@@ -113,9 +128,8 @@ export class Minimax {
 
             for (const action of actions) {
                 const nextState = this.simulateFullMove(state, action)
-
                 const nextIsMaximizing = nextState.activePlayer === player
-                const score = this.minimax(nextState, depth - 1, alpha, beta, nextIsMaximizing, player, profile)
+                const score = await this.minimax(nextState, depth - 1, alpha, beta, nextIsMaximizing, player, profile)
 
                 maxEval = Math.max(maxEval, score)
                 alpha = Math.max(alpha, score)
@@ -131,9 +145,8 @@ export class Minimax {
 
             for (const action of actions) {
                 const nextState = this.simulateFullMove(state, action)
-
                 const nextIsMaximizing = nextState.activePlayer === player
-                const score = this.minimax(nextState, depth - 1, alpha, beta, nextIsMaximizing, player, profile)
+                const score = await this.minimax(nextState, depth - 1, alpha, beta, nextIsMaximizing, player, profile)
 
                 minEval = Math.min(minEval, score)
                 beta = Math.min(beta, score)
