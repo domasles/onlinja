@@ -1,4 +1,4 @@
-import { GameState, GameEngine } from "../domain/engine"
+import { GameState, GameEngine, PlayerColor } from "../domain/engine"
 import { EvaluationEngine } from "./evaluation"
 import { BotProfile } from "./botAgent"
 
@@ -34,7 +34,7 @@ export class Minimax {
             const lane = state.board[l1]
 
             for (const p1 of lane) {
-                if (p1.color !== state.activePlayer) continue
+                if (p1.player !== state.activePlayer) continue
 
                 const vState1 = { 
                     ...state, 
@@ -58,7 +58,7 @@ export class Minimax {
                         const lane2 = stateAfterP1.board[l2]
 
                         for (const p2 of lane2) {
-                            if (p2.color !== stateAfterP1.activePlayer) continue
+                            if (p2.player !== stateAfterP1.activePlayer) continue
 
                             if (stateAfterP1.gameMode === "AGGRESSIVE" && p2.id !== stateAfterP1.move1MovedPieceId) continue
                             if (stateAfterP1.gameMode === "STRATEGIC" && p2.id === stateAfterP1.move1MovedPieceId) continue
@@ -109,7 +109,15 @@ export class Minimax {
         return bestAction
     }
 
-    private static async minimax(state: GameState, depth: number, alpha: number, beta: number, isMaximizing: boolean, player: "WHITE" | "BLACK", profile: BotProfile): Promise<number> {
+    private static async minimax(
+        state: GameState,
+        depth: number,
+        alpha: number,
+        beta: number,
+        isMaximizing: boolean,
+        player: PlayerColor,
+        profile: BotProfile
+    ): Promise<number> {
         this.operationCount++;
 
         if (this.operationCount % this.YIELD_THRESHOLD === 0) {
@@ -167,7 +175,7 @@ export class Minimax {
 
         const maxIdx = state.config.laneCount - 1
         const totalLandingPieces = nextBoard[t1].length
-        const enemyBaseIndex = piece.color === "WHITE" ? maxIdx : 0
+        const enemyBaseIndex = piece.player === "WHITE" ? maxIdx : 0
 
         if (totalLandingPieces <= 1 || t1 === enemyBaseIndex) {
             return {

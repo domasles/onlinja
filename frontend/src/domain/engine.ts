@@ -6,7 +6,7 @@ export type ControllerType = "HUMAN" | "BOT" | "ONLINE"
 
 export interface GamePiece {
     id: string
-    color: PlayerColor
+    player: PlayerColor
 }
 
 export interface MoveHistory {
@@ -47,13 +47,13 @@ export class GameEngine {
         let idCounter = 0
 
         for (let i = 0; i < config.piecesPerBase; i++) {
-            board[0].push({ id: `p-${idCounter++}`, color: "WHITE" })
-            board[config.laneCount - 1].push({ id: `p-${idCounter++}`, color: "BLACK" })
+            board[0].push({ id: `p-${idCounter++}`, player: "WHITE" })
+            board[config.laneCount - 1].push({ id: `p-${idCounter++}`, player: "BLACK" })
         }
 
         for (let l = 1; l < config.laneCount - 1; l++) {
-            board[l].push({ id: `p-${idCounter++}`, color: "WHITE" })
-            board[l].push({ id: `p-${idCounter++}`, color: "BLACK" })
+            board[l].push({ id: `p-${idCounter++}`, player: "WHITE" })
+            board[l].push({ id: `p-${idCounter++}`, player: "BLACK" })
         }
 
         const resolvedControllers = controllers ?? {
@@ -82,7 +82,7 @@ export class GameEngine {
     static getValidTargets(state: GameState, laneIndex: number): number[] {
         const maxIdx = state.config.laneCount - 1
         const piece = state.board[laneIndex].find(p => p.id === state.selectedPiece?.pieceId || p.id === state.move1MovedPieceId)
-        const pieceColor = piece ? piece.color : state.activePlayer
+        const pieceColor = piece ? piece.player : state.activePlayer
         const isWhite = pieceColor === "WHITE"
 
         const opponentHomeIndex = isWhite ? maxIdx : 0
@@ -133,14 +133,14 @@ export class GameEngine {
             const pieces = board[l]
 
             for (let p = 0; p < pieces.length; p++) {
-                if (pieces[p].color === "WHITE") {
+                if (pieces[p].player === "WHITE") {
                     if (l === maxIdx) whiteScore += 5
                     else if (l === maxIdx - 1 && l >= 0) whiteScore += 3
                     else if (l === maxIdx - 2 && l >= 0) whiteScore += 2
                     else if (l === maxIdx - 3 && l >= 0) whiteScore += 1
                 }
 
-                if (pieces[p].color === "BLACK") {
+                if (pieces[p].player === "BLACK") {
                     if (l === 0) blackScore += 5
                     else if (l === 1 && l <= maxIdx) blackScore += 3
                     else if (l === 2 && l <= maxIdx) blackScore += 2
@@ -157,11 +157,11 @@ export class GameEngine {
         const maxIdx = state.config.laneCount - 1
 
         const whiteLanes = board
-            .map((lane, idx) => lane.some(p => p.color === "WHITE") ? idx : -1)
+            .map((lane, idx) => lane.some(p => p.player === "WHITE") ? idx : -1)
             .filter(idx => idx !== -1)
 
         const blackLanes = board
-            .map((lane, idx) => lane.some(p => p.color === "BLACK") ? idx : -1)
+            .map((lane, idx) => lane.some(p => p.player === "BLACK") ? idx : -1)
             .filter(idx => idx !== -1)
 
         if (whiteLanes.length === 0 || blackLanes.length === 0) return true
@@ -180,12 +180,12 @@ export class GameEngine {
 
         for (let l = 0; l <= maxIdx; l++) {
             for (const piece of board[l]) {
-                if (!whiteHasMoves && piece.color === "WHITE") {
+                if (!whiteHasMoves && piece.player === "WHITE") {
                     const targets = GameEngine.getValidTargets({ ...state, activePlayer: "WHITE", selectedPiece: { laneIndex: l, pieceId: piece.id } }, l)
                     if (targets.length > 0) whiteHasMoves = true
                 }
 
-                if (!blackHasMoves && piece.color === "BLACK") {
+                if (!blackHasMoves && piece.player === "BLACK") {
                     const targets = GameEngine.getValidTargets({ ...state, activePlayer: "BLACK", selectedPiece: { laneIndex: l, pieceId: piece.id } }, l)
                     if (targets.length > 0) blackHasMoves = true
                 }

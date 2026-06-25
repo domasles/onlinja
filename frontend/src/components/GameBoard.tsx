@@ -2,18 +2,18 @@ import Animated, { LinearTransition, FadeIn, FadeOut } from "react-native-reanim
 import { View, TouchableOpacity, Text, ActivityIndicator } from "react-native"
 import { useEffect, useState, useRef } from "react"
 
+import { GameEngine, PlayerColor } from "../domain/engine"
 import { BOT_PRESETS, BotAgent } from "../bot/botAgent"
 import { useGameStore } from "../hooks/useGameStore"
 import { ScreenWrapper } from "./ScreenWrapper"
 import { StatusOverlay } from "./StatusOverlay"
 import { GameOverCard } from "./GameOverCard"
-import { GameEngine } from "../domain/engine"
 import { ScoreHeader } from "./ScoreHeader"
 import { GameButton } from "./GameButton"
 
 interface RenderItem {
     type: "SINGLE" | "MERGED"
-    color: "WHITE" | "BLACK"
+    color: PlayerColor
     count: number
     pieceId: string
     allIds: string[]
@@ -132,17 +132,17 @@ export const GameBoard = () => {
                                 let displayItems: RenderItem[] = []
 
                                 if (isHomeLane) {
-                                    const rawGroups: { color: "WHITE" | "BLACK"; pieces: typeof lanePieces }[] = []
+                                    const rawGroups: { color: PlayerColor; pieces: typeof lanePieces }[] = []
 
                                     lanePieces.forEach(p => {
                                         const lastGroup = rawGroups[rawGroups.length - 1]
 
-                                        if (lastGroup && lastGroup.color === p.color) {
+                                        if (lastGroup && lastGroup.color === p.player) {
                                             lastGroup.pieces.push(p)
                                         }
 
                                         else {
-                                            rawGroups.push({ color: p.color, pieces: [p] })
+                                            rawGroups.push({ color: p.player, pieces: [p] })
                                         }
                                     })
 
@@ -188,7 +188,7 @@ export const GameBoard = () => {
                                     lanePieces.forEach(p => {
                                         displayItems.push({
                                             type: "SINGLE",
-                                            color: p.color,
+                                            color: p.player,
                                             count: 1,
                                             pieceId: p.id,
                                             allIds: [p.id]

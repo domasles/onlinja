@@ -1,10 +1,11 @@
 import { View, Text } from "react-native"
+import { PlayerColor } from "../domain/engine"
 
 interface ScoreHeaderProps {
     whiteScore: number
     blackScore: number
     currentMove: number
-    activePlayer: "WHITE" | "BLACK"
+    activePlayer: PlayerColor
 }
 
 export const ScoreHeader = ({ whiteScore, blackScore, currentMove, activePlayer }: ScoreHeaderProps) => {

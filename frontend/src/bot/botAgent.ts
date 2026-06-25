@@ -1,5 +1,5 @@
-import { Minimax, UnifiedTurnAction } from "./minimax"
 import { BotDifficulty } from "../components/MainMenuCard"
+import { Minimax, UnifiedTurnAction } from "./minimax"
 import { GameState } from "../domain/engine"
 import { Humanizer } from "./humanizer"
 

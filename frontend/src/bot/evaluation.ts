@@ -2,10 +2,10 @@ import { GameState, PlayerColor, GameEngine } from "../domain/engine"
 import { BotProfile } from "./botAgent"
 
 export class EvaluationEngine {
-    public static evaluate(state: GameState, perspective: PlayerColor, profile: BotProfile): number {
+    public static evaluate(state: GameState, player: PlayerColor, profile: BotProfile): number {
         const board = state.board
         const maxIdx = state.config.laneCount - 1
-        const isWhite = perspective === "WHITE"
+        const isWhite = player === "WHITE"
         const scores = GameEngine.calculateScores(board, state.config)
 
         let evaluation = isWhite 
@@ -13,7 +13,7 @@ export class EvaluationEngine {
             : scores.blackScore - scores.whiteScore
 
         if (state.isExtraTurnActive) {
-            evaluation += (state.activePlayer === perspective)
+            evaluation += (state.activePlayer === player)
                 ? profile.extraTurnBonus
                 : -profile.extraTurnBonus
         }
@@ -24,7 +24,7 @@ export class EvaluationEngine {
 
         const forwardVector = isWhite ? 1 : -1
         const backwardVector = isWhite ? -1 : 1
-        const allyColor = perspective
+        const allyColor = player
         const enemyColor = isWhite ? "BLACK" : "WHITE"
 
         let positionalBonus = 0
@@ -35,7 +35,7 @@ export class EvaluationEngine {
 
             if (l === 0 || l === maxIdx) {
                 const isHomeBase = (l === 0 && isWhite) || (l === maxIdx && !isWhite)
-                const basePiecesCount = lanePieces.filter(p => p.color === (l === 0 ? "WHITE" : "BLACK")).length
+                const basePiecesCount = lanePieces.filter(p => p.player === (l === 0 ? "WHITE" : "BLACK")).length
                 const clearanceValue = (12 - basePiecesCount) * profile.homeBaseClearanceWeight
 
                 positionalBonus += isHomeBase ? clearanceValue : -clearanceValue
@@ -60,8 +60,8 @@ export class EvaluationEngine {
             } 
 
             else if (count >= 4 && count <= 5) {
-                const allyCanUse = prevLane.some(p => p.color === allyColor)
-                const enemyCanUse = nextLane.some(p => p.color === enemyColor)
+                const allyCanUse = prevLane.some(p => p.player === allyColor)
+                const enemyCanUse = nextLane.some(p => p.player === enemyColor)
 
                 const launchpadScore = (allyCanUse ? profile.friendlyClusterBonus : 0) - (enemyCanUse ? profile.enemyClusterPenalty : 0)
 

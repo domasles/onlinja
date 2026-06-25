@@ -45,7 +45,7 @@ export const useGameStore = create<GameStore>((set) => ({
         const piece = lane.find(p => p.id === pieceId)
         const maxIdx = state.config.laneCount - 1
 
-        if (!piece || piece.color !== state.activePlayer) return {}
+        if (!piece || piece.player !== state.activePlayer) return {}
         
         const opponentHomeIndex = state.activePlayer === "WHITE" ? maxIdx : 0
         if (laneIndex === opponentHomeIndex) return {}
@@ -89,7 +89,7 @@ export const useGameStore = create<GameStore>((set) => ({
 
         if (state.currentMove === 1) {
             const totalLandingPieces = nextBoard[targetLaneIndex].length
-            const enemyBaseIndex = movingPiece.color === "WHITE" ? maxIdx : 0
+            const enemyBaseIndex = movingPiece.player === "WHITE" ? maxIdx : 0
 
             const cleanHistory = {
                 move1: { pieceId: movingPiece.id, originLane: laneIndex, targetLane: targetLaneIndex },
