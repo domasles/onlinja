@@ -25,14 +25,14 @@ export const GameBoard = () => {
     const [resetNonce, setResetNonce] = useState(0)
     const turnIdRef = useRef(0)
     const scores = GameEngine.calculateScores(state.board, state.config)
-    const isGameOver = GameEngine.isMatchFinished(state.board) && state.currentPhase === 1 && !state.showExtraTurnEffect && !state.isExtraTurnActive
+    const isGameOver = GameEngine.isMatchFinished(state) && state.currentMove === 1 && !state.showExtraTurnEffect && !state.isExtraTurnActive
 
     const laneIndices = Array.from({ length: state.config.laneCount }, (_, i) => i)
     const orderedLanes = state.playerSide === "BLACK" ? laneIndices : [...laneIndices].reverse()
     const validTargets = state.selectedPiece ? GameEngine.getValidTargets(state, state.selectedPiece.laneIndex) : []
 
-    const h1 = state.history.phase1
-    const h2 = state.history.phase2
+    const h1 = state.history.move1
+    const h2 = state.history.move2
     const maxIdx = state.config.laneCount - 1
     const opponentHomeIndex = state.activePlayer === "WHITE" ? maxIdx : 0
 
@@ -41,7 +41,7 @@ export const GameBoard = () => {
     const isBotTurn = !isGameOver && activeControllerType === "BOT"
 
     useEffect(() => {
-        if (!isBotTurn || state.currentPhase !== 1 || state.showExtraTurnEffect) return
+        if (!isBotTurn || state.currentMove !== 1 || state.showExtraTurnEffect) return
 
         turnIdRef.current += 1
         const currentTurnId = turnIdRef.current
@@ -115,7 +115,7 @@ export const GameBoard = () => {
                     <ScoreHeader 
                         whiteScore={scores.whiteScore}
                         blackScore={scores.blackScore}
-                        currentPhase={state.currentPhase}
+                        currentMove={state.currentMove}
                         activePlayer={state.activePlayer}
                     />
 

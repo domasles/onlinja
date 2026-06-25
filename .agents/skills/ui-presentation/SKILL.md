@@ -13,7 +13,7 @@ This skill guides visual rendering inside the presentation components folder.
 - **Typography Matrix:** Standard typography strings must map directly to raw pre-compiled global hooks (font-logo, font-subheader, font-desc, font-status, font-score). No inline weight synthesis variants are allowed.
 
 ## Interactive Navigation & Controls
-- **Dynamic Lane Highlighting:** Render contextual indicator borders or translucent overlays when a lane index matches a target coordinate in `getValidTargets()`. Use `border-amber-400` for Phase 1 highlights and `border-emerald-400` for Phase 2 paths.
+- **Dynamic Lane Highlighting:** Render contextual indicator borders or translucent overlays when a lane index matches a target coordinate in `getValidTargets()`. Use `border-amber-400` for Move 1 highlights and `border-emerald-400` for Move 2 paths.
 - **Configuration Dropdown Controllers:** Menu selection structures for difficulty parameters (`BotDifficulty`) utilize clean custom dropdown blocks instead of native system modals. Apply flat geometric outlines (`border border-neutral-200 bg-white rounded-xl`), clean layout offsets, and dedicated selection item mapping.
 
 ## View Decomposition

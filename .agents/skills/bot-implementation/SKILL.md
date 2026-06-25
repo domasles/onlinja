@@ -20,7 +20,7 @@ export interface BotProfile {
 }
 
 export interface BotAction {
-    type: "PHASE_1" | "PHASE_2"
+    type: "MOVE_1" | "MOVE_2"
     laneIndex: number
     pieceId: string
     targetLaneIndex?: number
@@ -52,7 +52,7 @@ import { GameState } from "../domain/engine"
 import { UnifiedTurnAction } from "./types"
 
 export class MinimaxOptimizer {
-    // Generates all legal combinatory macro-moves for the current active phase sequence
+    // Generates all legal combinatory macro-moves for the current active move sequence
     public static generateLegalActions(state: GameState): UnifiedTurnAction[]
 
     // Traverses lookahead branches using alpha-beta pruning to find the absolute mathematically optimal path
@@ -79,7 +79,7 @@ import { UnifiedTurnAction, BotProfile, BotDifficulty } from "./types"
 export const BOT_PRESETS: Record<BotDifficulty, BotProfile> = {
     "ROOKIE": { depth: 1, errorRate: 0.60 },
     "RUNNER-UP": { depth: 2, errorRate: 0.15 },
-    "CHAMPION": { depth: 4, errorRate: 0.00 }
+    "CHAMPION": { depth: 3, errorRate: 0.00 }
 }
 
 export class BotAgent {
@@ -91,10 +91,11 @@ export class BotAgent {
 ## Difficulty Configuration
 - **ROOKIE:** Depth 1, 0.60 error rate. Shallow lookahead, frequent blunders.
 - **RUNNER-UP:** Depth 2, 0.15 error rate. Medium lookahead, occasional mistakes.
-- **CHAMPION:** Depth 4, 0.00 error rate. Deep lookahead, perfect play.
+- **CHAMPION:** Depth 3, 0.00 error rate. Deep lookahead, perfect play.
 
 ## Async Loop Interception
-- The bot execution thread checks the global board state before phase transitions to prevent parallel asynchronous execution tasks if structural win parameters are already matched.
+- The bot execution thread checks the global board state before move transitions to prevent parallel asynchronous execution tasks if structural win parameters are already matched.
+- The `minimax` loop must dynamically evaluate the `nextIsMaximizing` parameter by checking if `nextState.activePlayer === player`, ensuring sequential extra turns are calculated correctly under the correct optimization perspective.
 
 ## Verification Checklist
 - [ ] All classes use named exports only

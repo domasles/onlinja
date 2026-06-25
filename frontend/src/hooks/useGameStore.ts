@@ -60,8 +60,9 @@ export const useGameStore = create<GameStore>((set) => ({
         if (legalTargets.length === 0) return {}
         if (state.selectedPiece?.pieceId === pieceId) return { selectedPiece: null }
 
-        if (state.currentPhase === 2) {
-            const movedId = state.phase1MovedPieceId
+        if (state.currentMove === 2) {
+            const movedId = state.move1MovedPieceId
+
             if (state.gameMode === "AGGRESSIVE" && movedId && movedId !== pieceId) return {}
             if (state.gameMode === "STRATEGIC" && movedId && movedId === pieceId) return {}
         }
@@ -86,21 +87,21 @@ export const useGameStore = create<GameStore>((set) => ({
         nextBoard[targetLaneIndex].push(movingPiece)
         const maxIdx = state.config.laneCount - 1
 
-        if (state.currentPhase === 1) {
+        if (state.currentMove === 1) {
             const totalLandingPieces = nextBoard[targetLaneIndex].length
             const enemyBaseIndex = movingPiece.color === "WHITE" ? maxIdx : 0
 
             const cleanHistory = {
-                phase1: { pieceId: movingPiece.id, originLane: laneIndex, targetLane: targetLaneIndex },
-                phase2: null
+                move1: { pieceId: movingPiece.id, originLane: laneIndex, targetLane: targetLaneIndex },
+                move2: null
             }
 
             if (totalLandingPieces <= 1 || targetLaneIndex === enemyBaseIndex) {
                 return {
                     board: nextBoard,
                     selectedPiece: null,
-                    currentPhase: 1,
-                    phase1MovedPieceId: null,
+                    currentMove: 1,
+                    move1MovedPieceId: null,
                     history: cleanHistory,
                     activePlayer: state.activePlayer === "WHITE" ? "BLACK" : "WHITE",
                     isExtraTurnActive: false
@@ -110,26 +111,26 @@ export const useGameStore = create<GameStore>((set) => ({
             return {
                 board: nextBoard,
                 selectedPiece: null,
-                currentPhase: 2,
-                phase1LandingCount: Math.max(totalLandingPieces, 2),
-                phase1MovedPieceId: movingPiece.id,
+                currentMove: 2,
+                move1LandingCount: Math.max(totalLandingPieces, 2),
+                move1MovedPieceId: movingPiece.id,
                 history: cleanHistory,
                 isExtraTurnActive: state.isExtraTurnActive
             }
         }
 
-        if (state.currentPhase === 2) {
+        if (state.currentMove === 2) {
             if (isTargetEmptyPrior && !state.isExtraTurnActive) {
                 return {
                     board: nextBoard,
                     selectedPiece: null,
-                    currentPhase: 1,
-                    phase1LandingCount: 0,
-                    phase1MovedPieceId: null,
+                    currentMove: 1,
+                    move1LandingCount: 0,
+                    move1MovedPieceId: null,
 
                     history: {
                         ...state.history,
-                        phase2: { pieceId: movingPiece.id, originLane: laneIndex, targetLane: targetLaneIndex }
+                        move2: { pieceId: movingPiece.id, originLane: laneIndex, targetLane: targetLaneIndex }
                     },
 
                     showExtraTurnEffect: true,
@@ -140,13 +141,13 @@ export const useGameStore = create<GameStore>((set) => ({
             return {
                 board: nextBoard,
                 selectedPiece: null,
-                currentPhase: 1,
-                phase1LandingCount: 0,
-                phase1MovedPieceId: null,
+                currentMove: 1,
+                move1LandingCount: 0,
+                move1MovedPieceId: null,
 
                 history: {
                     ...state.history,
-                    phase2: { pieceId: movingPiece.id, originLane: laneIndex, targetLane: targetLaneIndex }
+                    move2: { pieceId: movingPiece.id, originLane: laneIndex, targetLane: targetLaneIndex }
                 },
 
                 activePlayer: state.activePlayer === "WHITE" ? "BLACK" : "WHITE",

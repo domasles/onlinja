@@ -10,20 +10,20 @@ export interface GamePiece {
 }
 
 export interface MoveHistory {
-    phase1: { pieceId: string; originLane: number; targetLane: number } | null
-    phase2: { pieceId: string; originLane: number; targetLane: number } | null
+    move1: { pieceId: string; originLane: number; targetLane: number } | null
+    move2: { pieceId: string; originLane: number; targetLane: number } | null
 }
 
 export interface GameState {
     board: GamePiece[][]
     activePlayer: PlayerColor
-    currentPhase: 1 | 2
-    phase1LandingCount: number
+    currentMove: 1 | 2
+    move1LandingCount: number
     selectedPiece: { laneIndex: number; pieceId: string } | null
     gameMode: "AGGRESSIVE" | "STRATEGIC"
     playerSide: PlayerColor
     botDifficulty: BotDifficulty
-    phase1MovedPieceId: string | null
+    move1MovedPieceId: string | null
     history: MoveHistory
     config: GameConfig
     showExtraTurnEffect: boolean
@@ -64,14 +64,14 @@ export class GameEngine {
         return {
             board,
             activePlayer: "WHITE",
-            currentPhase: 1,
-            phase1LandingCount: 0,
+            currentMove: 1,
+            move1LandingCount: 0,
             selectedPiece: null,
             gameMode: mode,
             playerSide: side,
             botDifficulty: difficulty,
-            phase1MovedPieceId: null,
-            history: { phase1: null, phase2: null },
+            move1MovedPieceId: null,
+            history: { move1: null, move2: null },
             config,
             showExtraTurnEffect: false,
             isExtraTurnActive: false,
@@ -81,7 +81,7 @@ export class GameEngine {
 
     static getValidTargets(state: GameState, laneIndex: number): number[] {
         const maxIdx = state.config.laneCount - 1
-        const piece = state.board[laneIndex].find(p => p.id === state.selectedPiece?.pieceId || p.id === state.phase1MovedPieceId)
+        const piece = state.board[laneIndex].find(p => p.id === state.selectedPiece?.pieceId || p.id === state.move1MovedPieceId)
         const pieceColor = piece ? piece.color : state.activePlayer
         const isWhite = pieceColor === "WHITE"
 
@@ -92,9 +92,9 @@ export class GameEngine {
         const maxCapacity = state.config.maxLaneCapacity || 6
 
         let currentIndex = laneIndex
-        let totalSteps = state.currentPhase === 1 ? 1 : state.phase1LandingCount - 1
+        let totalSteps = state.currentMove === 1 ? 1 : state.move1LandingCount - 1
 
-        if (state.currentPhase === 2 && totalSteps <= 0) return []
+        if (state.currentMove === 2 && totalSteps <= 0) return []
 
         for (let i = 0; i < totalSteps; i++) {
             currentIndex += direction
@@ -152,7 +152,10 @@ export class GameEngine {
         return { whiteScore, blackScore }
     }
 
-    static isMatchFinished(board: any[][]): boolean {
+    static isMatchFinished(state: GameState): boolean {
+        const board = state.board
+        const maxIdx = state.config.laneCount - 1
+
         const whiteLanes = board
             .map((lane, idx) => lane.some(p => p.color === "WHITE") ? idx : -1)
             .filter(idx => idx !== -1)
@@ -163,11 +166,36 @@ export class GameEngine {
 
         if (whiteLanes.length === 0 || blackLanes.length === 0) return true
 
+        const isRoundComplete = state.activePlayer === "WHITE" && state.currentMove === 1 && !state.isExtraTurnActive
+
         const maxWhite = Math.max(...whiteLanes)
         const minWhite = Math.min(...whiteLanes)
         const maxBlack = Math.max(...blackLanes)
         const minBlack = Math.min(...blackLanes)
 
-        return maxWhite < minBlack || maxBlack < minWhite
+        if ((maxWhite < minBlack || maxBlack < minWhite) && isRoundComplete) return true
+
+        let whiteHasMoves = false
+        let blackHasMoves = false
+
+        for (let l = 0; l <= maxIdx; l++) {
+            for (const piece of board[l]) {
+                if (!whiteHasMoves && piece.color === "WHITE") {
+                    const targets = GameEngine.getValidTargets({ ...state, activePlayer: "WHITE", selectedPiece: { laneIndex: l, pieceId: piece.id } }, l)
+                    if (targets.length > 0) whiteHasMoves = true
+                }
+
+                if (!blackHasMoves && piece.color === "BLACK") {
+                    const targets = GameEngine.getValidTargets({ ...state, activePlayer: "BLACK", selectedPiece: { laneIndex: l, pieceId: piece.id } }, l)
+                    if (targets.length > 0) blackHasMoves = true
+                }
+            }
+            if (whiteHasMoves && blackHasMoves) break
+        }
+
+        if (!blackHasMoves && state.activePlayer !== "BLACK") return true
+        if (!whiteHasMoves && isRoundComplete) return true
+
+        return false
     }
 }
