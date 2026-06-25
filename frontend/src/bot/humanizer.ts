@@ -1,4 +1,4 @@
-import { UnifiedTurnAction } from "./search"
+import { UnifiedTurnAction } from "./minimax"
 
 export class Humanizer {
     public static blunder(actions: UnifiedTurnAction[], optimal: UnifiedTurnAction, errorRate: number): UnifiedTurnAction {

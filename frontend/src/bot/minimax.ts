@@ -1,5 +1,6 @@
 import { GameState, GameEngine } from "../domain/engine"
 import { EvaluationEngine } from "./evaluation"
+import { BotProfile } from "./botAgent"
 
 export interface BotAction {
     type: "MOVE_1" | "MOVE_2"
@@ -17,7 +18,7 @@ export interface UnifiedTurnAction {
     p2Target: number
 }
 
-export class MinimaxOptimizer {
+export class Minimax {
     public static generateLegalActions(state: GameState): UnifiedTurnAction[] {
         const moves: UnifiedTurnAction[] = []
         const maxIdx = state.config.laneCount - 1
@@ -76,7 +77,7 @@ export class MinimaxOptimizer {
         return moves
     }
 
-    public static optimize(state: GameState, depth: number): UnifiedTurnAction | null {
+    public static optimize(state: GameState, profile: BotProfile): UnifiedTurnAction | null {
         const actions = this.generateLegalActions(state)
         if (actions.length === 0) return null
 
@@ -87,9 +88,8 @@ export class MinimaxOptimizer {
 
         for (const action of actions) {
             const nextState = this.simulateFullMove(state, action)
-
             const nextIsMaximizing = nextState.activePlayer === player
-            const score = this.minimax(nextState, depth - 1, -Infinity, Infinity, nextIsMaximizing, player)
+            const score = this.minimax(nextState, profile.lookaheadTurns - 1, -Infinity, Infinity, nextIsMaximizing, player, profile)
 
             if (score > bestScore) {
                 bestScore = score
@@ -100,13 +100,13 @@ export class MinimaxOptimizer {
         return bestAction
     }
 
-    private static minimax(state: GameState, depth: number, alpha: number, beta: number, isMaximizing: boolean, player: "WHITE" | "BLACK"): number {
+    private static minimax(state: GameState, depth: number, alpha: number, beta: number, isMaximizing: boolean, player: "WHITE" | "BLACK", profile: BotProfile): number {
         if (depth === 0 || GameEngine.isMatchFinished(state)) {
-            return EvaluationEngine.evaluate(state, player)
+            return EvaluationEngine.evaluate(state, player, profile)
         }
 
         const actions = this.generateLegalActions(state)
-        if (actions.length === 0) return EvaluationEngine.evaluate(state, player)
+        if (actions.length === 0) return EvaluationEngine.evaluate(state, player, profile)
 
         if (isMaximizing) {
             let maxEval = -Infinity
@@ -115,7 +115,7 @@ export class MinimaxOptimizer {
                 const nextState = this.simulateFullMove(state, action)
 
                 const nextIsMaximizing = nextState.activePlayer === player
-                const score = this.minimax(nextState, depth - 1, alpha, beta, nextIsMaximizing, player)
+                const score = this.minimax(nextState, depth - 1, alpha, beta, nextIsMaximizing, player, profile)
 
                 maxEval = Math.max(maxEval, score)
                 alpha = Math.max(alpha, score)
@@ -133,7 +133,7 @@ export class MinimaxOptimizer {
                 const nextState = this.simulateFullMove(state, action)
 
                 const nextIsMaximizing = nextState.activePlayer === player
-                const score = this.minimax(nextState, depth - 1, alpha, beta, nextIsMaximizing, player)
+                const score = this.minimax(nextState, depth - 1, alpha, beta, nextIsMaximizing, player, profile)
 
                 minEval = Math.min(minEval, score)
                 beta = Math.min(beta, score)
