@@ -2,7 +2,7 @@ import { GameConfig, DEFAULT_LINJA_CONFIG } from "../utils/config"
 import { BotDifficulty } from "../components/MainMenuCard"
 
 export type PlayerColor = "WHITE" | "BLACK"
-export type ControllerType = "HUMAN" | "BOT" | "ONLINE"
+export type ControllerType = "HUMAN" | "BOT"
 
 export interface GamePiece {
     id: string

@@ -31,7 +31,7 @@ export const GameBoardCard = ({ state, isThinking, isLocalHumanTurn }: GameBoard
 
     return (
         <View style={{ position: "relative", overflow: "hidden" }} className="w-full bg-white border border-neutral-200/80 rounded-2xl p-4 shadow-xl flex-col">
-            <View pointerEvents={isLocalHumanTurn && !isThinking ? "auto" : "none"}>
+            <View style={{ pointerEvents: isLocalHumanTurn && !isThinking ? "auto" : "none" }}>
                 {orderedLanes.map((laneIdx, viewIdx) => {
                     const lanePieces = state.board[laneIdx]
                     const isTargetable = validTargets.includes(laneIdx)
