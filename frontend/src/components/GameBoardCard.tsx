@@ -1,17 +1,11 @@
-import Animated, { LinearTransition, FadeIn, FadeOut } from "react-native-reanimated"
-import { View, TouchableOpacity, Text, ActivityIndicator } from "react-native"
+import Animated, { LinearTransition, ZoomOut, ZoomIn, FadeOut, FadeIn } from "react-native-reanimated"
+import { View, Pressable, Text, ActivityIndicator } from "react-native"
 
 import { GameEngine, PlayerColor } from "../domain/engine"
 import { useGameStore } from "../hooks/useGameStore"
+import { GamePiece, RenderItem } from "./GamePiece"
 import { StatusOverlay } from "./StatusOverlay"
-
-interface RenderItem {
-    type: "SINGLE" | "MERGED"
-    color: PlayerColor
-    count: number
-    pieceId: string
-    allIds: string[]
-}
+import { EASE_CURVE } from "../utils/config"
 
 interface GameBoardCardProps {
     state: ReturnType<typeof useGameStore.getState>
@@ -115,12 +109,15 @@ export const GameBoardCard = ({ state, isThinking, isLocalHumanTurn }: GameBoard
                                 <View className="h-[1px] bg-neutral-200 w-[96%] self-center my-0.5"/>
                             )}
 
-                            <TouchableOpacity
-                                activeOpacity={0.9}
+                            <Pressable
                                 onPress={() => state.selectTargetLane(laneIdx)}
-                                className={`flex-row items-center h-14 w-full px-4 rounded-xl transition-colors ${
-                                    isTargetable ? "bg-neutral-100" : laneHighlightClass
-                                }`}
+
+                                style={({ pressed }: { pressed: boolean }) => ({
+                                    backgroundColor: isTargetable ? "#f5f5f5" : "transparent",
+                                    opacity: pressed ? 0.9 : 1
+                                })}
+
+                                className={`flex-row items-center h-14 w-full px-4 rounded-xl`}
                             >
                                 <View className="flex-row items-center justify-center flex-1 h-full">
                                     {displayItems.map((item) => {
@@ -142,37 +139,32 @@ export const GameBoardCard = ({ state, isThinking, isLocalHumanTurn }: GameBoard
                                         return (
                                             <Animated.View
                                                 key={item.pieceId}
-                                                layout={LinearTransition.springify()}
-                                                entering={FadeIn.duration(300)}
-                                                exiting={FadeOut.duration(300)}
+                                                layout={LinearTransition.easing(EASE_CURVE).duration(300)}
+                                                entering={ZoomIn.easing(EASE_CURVE).duration(300)}
+                                                exiting={ZoomOut.easing(EASE_CURVE).duration(300)}
                                                 className="justify-center"
                                             >
-                                                <TouchableOpacity
-                                                    activeOpacity={isSelectable ? 0.8 : 1}
-                                                    disabled={!isSelectable}
-
-                                                    onPress={(e) => {
-                                                        e.stopPropagation()
-                                                        state.selectPiece(laneIdx, activeId)
-                                                    }}
-
-                                                    className={`w-9 h-9 rounded-full mx-1 shadow-xl items-center justify-center ${
-                                                        item.color === "WHITE" ? "bg-white" : "bg-black"
-                                                    } ${overlayRingStyle}`}
+                                                <Animated.View
+                                                    entering={FadeIn.easing(EASE_CURVE).duration(300)}
+                                                    exiting={FadeOut.easing(EASE_CURVE).duration(300)}
                                                 >
-                                                    {item.type === "MERGED" && (
-                                                        <Text className={`font-status text-xs font-bold ${
-                                                            item.color === "WHITE" ? "text-neutral-900" : "text-white"
-                                                        }`}>
-                                                            +{item.count}
-                                                        </Text>
-                                                    )}
-                                                </TouchableOpacity>
+                                                    <GamePiece
+                                                        item={item}
+                                                        isSelected={isSelected}
+                                                        isSelectable={isSelectable}
+                                                        overlayRingStyle={overlayRingStyle}
+
+                                                        onPress={(e) => {
+                                                            e.stopPropagation()
+                                                            state.selectPiece(laneIdx, activeId)
+                                                        }}
+                                                    />
+                                                </Animated.View>
                                             </Animated.View>
                                         )
                                     })}
                                 </View>
-                            </TouchableOpacity>
+                            </Pressable>
                         </View>
                     )
                 })}

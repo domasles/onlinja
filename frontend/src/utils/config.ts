@@ -1,3 +1,5 @@
+import { Easing } from "react-native-reanimated"
+
 export interface GameConfig {
     laneCount: number
     piecesPerBase: number
@@ -9,3 +11,5 @@ export const DEFAULT_LINJA_CONFIG: GameConfig = {
     piecesPerBase: 6,
     maxLaneCapacity: 6
 }
+
+export const EASE_CURVE = Easing.bezier(0.65, 0.05, 0.36, 1)

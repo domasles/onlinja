@@ -124,13 +124,13 @@ export const GameScreen = () => {
                             label="Leave Match"
                             onPress={handleLeave}
                             variant="secondary"
-                            className="flex-1 h-12"
+                            className="flex-1 w-full h-12"
                         />
                         <GameButton
                             label="Reset"
                             onPress={handleRestart}
                             variant="primary"
-                            className="px-10 h-12"
+                            className="flex-1 w-full h-12"
                         />
                     </View>
                 </MotiView>

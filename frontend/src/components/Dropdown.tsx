@@ -58,8 +58,8 @@ export const Dropdown = <T extends string>({ options, selectedValue, onSelect, o
                         position: "absolute",
                         top: -SCREEN_HEIGHT,
                         left: -SCREEN_WIDTH,
-                        width: SCREEN_WIDTH * 1.8,
-                        height: SCREEN_HEIGHT * 1.8,
+                        width: SCREEN_WIDTH * 2,
+                        height: SCREEN_HEIGHT * 2,
                         zIndex: 900,
                         backgroundColor: "transparent"
                     }}

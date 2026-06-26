@@ -1,6 +1,5 @@
-import Animated, { useSharedValue, useAnimatedStyle, withTiming, Easing } from "react-native-reanimated"
+import Animated, { useAnimatedStyle, useDerivedValue, withTiming, Easing } from "react-native-reanimated"
 import { View, Text, TouchableOpacity } from "react-native"
-import { useEffect } from "react"
 
 interface ActionSliderProps<T extends string> {
     options: { label: string; value: T }[]
@@ -10,14 +9,14 @@ interface ActionSliderProps<T extends string> {
 
 export const ActionSlider = <T extends string>({ options, selectedValue, onSelect }: ActionSliderProps<T>) => {
     const activeIndex = options.findIndex(opt => opt.value === selectedValue)
-    const sliderOffset = useSharedValue(0)
+    const validIndex = activeIndex >= 0 ? activeIndex : 0
 
-    useEffect(() => {
-        sliderOffset.value = withTiming((activeIndex >= 0 ? activeIndex : 0) * 136, {
+    const sliderOffset = useDerivedValue(() => {
+        return withTiming(validIndex * 136, {
             duration: 150,
             easing: Easing.out(Easing.quad)
         })
-    }, [activeIndex])
+    }, [validIndex])
 
     const animatedSliderStyle = useAnimatedStyle(() => ({
         transform: [{ translateX: sliderOffset.value }]
@@ -33,6 +32,7 @@ export const ActionSlider = <T extends string>({ options, selectedValue, onSelec
             {options.map((opt) => (
                 <TouchableOpacity
                     key={opt.value}
+                    activeOpacity={1}
                     onPress={() => onSelect(opt.value)}
                     className="w-[136px] h-full justify-center items-center z-10"
                 >
