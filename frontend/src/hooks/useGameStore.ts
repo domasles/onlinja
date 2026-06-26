@@ -85,7 +85,9 @@ export const useGameStore = create<GameStore>((set) => ({
         const [movingPiece] = nextBoard[laneIndex].splice(pieceIdx, 1)
 
         nextBoard[targetLaneIndex].push(movingPiece)
+
         const maxIdx = state.config.laneCount - 1
+        const isHomeBase = targetLaneIndex === 0 || targetLaneIndex === maxIdx
 
         if (state.currentMove === 1) {
             const totalLandingPieces = nextBoard[targetLaneIndex].length
@@ -162,7 +164,7 @@ export const useGameStore = create<GameStore>((set) => ({
         }
 
         if (state.currentMove === 2) {
-            if (isTargetEmptyPrior && !state.isExtraTurnActive) {
+            if (isTargetEmptyPrior && !isHomeBase && !state.isExtraTurnActive) {
                 return {
                     board: nextBoard,
                     selectedPiece: null,
