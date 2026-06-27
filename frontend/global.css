@@ -27,6 +27,10 @@
     font-family: "Inter-Regular";
 }
 
+.font-desc-medium {
+    font-family: "Inter-Medium";
+}
+
 .font-score {
     font-family: "Inter-SemiBold";
 }
@@ -34,19 +38,19 @@
 .font-status {
     font-family: "Oswald-Regular";
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.5px !important;
 }
 
 .font-label {
     font-family: "Oswald-SemiBold";
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.5px !important;
 }
 
 html, body, #root {
-    height: 100vh;
-    width: 100vw;
+    height: full;
+    width: full;
     margin: 0;
     overflow: hidden;
-    overscroll-behavior: none; 
+    overscroll-behavior: none;
 }

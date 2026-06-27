@@ -1,4 +1,5 @@
 import { Easing } from "react-native-reanimated"
+import { GamePiece, PlayerColor } from "../domain/engine"
 
 export interface GameConfig {
     laneCount: number
@@ -12,4 +13,254 @@ export const DEFAULT_LINJA_CONFIG: GameConfig = {
     maxLaneCapacity: 6
 }
 
-export const EASE_CURVE = Easing.bezier(0.65, 0.05, 0.36, 1)
+export const EASE_CURVE = Easing.bezier(0.25, 0.1, 0.25, 1)
+
+export type TutorialTextVariant = "small" | "base" | "large"
+
+export interface TutorialStepConfig {
+    id: string
+    type: "TEXT_ONLY" | "INTERACTIVE_BOARD"
+    showLogo: boolean
+    title?: string
+    textLines: string[]
+    lineVariants?: TutorialTextVariant[]
+    primaryButtonText: "Next" | "Finish"
+    gameMode: "AGGRESSIVE" | "STRATEGIC"
+    boardSetup?: {
+        board: GamePiece[][]
+        activePlayer: PlayerColor
+        playerSide: PlayerColor
+        allowedSourceLane?: number
+        allowedPieceId?: string
+    }
+}
+
+const makePieces = (player: PlayerColor, count: number, startIdOffset: number): GamePiece[] => {
+    return Array.from({ length: count }, (_, i) => ({
+        id: `tut-p-${startIdOffset + i}-${player}`,
+        player
+    }))
+}
+
+export const tutorialInfo: TutorialStepConfig[] = [
+    {
+        id: "intro",
+        type: "TEXT_ONLY",
+        showLogo: true,
+        textLines: [
+            "Hello, and welcome to Onlinja!",
+            "Your favourite abstract game, everytime and everywhere!",
+            "Let's show you around."
+        ],
+        lineVariants: ["large", "base", "small"],
+        primaryButtonText: "Next",
+        gameMode: "STRATEGIC"
+    },
+    {
+        id: "rules_intro_1",
+        type: "TEXT_ONLY",
+        showLogo: false,
+        title: "The Basics",
+        lineVariants: ["large"],
+        textLines: [
+            "First of all, we need to learn some rules."
+        ],
+        primaryButtonText: "Next",
+        gameMode: "STRATEGIC"
+    },
+    {
+        id: "rules_intro_2",
+        type: "TEXT_ONLY",
+        showLogo: false,
+        title: "The Basics",
+        lineVariants: ["large", "base", "base", "base", "small"],
+        textLines: [
+            "The board consists of 8 lanes.",
+            "Your goal is to race your pieces into the opponent's home base.",
+            "During each turn you must perform exactly 2 moves.",
+            "A pair of both player's turns is called a round.",
+            "*White starts first. Always."
+        ],
+        primaryButtonText: "Next",
+        gameMode: "STRATEGIC"
+    },
+    {
+        id: "modes_intro",
+        type: "TEXT_ONLY",
+        showLogo: false,
+        title: "Game Modes",
+        lineVariants: ["large", "base", "base"],
+        textLines: [
+            "In Onlinja there are 2 modes. Aggressive and Strategic.",
+            "We'll start with aggressive mode in a simplified board to understand the fundamental core.",
+            "The core mechanic depends heavily on where your pieces land."
+        ],
+        primaryButtonText: "Next",
+        gameMode: "AGGRESSIVE"
+    },
+    {
+        id: "aggressive_rules",
+        type: "TEXT_ONLY",
+        showLogo: false,
+        title: "Aggressive Mode Rules",
+        lineVariants: ["large", "base", "base", "base", "base"],
+        textLines: [
+            "Rules are simple:",
+            "During your turn, you have to make 2 moves.",
+            "Select a piece, and note the amount of pieces one row higher.",
+            "Move the piece one row up. Then select the same piece.",
+            "Remember the piece count? That's how much rows forward you must move the same piece!"
+        ],
+        primaryButtonText: "Next",
+        gameMode: "AGGRESSIVE"
+    },
+    {
+        id: "aggressive_demo",
+        type: "INTERACTIVE_BOARD",
+        showLogo: false,
+        title: "Try Aggressive Mode",
+        lineVariants: ["large", "base", "base"],
+        textLines: [
+            "Select your White piece on the 1st lane.",
+            "Move it one lane up into Lane 2.",
+            "Lane 2 contains 2 pieces, so your second move automatically forces that SAME piece forward by two full lanes!"
+        ],
+        primaryButtonText: "Next",
+        gameMode: "AGGRESSIVE",
+        boardSetup: {
+            activePlayer: "WHITE",
+            playerSide: "WHITE",
+            allowedSourceLane: 0,
+            allowedPieceId: "tut-p-100-WHITE",
+            board: [
+                [{ id: "tut-p-100-WHITE", player: "WHITE" }],
+                makePieces("BLACK", 2, 10),
+                [],
+                makePieces("BLACK", 5, 20)
+            ]
+        }
+    },
+    {
+        id: "strategic_rules",
+        type: "TEXT_ONLY",
+        showLogo: false,
+        title: "Strategic Mode Rules",
+        lineVariants: ["large", "base", "base", "base"],
+        textLines: [
+            "In Strategic Mode, the distance math remains exactly the same.",
+            "However, your second move MUST be performed using a completely different piece.",
+            "This spreads your power out dynamically across the field."
+        ],
+        primaryButtonText: "Next",
+        gameMode: "STRATEGIC"
+    },
+    {
+        id: "strategic_demo",
+        type: "INTERACTIVE_BOARD",
+        showLogo: false,
+        title: "Try Strategic Mode",
+        lineVariants: ["large", "base", "base"],
+        textLines: [
+            "Move your piece from Lane 1 forward one lane.",
+            "Because this is Strategic Mode, choose any OTHER piece to make the second move!"
+        ],
+        primaryButtonText: "Next",
+        gameMode: "STRATEGIC",
+        boardSetup: {
+            activePlayer: "WHITE",
+            playerSide: "WHITE",
+            allowedSourceLane: 0,
+            allowedPieceId: "tut-p-200-WHITE",
+            board: [
+                [{ id: "tut-p-200-WHITE", player: "WHITE" }],
+                makePieces("WHITE", 2, 30),
+                [],
+                makePieces("BLACK", 5, 40)
+            ]
+        }
+    },
+    {
+        id: "jump_rules",
+        type: "TEXT_ONLY",
+        showLogo: false,
+        title: "Lanes Capacity & Jumping",
+        lineVariants: ["large", "base", "base"],
+        textLines: [
+            "Middle lanes have a strict maximum capacity of 6 pieces.",
+            "If your move distance forces a piece to land precisely on a full lane...",
+            "The piece completely leaps over the blocked line directly into the next open lane!"
+        ],
+        primaryButtonText: "Next",
+        gameMode: "STRATEGIC"
+    },
+    {
+        id: "jump_over_demo",
+        type: "INTERACTIVE_BOARD",
+        showLogo: false,
+        title: "Try Jumping Over a Full Lane",
+        lineVariants: ["large", "base", "small"],
+        textLines: [
+            "Move your piece from Lane 1 forward one lane.",
+            "Lane 2 has 6 pieces, so you'll be forced to jump over it. Normally you'd move one lane forward.",
+            "*This works with both moves of a turn."
+        ],
+        primaryButtonText: "Next",
+        gameMode: "STRATEGIC",
+        boardSetup: {
+            activePlayer: "WHITE",
+            playerSide: "WHITE",
+            allowedSourceLane: 0,
+            allowedPieceId: "tut-p-300-WHITE",
+            board: [
+                [{ id: "tut-p-300-WHITE", player: "WHITE" }],
+                makePieces("BLACK", 6, 50),
+                [],
+                makePieces("BLACK", 3, 60)
+            ]
+        }
+    },
+    {
+        id: "lane_highlighting_tips",
+        type: "TEXT_ONLY",
+        showLogo: false,
+        title: "Lane Highlighting",
+        lineVariants: ["large", "small", "base"],
+        textLines: [
+            "This game also helps you out!",
+            "It highlights the lanes as such:",
+            "A grey lane appears when you select a piece, showing where it can move.",
+            "Yellow highlights where the first piece of a turn was moved from.",
+            "Green highlights where the second piece of a turn was moved from.",
+        ],
+        primaryButtonText: "Next",
+        gameMode: "STRATEGIC"
+    },
+    {
+        id: "empty_lane_rules",
+        type: "TEXT_ONLY",
+        showLogo: false,
+        title: "Empty Lane Bonus",
+        lineVariants: ["large", "base", "base", "small"],
+        textLines: [
+            "Here is a powerful secret strategy:",
+            "If your SECOND move of a turn lands perfectly inside a completely empty lane...",
+            "You are immediately awarded an extra turn!",
+            "*You can only get one extra turn per round."
+        ],
+        primaryButtonText: "Next",
+        gameMode: "STRATEGIC"
+    },
+    {
+        id: "final_outro",
+        type: "TEXT_ONLY",
+        showLogo: true,
+        lineVariants: ["large", "base", "small"],
+        textLines: [
+            "You are now ready to dominate the board!",
+            "Play against our competitive training bots or grab a friend for local Pass & Play.",
+            "Good luck! You'll need it ;)"
+        ],
+        primaryButtonText: "Finish",
+        gameMode: "STRATEGIC"
+    }
+]

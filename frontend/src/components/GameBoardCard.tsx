@@ -1,11 +1,11 @@
 import Animated, { LinearTransition, ZoomOut, ZoomIn, FadeOut, FadeIn } from "react-native-reanimated"
 import { View, TouchableOpacity, Text, ActivityIndicator } from "react-native"
 
+import { EASE_CURVE, tutorialInfo } from "../utils/config"
 import { GameEngine, PlayerColor } from "../domain/engine"
 import { useGameStore } from "../hooks/useGameStore"
 import { GamePiece, RenderItem } from "./GamePiece"
 import { StatusOverlay } from "./StatusOverlay"
-import { EASE_CURVE } from "../utils/config"
 
 interface GameBoardCardProps {
     state: ReturnType<typeof useGameStore.getState>
@@ -14,13 +14,15 @@ interface GameBoardCardProps {
 }
 
 export const GameBoardCard = ({ state, isThinking, isLocalHumanTurn }: GameBoardCardProps) => {
-    const laneIndices = Array.from({ length: state.config.laneCount }, (_, i) => i)
+    const totalLanes = state.isTutorialMode && state.board ? state.board.length : state.config.laneCount;
+
+    const laneIndices = Array.from({ length: totalLanes }, (_, i) => i)
     const orderedLanes = state.playerSide === "BLACK" ? laneIndices : [...laneIndices].reverse()
     const validTargets = state.selectedPiece ? GameEngine.getValidTargets(state, state.selectedPiece.laneIndex) : []
 
     const h1 = state.history.move1
     const h2 = state.history.move2
-    const maxIdx = state.config.laneCount - 1
+    const maxIdx = totalLanes - 1
     const opponentHomeIndex = state.activePlayer === "WHITE" ? maxIdx : 0
 
     return (
@@ -125,7 +127,36 @@ export const GameBoardCard = ({ state, isThinking, isLocalHumanTurn }: GameBoard
 
                                         const virtualState = { ...state, selectedPiece: { laneIndex: laneIdx, pieceId: activeId } }
                                         const hasLegalMoves = GameEngine.getValidTargets(virtualState, laneIdx).length > 0
-                                        const isSelectable = isLocalHumanTurn && item.color === state.activePlayer && laneIdx !== opponentHomeIndex && hasLegalMoves
+
+                                        let isSelectable = isLocalHumanTurn && item.color === state.activePlayer && laneIdx !== opponentHomeIndex && hasLegalMoves
+
+                                        if (state.isTutorialMode) {
+                                            const currentStep = tutorialInfo[state.currentTutorialStepIdx]
+
+                                            if (currentStep && currentStep.type === "INTERACTIVE_BOARD" && currentStep.boardSetup) {
+                                                const { allowedSourceLane, allowedPieceId } = currentStep.boardSetup
+                                                const isFirstMove = state.currentMove === 1
+
+                                                if (isFirstMove) {
+                                                    isSelectable = laneIdx === allowedSourceLane && item.allIds.includes(allowedPieceId || "")
+                                                }
+
+                                                else {
+                                                    if (state.gameMode === "AGGRESSIVE") {
+                                                        isSelectable = item.allIds.includes(state.move1MovedPieceId || "") && hasLegalMoves
+                                                    }
+
+                                                    else {
+                                                        const firstMovePieceId = state.history.move1?.pieceId
+                                                        isSelectable = item.color === state.activePlayer && !item.allIds.includes(firstMovePieceId || "") && hasLegalMoves
+                                                    }
+                                                }
+                                            }
+
+                                            else {
+                                                isSelectable = false
+                                            }
+                                        }
 
                                         let overlayRingStyle = isSelected
                                             ? "border-[4px] border-neutral-400 scale-full"
