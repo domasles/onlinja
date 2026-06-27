@@ -1,5 +1,5 @@
 import Animated, { LinearTransition, ZoomOut, ZoomIn, FadeOut, FadeIn } from "react-native-reanimated"
-import { View, Pressable, Text, ActivityIndicator } from "react-native"
+import { View, TouchableOpacity, Text, ActivityIndicator } from "react-native"
 
 import { GameEngine, PlayerColor } from "../domain/engine"
 import { useGameStore } from "../hooks/useGameStore"
@@ -98,10 +98,11 @@ export const GameBoardCard = ({ state, isThinking, isLocalHumanTurn }: GameBoard
                         })
                     }
 
-                    let laneHighlightClass = "bg-transparent"
+                    let laneHighlightClass = "bg-white"
 
                     if (h1 && h1.originLane === laneIdx) laneHighlightClass = "bg-yellow-500/10"
                     if (h2 && h2.originLane === laneIdx) laneHighlightClass = "bg-emerald-500/10"
+                    if (isTargetable) laneHighlightClass = "bg-neutral-100"
 
                     return (
                         <View key={laneIdx} className="w-full flex-col">
@@ -109,15 +110,13 @@ export const GameBoardCard = ({ state, isThinking, isLocalHumanTurn }: GameBoard
                                 <View className="h-[1px] bg-neutral-200 w-[96%] self-center my-0.5"/>
                             )}
 
-                            <Pressable
+                            <TouchableOpacity
+                                activeOpacity={0.9}
                                 onPress={() => state.selectTargetLane(laneIdx)}
 
-                                style={({ pressed }: { pressed: boolean }) => ({
-                                    backgroundColor: isTargetable ? "#f5f5f5" : "transparent",
-                                    opacity: pressed ? 0.9 : 1
-                                })}
-
-                                className={`flex-row items-center h-14 w-full px-4 rounded-xl`}
+                                className={`flex-row items-center h-14 w-full px-4 rounded-xl ${
+                                    laneHighlightClass
+                                }`}
                             >
                                 <View className="flex-row items-center justify-center flex-1 h-full">
                                     {displayItems.map((item) => {
@@ -129,7 +128,7 @@ export const GameBoardCard = ({ state, isThinking, isLocalHumanTurn }: GameBoard
                                         const isSelectable = isLocalHumanTurn && item.color === state.activePlayer && laneIdx !== opponentHomeIndex && hasLegalMoves
 
                                         let overlayRingStyle = isSelected
-                                            ? "border-[4px] border-neutral-400 scale-105"
+                                            ? "border-[4px] border-neutral-400 scale-full"
                                             : item.allIds.some(id => h2 && h2.pieceId === id)
                                             ? "border-[3px] border-emerald-400"
                                             : item.allIds.some(id => h1 && h1.pieceId === id)
@@ -164,7 +163,7 @@ export const GameBoardCard = ({ state, isThinking, isLocalHumanTurn }: GameBoard
                                         )
                                     })}
                                 </View>
-                            </Pressable>
+                            </TouchableOpacity>
                         </View>
                     )
                 })}
@@ -172,7 +171,7 @@ export const GameBoardCard = ({ state, isThinking, isLocalHumanTurn }: GameBoard
 
             {isThinking && (
                 <StatusOverlay isVisible={isThinking}>
-                    <View className="flex-row items-center gap-3 bg-white/90 px-3 py-1.5 rounded-full shadow-xl border border-neutral-200/50">
+                    <View className="flex-row items-center gap-3 bg-white px-3 py-1.5 rounded-full shadow-xl border border-neutral-200/50">
                         <ActivityIndicator size="small" color="#262626" />
                         <Text className="text-sm font-desc text-neutral-800">Bot thinking...</Text>
                     </View>
@@ -188,7 +187,7 @@ export const GameBoardCard = ({ state, isThinking, isLocalHumanTurn }: GameBoard
                         <View className="w-6 h-1 bg-emerald-500 rounded-full absolute"/>
                         <View className="w-1 h-6 bg-emerald-500 rounded-full absolute"/>
                     </Animated.View>
-                    <Text className="text-sm font-desc text-neutral-800 bg-white/90 px-3 py-1.5 rounded-full shadow-xl border border-neutral-200/50">
+                    <Text className="text-sm font-desc text-neutral-800 bg-white px-3 py-1.5 rounded-full shadow-xl border border-neutral-200/50">
                         Extra turn awarded to player {state.activePlayer === "WHITE" ? "White" : "Black"}
                     </Text>
                 </StatusOverlay>

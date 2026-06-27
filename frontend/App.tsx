@@ -12,10 +12,11 @@ export const App = () => {
     const currentScreen = useGameStore((state) => state.currentScreen)
     
     const [fontsLoaded] = useFonts({
-        "Inter": require("./assets/fonts/inter/Inter.ttf"),
-        "Lobster": require("./assets/fonts/lobster/Lobster.ttf"),
-        "Oswald": require("./assets/fonts/oswald/Oswald.ttf"),
-        "Space-Grotesk": require("./assets/fonts/space-grotesk/Space-Grotesk.ttf"),
+        "Inter-Regular": require("./assets/fonts/inter/Inter-Regular.ttf"),
+        "Inter-SemiBold": require("./assets/fonts/inter/Inter-SemiBold.ttf"),
+        "Oswald-Regular": require("./assets/fonts/oswald/Oswald-Regular.ttf"),
+        "Oswald-SemiBold": require("./assets/fonts/oswald/Oswald-SemiBold.ttf"),
+        "Space-Grotesk-Regular": require("./assets/fonts/space-grotesk/Space-Grotesk-Regular.ttf"),
     })
 
     if (!fontsLoaded) return null

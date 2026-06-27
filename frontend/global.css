@@ -4,38 +4,41 @@
 @import "nativewind/theme";
 
 .font-logo {
-    font-family: "Space-Grotesk";
+    font-family: "Space-Grotesk-Regular";
 }
 
 .font-subheader {
-    font-family: "Oswald";
+    font-family: "Oswald-Regular";
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.5px !important;
+}
+
+.font-subheader-semibold {
+    font-family: "Oswald-SemiBold";
+    text-transform: uppercase;
+    letter-spacing: 0.5px !important;
 }
 
 .font-button {
-    font-family: "Inter";
-    font-weight: bold;
+    font-family: "Inter-SemiBold";
 }
 
 .font-desc {
-    font-family: "Inter";
+    font-family: "Inter-Regular";
 }
 
 .font-score {
-    font-family: "Inter";
-    font-weight: bold;
+    font-family: "Inter-SemiBold";
 }
 
 .font-status {
-    font-family: "Oswald";
+    font-family: "Oswald-Regular";
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 
 .font-label {
-    font-family: "Oswald";
-    font-weight: bold;
+    font-family: "Oswald-SemiBold";
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }

@@ -28,8 +28,10 @@ export const MainMenuScreen = () => {
                                 : "bg-neutral-100 border-transparent"
                         }`}
                     >
-                        <Text className={`font-subheader text-xs uppercase tracking-wider ${
-                            activeTab === "BOT" ? "text-black font-bold" : "text-neutral-400"
+                        <Text
+                            numberOfLines={1}
+                            className={`text-xs uppercase tracking-wider ${
+                            activeTab === "BOT" ? "text-black font-subheader-semibold" : "text-neutral-400 font-subheader"
                         }`}>
                             VS Bot
                         </Text>
@@ -43,9 +45,12 @@ export const MainMenuScreen = () => {
                                 : "bg-neutral-100 border-transparent"
                         }`}
                     >
-                        <Text className={`font-subheader text-xs uppercase tracking-wider ${
-                            activeTab === "LOCAL" ? "text-black font-bold" : "text-neutral-400"
-                        }`}>
+                        <Text
+                            numberOfLines={1}
+                            className={`text-xs uppercase tracking-wider ${
+                                activeTab === "LOCAL" ? "text-black font-subheader-semibold" : "text-neutral-400 font-subheader"
+                            }`}
+                        >
                             Pass & Play
                         </Text>
                     </TouchableOpacity>

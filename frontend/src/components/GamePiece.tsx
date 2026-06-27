@@ -59,7 +59,7 @@ export const GamePiece = ({ item, isSelected, isSelectable, overlayRingStyle, on
             } ${overlayRingStyle}`}
         >
             {item.type === "MERGED" && (
-                <Text className={`font-status text-xs font-bold ${item.color === "WHITE" ? "text-neutral-900" : "text-white"}`}>
+                <Text className={`font-label text-xs ${item.color === "WHITE" ? "text-neutral-900" : "text-white"}`}>
                     +{item.count}
                 </Text>
             )}

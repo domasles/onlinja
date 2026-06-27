@@ -112,7 +112,7 @@ export const Dropdown = <T extends string>({ options, selectedValue, onSelect, o
                                 onPress={() => handleSelect(opt.value)}
                                 className={`w-full h-10 px-4 justify-center ${selectedValue === opt.value ? "bg-neutral-50" : "bg-white"}`}
                             >
-                                <Text className={`text-xs font-button ${selectedValue === opt.value ? "text-black font-bold" : "text-neutral-600"}`}>
+                                <Text className={`text-xs font-button ${selectedValue === opt.value ? "text-black" : "text-neutral-600"}`}>
                                     {opt.label}
                                 </Text>
                             </TouchableOpacity>

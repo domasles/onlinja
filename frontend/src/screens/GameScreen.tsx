@@ -104,7 +104,7 @@ export const GameScreen = () => {
                     from={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ type: "timing", duration: 200 }}
-                    className="w-full flex-1 relative"
+                    className="w-full flex-col relative"
                 >
                     <ScoreHeader
                         whiteScore={scores.whiteScore}
