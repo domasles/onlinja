@@ -1,8 +1,6 @@
-import { View, Text, TouchableOpacity, Dimensions } from "react-native"
+import { View, Text, TouchableOpacity, useWindowDimensions } from "react-native"
 import { MotiView, AnimatePresence } from "moti"
 import { useState } from "react"
-
-const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window")
 
 interface DropdownOption<T extends string> {
     label: string
@@ -19,6 +17,7 @@ interface DropdownProps<T extends string> {
 export const Dropdown = <T extends string>({ options, selectedValue, onSelect, onToggle }: DropdownProps<T>) => {
     const [isOpen, setIsOpen] = useState(false)
     const currentOption = options.find((opt) => opt.value === selectedValue)
+    const { width, height } = useWindowDimensions();
 
     const closeDropdown = () => {
         setIsOpen(false)
@@ -54,12 +53,13 @@ export const Dropdown = <T extends string>({ options, selectedValue, onSelect, o
                 <TouchableOpacity
                     activeOpacity={1}
                     onPress={closeDropdown}
+
                     style={{
                         position: "absolute",
-                        top: -SCREEN_HEIGHT,
-                        left: -SCREEN_WIDTH,
-                        width: SCREEN_WIDTH * 2,
-                        height: SCREEN_HEIGHT * 2,
+                        top: -height,
+                        left: -width,
+                        width: width * 2,
+                        height: height * 2,
                         zIndex: 900,
                         backgroundColor: "transparent"
                     }}
