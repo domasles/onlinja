@@ -31,7 +31,7 @@ export const App = () => {
             try {
                 const hasCompleted = await AsyncStorage.getItem("onlinja_tutorial_completed")
 
-                if (!hasCompleted) {
+                if (!hasCompleted || hasCompleted === "false") {
                     startTutorial()
                 }
             }
