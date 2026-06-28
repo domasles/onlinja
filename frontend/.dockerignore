@@ -1,0 +1,30 @@
+# Cache and dependency directories
+node_modules/
+.npm/
+.yarn/
+
+# Expo and build output artifacts
+.expo/
+dist/
+web-build/
+
+# Native app directories
+ios/
+android/
+
+# Git and configuration environment tracking
+.git
+.gitignore
+.github/
+README.md
+.env*.local
+
+# Debug files and logs
+*.log
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# OS metadata
+.DS_Store
+Thumbs.db

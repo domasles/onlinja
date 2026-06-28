@@ -1,0 +1,13 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+
+    image: ghcr.io/domasles/onlinja/onlinja-frontend:latest
+    container_name: onlinja-frontend
+
+    ports:
+      - "0.0.0.0:8080:80"
+
+    restart: unless-stopped
