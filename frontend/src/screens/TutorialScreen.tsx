@@ -57,7 +57,7 @@ export const TutorialScreen = () => {
 
                         transition={{ type: "timing", duration: 250 }}
                         className="w-full mt-2"
-                        pointerEvents={currentStep.type === "INTERACTIVE_BOARD" ? "auto" : "none"}
+                        style={{ pointerEvents: currentStep.type === "INTERACTIVE_BOARD" ? "auto" : "none" }}
                     >
                         <GameBoardCard
                             state={state}

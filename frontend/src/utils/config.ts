@@ -103,13 +103,14 @@ export const tutorialInfo: TutorialStepConfig[] = [
         type: "TEXT_ONLY",
         showLogo: false,
         title: "Aggressive Mode Rules",
-        lineVariants: ["large", "base", "base", "base", "base"],
+        lineVariants: ["large", "base", "base", "base", "base", "small"],
         textLines: [
             "Rules are simple:",
             "During your turn, you have to make 2 moves.",
-            "Select a piece, and note the amount of pieces one row higher.",
-            "Move the piece one row up. Then select the same piece.",
-            "Remember the piece count? That's how much rows forward you must move the same piece!"
+            "Select a piece and note the amount of pieces one lane higher.",
+            "Move the piece one lane up, select the same piece.",
+            "Remember the piece count? That's how much lanes forward you must move the same piece!",
+            "*If your first move landed on a lane with 0 pieces or the opponent's home base, your turn is over."
         ],
         primaryButtonText: "Next",
         gameMode: "AGGRESSIVE"
