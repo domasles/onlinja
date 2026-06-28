@@ -49,9 +49,15 @@ export const TutorialScreen = () => {
                 {shouldRenderBoard && (
                     <MotiView
                         from={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
+
+                        animate={{
+                            opacity: currentStep.type === "INTERACTIVE_BOARD" ? 1 : 0,
+                            scale: currentStep.type === "INTERACTIVE_BOARD" ? 1 : 0.95
+                        }}
+
                         transition={{ type: "timing", duration: 250 }}
                         className="w-full mt-2"
+                        pointerEvents={currentStep.type === "INTERACTIVE_BOARD" ? "auto" : "none"}
                     >
                         <GameBoardCard
                             state={state}

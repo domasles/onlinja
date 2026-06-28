@@ -47,7 +47,7 @@ export const MainMenuCard = ({ activeTab, onStartGame }: MainMenuCardProps) => {
                 <View className="w-6 h-6 rounded-full bg-white border border-neutral-300"/>
             </View>
 
-            <Text className="font-logo text-5xl text-black tracking-tight m-5 mt-3">Onlinja</Text>
+            <Text className="w-full text-center font-logo text-5xl text-black tracking-tight leading-tight m-5 mt-3">Onlinja</Text>
             <Text className="font-desc text-sm text-neutral-400 text-center mb-6 px-4">
                 Your favorite abstract board game, but digital.
             </Text>

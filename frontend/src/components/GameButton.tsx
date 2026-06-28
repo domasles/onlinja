@@ -18,7 +18,7 @@ export const GameButton = ({ label, onPress, variant = "primary", className = ""
             onPress={onPress}
             className={`${baseStyles} ${variantStyles} ${className}`}
         >
-            <Text className={`text-sm font-button ${variant === "primary" ? "text-white" : "text-neutral-500"}`}>
+            <Text className={`w-full text-center text-sm font-button ${variant === "primary" ? "text-white" : "text-neutral-500"}`}>
                 {label}
             </Text>
         </TouchableOpacity>

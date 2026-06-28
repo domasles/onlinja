@@ -30,7 +30,7 @@ export const MainMenuScreen = () => {
                     >
                         <Text
                             numberOfLines={1}
-                            className={`text-xs uppercase tracking-wider ${
+                            className={`w-full text-center text-xs uppercase tracking-wider ${
                             activeTab === "BOT" ? "text-black font-subheader-semibold" : "text-neutral-400 font-subheader"
                         }`}>
                             VS Bot
@@ -47,7 +47,7 @@ export const MainMenuScreen = () => {
                     >
                         <Text
                             numberOfLines={1}
-                            className={`text-xs uppercase tracking-wider ${
+                            className={`w-full text-center text-xs uppercase tracking-wider ${
                                 activeTab === "LOCAL" ? "text-black font-subheader-semibold" : "text-neutral-400 font-subheader"
                             }`}
                         >

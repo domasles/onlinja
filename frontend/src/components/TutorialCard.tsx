@@ -43,15 +43,15 @@ export const TutorialCard = ({ currentStep, onNext, onSkip, onExitComplete }: Tu
                     >
                         <View className="w-full items-center">
                             {currentStep.showLogo && (
-                                <View className="items-center">
-                                    <Text className="font-logo text-5xl text-black tracking-tight m-5 mt-3">
+                                <View className="items-center w-full">
+                                    <Text className="w-full text-center font-logo text-5xl text-black tracking-tight leading-tight m-5 mt-3">
                                         Onlinja
                                     </Text>
                                 </View>
                             )}
 
                             {currentStep.title && (
-                                <Text className="text-sm font-subheader text-neutral-400 uppercase tracking-widest m-5 mb-3 text-center">
+                                <Text className="w-full text-sm font-subheader text-neutral-400 uppercase tracking-widest m-5 mb-3 text-center">
                                     - {currentStep.title} -
                                 </Text>
                             )}
@@ -67,8 +67,9 @@ export const TutorialCard = ({ currentStep, onNext, onSkip, onExitComplete }: Tu
                                             from={{ opacity: 0, translateY: -10 }}
                                             animate={{ opacity: 1, translateY: 0 }}
                                             transition={{ type: "timing", duration: 200, delay: idx * 80 }}
+                                            style={{ width: "100%" }}
                                         >
-                                            <Text className={`${variantClass} text-center -mb-0.5`}>
+                                            <Text className={`${variantClass} text-center -mb-0.5 w-full`}>
                                                 {line}
                                             </Text>
                                         </MotiView>
