@@ -1,8 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { SafeAreaProvider } from "react-native-safe-area-context"
-import { StatusBar, View, ActivityIndicator } from "react-native"
-import { useEffect, useState } from "react"
+import { StatusBar, } from "react-native"
 import { useFonts } from "expo-font"
+import { useEffect } from "react"
 
 import { MainMenuScreen } from "./src/screens/MainMenuScreen"
 import { TutorialScreen } from "./src/screens/TutorialScreen"
@@ -13,10 +13,9 @@ import "./global.css"
 
 export const App = () => {
     const currentScreen = useGameStore((state) => state.currentScreen)
-    const startTutorial = useGameStore((state) => state.startTutorial)    
-    const [storageChecked, setStorageChecked] = useState(false)
+    const startTutorial = useGameStore((state) => state.startTutorial)
 
-    const [fontsLoaded] = useFonts({
+    useFonts({
         "Inter-Regular": require("./assets/fonts/inter/Inter-Regular.ttf"),
         "Inter-Medium": require("./assets/fonts/inter/Inter-Medium.ttf"),
         "Inter-SemiBold": require("./assets/fonts/inter/Inter-SemiBold.ttf"),
@@ -39,10 +38,6 @@ export const App = () => {
 
             catch (error) {
                 console.warn("Could not load stored tutorial flag status:", error)
-            }
-
-            finally {
-                setStorageChecked(true)
             }
         }
 

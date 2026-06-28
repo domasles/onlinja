@@ -8,6 +8,7 @@ interface TutorialCardProps {
     currentStep: TutorialStepConfig
     onNext: () => void
     onSkip: () => void
+    onExitComplete?: () => void
 }
 
 const TEXT_VARIANT_STYLES: Record<TutorialTextVariant, string> = {
@@ -16,7 +17,7 @@ const TEXT_VARIANT_STYLES: Record<TutorialTextVariant, string> = {
     large: "text-2xl font-desc-medium text-neutral-800 leading-snug"
 }
 
-export const TutorialCard = ({ currentStep, onNext, onSkip }: TutorialCardProps) => {
+export const TutorialCard = ({ currentStep, onNext, onSkip, onExitComplete }: TutorialCardProps) => {
     const isInteractiveBoard = currentStep.type === "INTERACTIVE_BOARD"
 
     return (
@@ -31,7 +32,7 @@ export const TutorialCard = ({ currentStep, onNext, onSkip }: TutorialCardProps)
             </View>
 
             <View className="w-full justify-center items-center">
-                <AnimatePresence exitBeforeEnter>
+                <AnimatePresence exitBeforeEnter onExitComplete={onExitComplete}>
                     <MotiView
                         key={currentStep.id}
                         from={{ opacity: 0 }}
@@ -74,29 +75,31 @@ export const TutorialCard = ({ currentStep, onNext, onSkip }: TutorialCardProps)
                                     )
                                 })}
                             </View>
+
+                            {!isInteractiveBoard && (
+                                <View className="w-full mt-6 items-center">
+                                    <GameButton
+                                        label={currentStep.primaryButtonText}
+                                        onPress={onNext}
+                                        variant="primary"
+                                        className="w-full h-12"
+                                    />
+                                </View>
+                            )}
                         </View>
                     </MotiView>
                 </AnimatePresence>
             </View>
 
-            <View className="w-full mt-6 items-center gap-4">
-                {!isInteractiveBoard && (
-                    <GameButton
-                        label={currentStep.primaryButtonText}
-                        onPress={onNext}
-                        variant="primary"
-                        className="w-full h-12"
-                    />
-                )}
-
-                <TouchableOpacity activeOpacity={0.7} onPress={onSkip}>
-                    {currentStep.primaryButtonText !== "Finish" && (
+            {currentStep.primaryButtonText !== "Finish" && (
+                <View className="w-full mt-6 items-center gap-4">
+                    <TouchableOpacity activeOpacity={0.7} onPress={onSkip}>
                         <Text className="font-desc text-xs text-neutral-400 underline tracking-wide">
                             Skip Tutorial
                         </Text>
-                    )}
-                </TouchableOpacity>
-            </View>
+                    </TouchableOpacity>
+                </View>
+            )}
         </MotiView>
     )
 }

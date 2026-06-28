@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from "react"
 import { MotiView } from "moti"
 
 import { GameBoardCard } from "../components/GameBoardCard"
@@ -9,6 +10,26 @@ import { tutorialInfo } from "../utils/config"
 export const TutorialScreen = () => {
     const state = useGameStore()
     const currentStep = tutorialInfo[state.currentTutorialStepIdx]
+    const [shouldRenderBoard, setShouldRenderBoard] = useState(false)
+    const prevTypeRef = useRef(currentStep.type)
+
+    useEffect(() => {
+        if (currentStep.type !== "INTERACTIVE_BOARD" && prevTypeRef.current !== "INTERACTIVE_BOARD") {
+            setShouldRenderBoard(false)
+        }
+
+        prevTypeRef.current = currentStep.type
+    }, [state.currentTutorialStepIdx])
+
+    const handleExitComplete = () => {
+        if (currentStep.type === "INTERACTIVE_BOARD") {
+            setShouldRenderBoard(true)
+        }
+
+        else {
+            setShouldRenderBoard(false)
+        }
+    }
 
     return (
         <ScreenWrapper maxWidthClass="max-w-md">
@@ -22,9 +43,10 @@ export const TutorialScreen = () => {
                     currentStep={currentStep}
                     onNext={state.nextTutorialStep}
                     onSkip={state.exitTutorial}
+                    onExitComplete={handleExitComplete}
                 />
 
-                {currentStep.type === "INTERACTIVE_BOARD" && (
+                {shouldRenderBoard && (
                     <MotiView
                         from={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}

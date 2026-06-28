@@ -27,7 +27,7 @@ onlinja/
         ├── screens/     # Page Screens
         ├── domain/      # Game Domain Logic (Rules for players and bots to follow)
         ├── hooks/       # React Hooks & Zustand Store (State management orchestrator)
-        └── utils/       # Utility Functions & Helpers
+        └── utils/       # Utility Functions, Helpers and Configuration
 ```
 
 ---
@@ -40,10 +40,13 @@ Do not search for hardcoded instructions or static file pathways. Scan the `.age
 - Resolve autonomous local bot execution profiles via the `bot-implementation` skill.
 - Apply layout components, visual selection rings, and interactive dropdowns via the `ui-presentation` skill.
 
+You must read any existing implementation and compare it against the skill definitions to determine if any new code is required. If a skill is already implemented, do not implement redundant code, be concise, don't try to go out of defined boundaries by this file and skills.
+
 ---
 
 ## Rigid Code Style Constraints
 
+- **No Deprecated APIs:** Avoid any deprecated React Native or Expo APIs. Use only the latest stable or compatible releases (installed via `npx expo install`, if applicable).
 - **Indentation:** Exactly 4 spaces per tab level. No 2-space offsets.
 - **Component Wrappings:** Zero spacing inside self-closing structures (<App/>).
 - **Comments:** No comments allowed unless explaining mathematical edge-case anomalies. No emojis.

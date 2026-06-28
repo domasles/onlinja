@@ -77,8 +77,8 @@ export const tutorialInfo: TutorialStepConfig[] = [
         textLines: [
             "The board consists of 8 lanes.",
             "Your goal is to race your pieces into the opponent's home base.",
-            "During each turn you must perform exactly 2 moves.",
-            "A pair of both player's turns is called a round.",
+            "A pair of both players' turns is called a round.",
+            "Game ends when all white pieces surpass all black pieces, or vice versa.",
             "*White starts first. Always."
         ],
         primaryButtonText: "Next",
@@ -93,7 +93,7 @@ export const tutorialInfo: TutorialStepConfig[] = [
         textLines: [
             "In Onlinja there are 2 modes. Aggressive and Strategic.",
             "We'll start with aggressive mode in a simplified board to understand the fundamental core.",
-            "The core mechanic depends heavily on where your pieces land."
+            "Gameplay heavily depends on where your pieces land."
         ],
         primaryButtonText: "Next",
         gameMode: "AGGRESSIVE"
@@ -115,15 +115,31 @@ export const tutorialInfo: TutorialStepConfig[] = [
         gameMode: "AGGRESSIVE"
     },
     {
+        id: "lane_highlighting_tips",
+        type: "TEXT_ONLY",
+        showLogo: false,
+        title: "Lane Highlighting",
+        lineVariants: ["large", "base", "base", "base", "base"],
+        textLines: [
+            "This game helps you out!",
+            "You don't need to count the pieces yourself. It highlights the lanes as such:",
+            "A grey lane appears when you select a piece, showing where it can move.",
+            "Yellow highlights where the first piece of a turn was moved from.",
+            "Green highlights where the second piece of a turn was moved from.",
+        ],
+        primaryButtonText: "Next",
+        gameMode: "STRATEGIC"
+    },
+    {
         id: "aggressive_demo",
         type: "INTERACTIVE_BOARD",
         showLogo: false,
         title: "Try Aggressive Mode",
-        lineVariants: ["large", "base", "base"],
+        lineVariants: ["large", "base", "small"],
         textLines: [
-            "Select your White piece on the 1st lane.",
-            "Move it one lane up into Lane 2.",
-            "Lane 2 contains 2 pieces, so your second move automatically forces that SAME piece forward by two full lanes!"
+            "Select your White piece on the 1st lane. Move it up one lane.",
+            "Lane 2 contains 2 pieces, so your second move forces that SAME piece forward by two lanes!",
+            "Select the same piece again and complete your turn."
         ],
         primaryButtonText: "Next",
         gameMode: "AGGRESSIVE",
@@ -186,9 +202,9 @@ export const tutorialInfo: TutorialStepConfig[] = [
         title: "Lanes Capacity & Jumping",
         lineVariants: ["large", "base", "base"],
         textLines: [
-            "Middle lanes have a strict maximum capacity of 6 pieces.",
+            "Non-home lanes have a strict maximum capacity of 6 pieces.",
             "If your move distance forces a piece to land precisely on a full lane...",
-            "The piece completely leaps over the blocked line directly into the next open lane!"
+            "The piece completely leaps over, directly into the next non-full lane!"
         ],
         primaryButtonText: "Next",
         gameMode: "STRATEGIC"
@@ -200,7 +216,7 @@ export const tutorialInfo: TutorialStepConfig[] = [
         title: "Try Jumping Over a Full Lane",
         lineVariants: ["large", "base", "small"],
         textLines: [
-            "Move your piece from Lane 1 forward one lane.",
+            "Try to move your piece from Lane 1 forward one lane.",
             "Lane 2 has 6 pieces, so you'll be forced to jump over it. Normally you'd move one lane forward.",
             "*This works with both moves of a turn."
         ],
@@ -220,22 +236,6 @@ export const tutorialInfo: TutorialStepConfig[] = [
         }
     },
     {
-        id: "lane_highlighting_tips",
-        type: "TEXT_ONLY",
-        showLogo: false,
-        title: "Lane Highlighting",
-        lineVariants: ["large", "small", "base"],
-        textLines: [
-            "This game also helps you out!",
-            "It highlights the lanes as such:",
-            "A grey lane appears when you select a piece, showing where it can move.",
-            "Yellow highlights where the first piece of a turn was moved from.",
-            "Green highlights where the second piece of a turn was moved from.",
-        ],
-        primaryButtonText: "Next",
-        gameMode: "STRATEGIC"
-    },
-    {
         id: "empty_lane_rules",
         type: "TEXT_ONLY",
         showLogo: false,
@@ -243,7 +243,7 @@ export const tutorialInfo: TutorialStepConfig[] = [
         lineVariants: ["large", "base", "base", "small"],
         textLines: [
             "Here is a powerful secret strategy:",
-            "If your SECOND move of a turn lands perfectly inside a completely empty lane...",
+            "If your SECOND move of a turn lands perfectly inside of a completely empty lane...",
             "You are immediately awarded an extra turn!",
             "*You can only get one extra turn per round."
         ],
