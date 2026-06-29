@@ -1,7 +1,7 @@
+import AsyncStorage from "@react-native-async-storage/async-storage"
 import { View, Text, TouchableOpacity } from "react-native"
 import { useState } from "react"
 import { MotiView } from "moti"
-import AsyncStorage from "@react-native-async-storage/async-storage"
 
 import { ScreenWrapper } from "../components/ScreenWrapper"
 import { MainMenuCard } from "../components/MainMenuCard"
