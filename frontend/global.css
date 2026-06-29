@@ -48,9 +48,10 @@
 }
 
 html, body, #root {
-    height: full;
-    width: full;
+    height: 100%;
+    width: 100%;
     margin: 0;
     overflow: hidden;
     overscroll-behavior: none;
+    color-scheme: only light !important;
 }

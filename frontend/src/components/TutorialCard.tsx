@@ -87,20 +87,20 @@ export const TutorialCard = ({ currentStep, onNext, onSkip, onExitComplete }: Tu
                                     />
                                 </View>
                             )}
+
+                            {currentStep.primaryButtonText !== "Finish" && (
+                                <View className="w-full mt-5 items-center gap-4">
+                                    <TouchableOpacity activeOpacity={0.7} onPress={onSkip}>
+                                        <Text className="font-desc text-xs text-neutral-400 underline tracking-wide">
+                                            Skip Tutorial
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            )}
                         </View>
                     </MotiView>
                 </AnimatePresence>
             </View>
-
-            {currentStep.primaryButtonText !== "Finish" && (
-                <View className="w-full mt-6 items-center gap-4">
-                    <TouchableOpacity activeOpacity={0.7} onPress={onSkip}>
-                        <Text className="font-desc text-xs text-neutral-400 underline tracking-wide">
-                            Skip Tutorial
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-            )}
         </MotiView>
     )
 }

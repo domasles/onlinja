@@ -63,7 +63,7 @@ export const tutorialInfo: TutorialStepConfig[] = [
         title: "The Basics",
         lineVariants: ["large"],
         textLines: [
-            "First of all, we need to learn some rules."
+            "First of all, you should learn some rules."
         ],
         primaryButtonText: "Next",
         gameMode: "STRATEGIC"
@@ -73,11 +73,10 @@ export const tutorialInfo: TutorialStepConfig[] = [
         type: "TEXT_ONLY",
         showLogo: false,
         title: "The Basics",
-        lineVariants: ["large", "base", "base", "base", "small"],
+        lineVariants: ["large", "base", "base", "small"],
         textLines: [
             "The board consists of 8 lanes.",
-            "Your goal is to race your pieces into the opponent's home base.",
-            "A pair of both players' turns is called a round.",
+            "Your must race your pieces to the opponent's home base first.",
             "Game ends when all white pieces surpass all black pieces, or vice versa.",
             "*White starts first. Always."
         ],
@@ -89,11 +88,10 @@ export const tutorialInfo: TutorialStepConfig[] = [
         type: "TEXT_ONLY",
         showLogo: false,
         title: "Game Modes",
-        lineVariants: ["large", "base", "base"],
+        lineVariants: ["large", "base"],
         textLines: [
             "In Onlinja there are 2 modes. Aggressive and Strategic.",
-            "We'll start with aggressive mode in a simplified board to understand the fundamental core.",
-            "Gameplay heavily depends on where your pieces land."
+            "You'll start with aggressive mode in a simplified board to understand the fundamentals."
         ],
         primaryButtonText: "Next",
         gameMode: "AGGRESSIVE"
@@ -103,14 +101,13 @@ export const tutorialInfo: TutorialStepConfig[] = [
         type: "TEXT_ONLY",
         showLogo: false,
         title: "Aggressive Mode Rules",
-        lineVariants: ["large", "base", "base", "base", "base", "small"],
+        lineVariants: ["large", "base", "base", "base", "base"],
         textLines: [
             "Rules are simple:",
             "During your turn, you have to make 2 moves.",
-            "Select a piece and note the amount of pieces one lane higher.",
-            "Move the piece one lane up, select the same piece.",
-            "Remember the piece count? That's how much lanes forward you must move the same piece!",
-            "*If your first move landed on a lane with 0 pieces or the opponent's home base, your turn is over."
+            "Select a piece and note the amount of pieces in highlighted lane.",
+            "Move your chosen piece to that lane.",
+            "Remember the piece count? That's how much lanes your piece must advance the second time!"
         ],
         primaryButtonText: "Next",
         gameMode: "AGGRESSIVE"
@@ -122,11 +119,11 @@ export const tutorialInfo: TutorialStepConfig[] = [
         title: "Lane Highlighting",
         lineVariants: ["large", "base", "base", "base", "base"],
         textLines: [
-            "This game helps you out!",
-            "You don't need to count the pieces yourself. It highlights the lanes as such:",
-            "A grey lane appears when you select a piece, showing where it can move.",
-            "Yellow highlights where the first piece of a turn was moved from.",
-            "Green highlights where the second piece of a turn was moved from.",
+            "The board helps you out!",
+            "You don't need to count moves yourself. It highlights the lanes!",
+            "A lane is highlighted gray when you select a piece. This hints where you can move it.",
+            "Yellow highlights where the first piece was moved from.",
+            "Green indicates your second move's starting point.",
         ],
         primaryButtonText: "Next",
         gameMode: "STRATEGIC"
@@ -178,7 +175,7 @@ export const tutorialInfo: TutorialStepConfig[] = [
         title: "Try Strategic Mode",
         lineVariants: ["large", "base", "base"],
         textLines: [
-            "Move your piece from Lane 1 forward one lane.",
+            "Move your piece at Lane 1 forwards.",
             "Because this is Strategic Mode, choose any OTHER piece to make the second move!"
         ],
         primaryButtonText: "Next",
@@ -217,8 +214,8 @@ export const tutorialInfo: TutorialStepConfig[] = [
         title: "Try Jumping Over a Full Lane",
         lineVariants: ["large", "base", "small"],
         textLines: [
-            "Try to move your piece from Lane 1 forward one lane.",
-            "Lane 2 has 6 pieces, so you'll be forced to jump over it. Normally you'd move one lane forward.",
+            "Try to move your piece at Lane 1 forwards.",
+            "Lane 2 has 6 pieces, so you'll be forced to jump over it.",
             "*This works with both moves of a turn."
         ],
         primaryButtonText: "Next",
@@ -244,9 +241,22 @@ export const tutorialInfo: TutorialStepConfig[] = [
         lineVariants: ["large", "base", "base", "small"],
         textLines: [
             "Here is a powerful secret strategy:",
-            "If your SECOND move of a turn lands perfectly inside of a completely empty lane...",
+            "If your SECOND move of a turn lands in an empty lane...",
             "You are immediately awarded an extra turn!",
             "*You can only get one extra turn per round."
+        ],
+        primaryButtonText: "Next",
+        gameMode: "STRATEGIC"
+    },
+    {
+        id: "extra_rules",
+        type: "TEXT_ONLY",
+        showLogo: false,
+        title: "Extra rules",
+        lineVariants: ["large", "base"],
+        textLines: [
+            "One last thing:",
+            "If your first move ended on a lane with 0 pieces or the opponent's home base, your turn is over."
         ],
         primaryButtonText: "Next",
         gameMode: "STRATEGIC"

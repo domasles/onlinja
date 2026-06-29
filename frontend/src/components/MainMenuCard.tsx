@@ -10,7 +10,7 @@ import { Dropdown } from "./Dropdown"
 export type BotDifficulty = "ROOKIE" | "RUNNER-UP" | "CHAMPION"
 
 interface MainMenuCardProps {
-    activeTab: "BOT" | "LOCAL"
+    activeTab: "BOT" | "LOCAL" | "TUTORIAL"
 
     onStartGame: (
         mode: "STRATEGIC" | "AGGRESSIVE",

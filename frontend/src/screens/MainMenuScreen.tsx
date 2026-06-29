@@ -92,7 +92,7 @@ export const MainMenuScreen = () => {
                 </View>
 
                 <MainMenuCard
-                    activeTab={activeTab === "TUTORIAL" ? "BOT" : activeTab}
+                    activeTab={activeTab}
                     onStartGame={(mode, side, controllers, difficulty) => {initializeMatch(mode, side, controllers, difficulty)}}
                 />
             </MotiView>
