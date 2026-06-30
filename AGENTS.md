@@ -7,6 +7,7 @@ You are an expert software engineering agent specializing in structural cross-pl
 ## Technical Stack Bounds
 
 - **Frontend:** React Native via Expo, Zustand (State), NativeWind (Tailwind CSS engine)
+- **Web/Browser:** React Native via Expo with mandatory Web and PWA support
 - **Bundler:** Metro Compiler Runtime
 - **Backend:** Python FastAPI with WebSockets (NOT authorized for active implementation)
 - **Containers:** Docker multi-stage compilation builds
@@ -21,6 +22,7 @@ You must write isolated single-responsibility modules following this layout:
 onlinja/
 ├── backend/   # FastAPI WebSocket Server (Matchmaking & Routing)
 └── frontend/  # Expo React Native App (Game Engine & UI)
+    ├─── public/  Web Assets, index.html and manifest.json
     └─── src/
         ├── bot/         # Autonomous Bot Logic (Pure algorithmic layer)
         ├── components/  # Presentation Components
@@ -50,6 +52,6 @@ You must read any existing implementation and compare it against the skill defin
 - **Indentation:** Exactly 4 spaces per tab level. No 2-space offsets.
 - **Component Wrappings:** Zero spacing inside self-closing structures (<App/>).
 - **Comments:** No comments allowed unless explaining mathematical edge-case anomalies. No emojis.
-- **Formatting Pads:** Append an empty newline before control keywords (if, else, return, const).
-- **Semicolons:** Never terminate statements with semicolons. Prohibited across all files.
-- **Paradigms:** Pure Named Exports only. Explicit object-oriented structures (Classes) for all logic. No any type usage allowed.
+- **Formatting Pads:** Append an empty newline before control keywords (if, else, return, let, const, etc.), unless there are several repeating one-line statements.
+- **Semicolons:** Never terminate statements with semicolons. Prohibited across all files (except where required by the language syntax).
+- **Paradigms:** Pure Named Exports only. Explicit object-oriented structures (Classes) for all logic. No `any` type usage allowed, strict typing.

@@ -67,7 +67,7 @@ export const MainMenuScreen = () => {
                                 activeTab === "LOCAL" ? "text-black font-subheader-semibold" : "text-neutral-400 font-subheader"
                             }`}
                         >
-                            Pass & Play
+                            VS Friend
                         </Text>
                     </TouchableOpacity>
 

@@ -12,7 +12,7 @@ This skill provides a structured workflow for implementing the autonomous bot lo
 
 ### Step 1: Create Type Definitions
 ```typescript
-export type BotDifficulty = "ROOKIE" | "RUNNER-UP" | "CHAMPION"
+export type BotDifficulty = "ROOKIE" | "RUNNER-UP" | "LEGEND"
 
 export interface BotProfile {
   // Search Architecture
@@ -116,7 +116,7 @@ export const BOT_PRESETS: Record<BotDifficulty, BotProfile> = {
     friendlyClusterBonus: 2,
     enemyClusterPenalty: 2
   },
-  "CHAMPION": {
+  "LEGEND": {
     lookaheadTurns: 3,
     blunderRate: 0.0,
     extraTurnBonus: 30,
@@ -139,7 +139,7 @@ export class BotAgent {
 ## Difficulty Configuration
 - **ROOKIE:** Lookahead 1 turn, 0.65 blunder rate. Shallow lookahead, frequent blunders.
 - **RUNNER-UP:** Lookahead 2 turns, 0.15 blunder rate. Medium lookahead, occasional mistakes.
-- **CHAMPION:** Lookahead 3 turns, 0.00 blunder rate. Deep lookahead, perfect play.
+- **LEGEND:** Lookahead 3 turns, 0.00 blunder rate. Deep lookahead, perfect play.
 
 ## Symmetrical Move Fallbacks
 - **Turn Autopass Alignment:** The branch generator (`generateLegalActions`) must actively track if a chosen Move 1 forces a second move state (`currentMove: 2`) but possesses zero valid second targets under the current `gameMode` criteria.

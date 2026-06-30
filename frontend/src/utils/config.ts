@@ -268,7 +268,7 @@ export const tutorialInfo: TutorialStepConfig[] = [
         lineVariants: ["large", "base", "small"],
         textLines: [
             "You are now ready to dominate the board!",
-            "Play against our competitive training bots or grab a friend for local Pass & Play.",
+            "Play against our competitive training bots or grab a friend!",
             "Good luck! You'll need it ;)"
         ],
         primaryButtonText: "Finish",

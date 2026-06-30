@@ -48,7 +48,7 @@ export const BOT_PRESETS: Record<BotDifficulty, BotProfile> = {
         friendlyClusterBonus: 2,
         enemyClusterPenalty: 2
     },
-    "CHAMPION": {
+    "LEGEND": {
         lookaheadTurns: 3,
         blunderRate: 0.0,
         extraTurnBonus: 30,

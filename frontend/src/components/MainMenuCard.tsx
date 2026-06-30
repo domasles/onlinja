@@ -7,7 +7,7 @@ import { ActionSlider } from "./ActionSlider"
 import { GameButton } from "./GameButton"
 import { Dropdown } from "./Dropdown"
 
-export type BotDifficulty = "ROOKIE" | "RUNNER-UP" | "CHAMPION"
+export type BotDifficulty = "ROOKIE" | "RUNNER-UP" | "LEGEND"
 
 interface MainMenuCardProps {
     activeTab: "BOT" | "LOCAL" | "TUTORIAL"
@@ -100,7 +100,7 @@ export const MainMenuCard = ({ activeTab, onStartGame }: MainMenuCardProps) => {
                                     options={[
                                         { label: "Rookie", value: "ROOKIE" },
                                         { label: "Runner-Up", value: "RUNNER-UP" },
-                                        { label: "Champion", value: "CHAMPION" }
+                                        { label: "Legend", value: "LEGEND" }
                                     ]}
 
                                     selectedValue={difficulty}

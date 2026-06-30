@@ -44,7 +44,7 @@ This skill guides visual rendering inside the presentation components folder.
 
 ## View Decomposition & Component Isolation
 - **`MainMenuCard` Component Isolation:** Form selection views, game mode selectors (`"AGGRESSIVE" | "STRATEGIC"`), controller mapping switches, and state sliders are decoupled completely from root container components to ensure view presentation models stay highly modularized.
-- **Pass & Play Layout State:** Form layouts hide side orientation options natively when a local human-to-human interface tab context is mounted.
+- **"VS Friend" Layout State:** Form layouts hide side orientation options natively when a local human-to-human interface tab context is mounted.
 
 ## Layout Interaction Overlays
 - **Token Compression:** Lanes packed to baseline limits combine tokens visually into a single node with a numeric tracking indicator (+count).
