@@ -19,11 +19,11 @@ export interface UnifiedTurnAction {
 }
 
 export class Minimax {
-    private static operationCount = 0;
-    private static readonly YIELD_THRESHOLD = 400;
+    private static operationCount = 0
+    private static readonly YIELD_THRESHOLD = 400
 
     private static async yieldToMainThread(): Promise<void> {
-        return new Promise((resolve) => setTimeout(resolve, 0));
+        return new Promise((resolve) => setTimeout(resolve, 0))
     }
 
     public static generateLegalActions(state: GameState): UnifiedTurnAction[] {
@@ -91,7 +91,7 @@ export class Minimax {
     }
 
     public static async optimize(state: GameState, profile: BotProfile): Promise<UnifiedTurnAction | null> {
-        this.operationCount = 0;
+        this.operationCount = 0
 
         const actions = this.generateLegalActions(state)
         if (actions.length === 0) return null
@@ -124,10 +124,10 @@ export class Minimax {
         player: PlayerColor,
         profile: BotProfile
     ): Promise<number> {
-        this.operationCount++;
+        this.operationCount++
 
         if (this.operationCount % this.YIELD_THRESHOLD === 0) {
-            await this.yieldToMainThread();
+            await this.yieldToMainThread()
         }
 
         if (depth === 0 || GameEngine.isMatchFinished(state)) {

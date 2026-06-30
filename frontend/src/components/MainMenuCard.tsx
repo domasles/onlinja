@@ -3,11 +3,10 @@ import { View, Text } from "react-native"
 import { useState } from "react"
 
 import { PlayerColor, ControllerType } from "../domain/engine"
+import { BotDifficulty } from "../bot/botAgent"
 import { ActionSlider } from "./ActionSlider"
 import { GameButton } from "./GameButton"
 import { Dropdown } from "./Dropdown"
-
-export type BotDifficulty = "ROOKIE" | "RUNNER-UP" | "LEGEND"
 
 interface MainMenuCardProps {
     activeTab: "BOT" | "LOCAL" | "TUTORIAL"

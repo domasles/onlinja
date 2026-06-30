@@ -17,7 +17,7 @@ interface DropdownProps<T extends string> {
 export const Dropdown = <T extends string>({ options, selectedValue, onSelect, onToggle }: DropdownProps<T>) => {
     const [isOpen, setIsOpen] = useState(false)
     const currentOption = options.find((opt) => opt.value === selectedValue)
-    const { width, height } = useWindowDimensions();
+    const { width, height } = useWindowDimensions()
 
     const closeDropdown = () => {
         setIsOpen(false)

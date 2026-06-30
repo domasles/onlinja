@@ -1,7 +1,8 @@
-import { BotDifficulty } from "../components/MainMenuCard"
 import { Minimax, UnifiedTurnAction } from "./minimax"
 import { GameState } from "../domain/engine"
 import { Humanizer } from "./humanizer"
+
+export type BotDifficulty = "ROOKIE" | "RUNNER-UP" | "LEGEND"
 
 export interface BotProfile {
     // Search Architecture

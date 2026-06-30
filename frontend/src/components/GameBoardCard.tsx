@@ -14,7 +14,7 @@ interface GameBoardCardProps {
 }
 
 export const GameBoardCard = ({ state, isThinking, isLocalHumanTurn }: GameBoardCardProps) => {
-    const totalLanes = state.isTutorialMode && state.board ? state.board.length : state.config.laneCount;
+    const totalLanes = state.isTutorialMode && state.board ? state.board.length : state.config.laneCount
 
     const laneIndices = Array.from({ length: totalLanes }, (_, i) => i)
     const orderedLanes = state.playerSide === "BLACK" ? laneIndices : [...laneIndices].reverse()

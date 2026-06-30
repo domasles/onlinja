@@ -13,40 +13,40 @@ This skill guides visual rendering inside the presentation components folder.
 - **Typography Matrix:** Standard typography strings must map directly to raw pre-compiled global hooks (`font-logo`, `font-subheader`, `font-subheader-semibold`, `font-desc`, `font-desc-medium`, `font-score`, `font-status`, `font-label`). No inline weight synthesis variants are allowed.
 
 ## Screen & Flow State Management
-- **Screen Router Navigation:** View progression relies entirely on the global store's `currentScreen` state `"MAIN_MENU" | "TUTORIAL" | "GAMEPLAY"`. Transitioning between top-level layouts must run through the decoupled `MapsTo` controller rather than local component state variables.
-- **Player Onboarding Flow:** `startTutorial` boolean state must be checked on app initialization to determine whether to route the user to `"TUTORIAL"` or `"MAIN_MENU"` screens. This state is set via the `checkTutorialStatus()` method. It checks whether `onlinja_tutorial_completed` flag is set in AsyncStorage. Tutorial is configured via the main config file with the following parameters:
-  ```typescript
-  export interface TutorialStepConfig {
-      id: string
-      type: "TEXT_ONLY" | "INTERACTIVE_BOARD"
-      showLogo: boolean
-      title?: string
-      textLines: string[]
-      lineVariants?: TutorialTextVariant[]
-      primaryButtonText: "Next" | "Finish"
-      gameMode: "AGGRESSIVE" | "STRATEGIC"
-      boardSetup?: {
-          board: GamePiece[][]
-          activePlayer: PlayerColor
-          playerSide: PlayerColor
-          allowedSourceLane?: number
-          allowedPieceId?: string
-      }
-  }
-  ```
+- **Screen Router Navigation:** View progression relies entirely on the global store's `currentScreen` state `"MAIN_MENU" | "TUTORIAL" | "GAMEPLAY"`. Transitioning between top-level layouts runs through the `navigateTo()` action in the store.
+  - **Player Onboarding Flow:** Tutorial status is checked on app initialization via `startTutorial()` action in the store. It checks whether `onlinja_tutorial_completed` flag is set in AsyncStorage. Tutorial is configured via the main config file with the following parameters:
+    ```typescript
+    export interface TutorialStepConfig {
+        id: string
+        type: "TEXT_ONLY" | "INTERACTIVE_BOARD"
+        showLogo: boolean
+        title?: string
+        textLines: string[]
+        lineVariants?: TutorialTextVariant[]
+        primaryButtonText: "Next" | "Finish"
+        gameMode: "AGGRESSIVE" | "STRATEGIC"
+        boardSetup?: {
+            board: GamePiece[][]
+            activePlayer: PlayerColor
+            playerSide: PlayerColor
+            allowedSourceLane?: number
+            allowedPieceId?: string
+        }
+    }
+    ```
 - **State-Driven Mounting:** Ensure that screen-level containers cleanly unmount and clear temporary animation contexts when switching between root routes.
 
 ## Interactive Navigation & Controls
-- **Dynamic Lane Highlighting:** Render contextual indicator borders or translucent overlays when a lane index matches a target coordinate in `getValidTargets()`. Use `border-amber-400` for Move 1 highlights and `border-emerald-400` for Move 2 paths.
-- **Tryout Mode in Tutorial:** The tutorial screen must feature an interactive way to try the game out with pre-configured board states. It must display a simplified `GameBoardCard` component without the score header and `Leave`/`Reset` buttons. The board must be fully interactive, allowing the user to select pieces and move them according to the tutorial's current step configuration.
+- **Dynamic Lane Highlighting:** Render contextual indicator backgrounds when a lane index matches a target coordinate in `getValidTargets()`. Use `bg-yellow-500/10` for Move 1 highlights (origin lane), `bg-emerald-500/10` for Move 2 paths (second move origin), and `bg-neutral-100` for valid target lanes.
+- **Tryout Mode in Tutorial:** The tutorial screen features an interactive way to try the game out with pre-configured board states. It displays a simplified `GameBoardCard` component without the score header and `Leave`/`Reset` buttons. The board is fully interactive, allowing the user to select pieces and move them according to the tutorial's current step configuration.
 - **Configuration Dropdown Controllers:** Menu selection structures for match configuration parameter initialization (`initializeMatch`) utilize clean custom dropdown blocks instead of native system modals. Apply flat geometric outlines (`border border-neutral-200 bg-white rounded-xl`), clean layout offsets, and dedicated selection item mapping.
-- **Animation & Transition Effects:** All layout transitions, modal popups, and lane selection overlays must utilize spring-based animation engines (`LinearTransition.springify()`) or zoom/fade parameter modifications with a consistent easing curve across all `GameBoard` and `StatusOverlay` transitions, defined within the main config file. Using the easing curve anywhere else is prohibited.
+- **Animation & Transition Effects:** All layout transitions, modal popups, and lane selection overlays utilize the `EASE_CURVE` easing function defined in `config.ts` (bezier curve: `0.25, 0.1, 0.25, 1`). This easing curve is applied consistently across all `GameBoardCard` and `StatusOverlay` transitions using `LinearTransition.easing(EASE_CURVE).duration()`.
 
 ## View Decomposition & Component Isolation
 - **`MainMenuCard` Component Isolation:** Form selection views, game mode selectors (`"AGGRESSIVE" | "STRATEGIC"`), controller mapping switches, and state sliders are decoupled completely from root container components to ensure view presentation models stay highly modularized.
-- **"VS Friend" Layout State:** Form layouts hide side orientation options natively when a local human-to-human interface tab context is mounted.
+- **"VS Friend" Layout State:** When the "LOCAL" tab is active, the side orientation options are hidden (the entire bot difficulty dropdown is hidden via conditional rendering in `MainMenuCard`).
 
 ## Layout Interaction Overlays
 - **Token Compression:** Lanes packed to baseline limits combine tokens visually into a single node with a numeric tracking indicator (+count).
 - **Extra Turn Interrupt:** When `isExtraTurnActive` triggers, a layer interceptor locks screen navigation using pointer events. Renders a translucent canvas overlay using `backdrop-blur-[4px]` around a structured notification container.
-- **Transitions:** Layout alterations, piece reposition paths, and modal screens utilize standard spring engines (`LinearTransition.springify()`).
+- **Transitions:** Layout alterations, piece reposition paths, and modal screens utilize the consistent `EASE_CURVE` easing function defined in `config.ts`.

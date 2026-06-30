@@ -16,7 +16,7 @@ This skill guides the implementation of the core stateless rule engine in the ga
 ## Move Lifecycle
 1. **Move 1 (Initiative Move):** Advance exactly 1 step. Count the total pieces occupying the landing track.
 2. **Move 2 (Momentum Move):** Advance by Move 1 Count - 1 steps.
-   - **Aggressive Mode:** Move 2 piece MUST match the Move 1 piece.
+   - **Aggressive Mode:** Move 2 piece MUST match the Move 1 piece (tracked via `move1MovedPieceId`).
    - **Strategic Mode:** Move 2 piece MUST be a completely distinct piece.
    - **Dead-End Evaluation:** Immediately after Move 1 updates the board layout, the engine must sweep all pieces belonging to the active player. If no legal targets exist for Move 2 under the active `gameMode` constraints, the turn immediately auto-passes to the opponent at Move 1.
     - **Vulnerability Forfeiture:** If Move 1 lands on a track that had 0 or 1 elements before the move, or hits the opponent base, immediately skip Move 2 and pass the turn.
@@ -38,3 +38,9 @@ This skill guides the implementation of the core stateless rule engine in the ga
 
 ## State Control & Unified Initialization
 - **Match Setup:** The engine utilizes a unified initialization matrix accepting structural controller profiles (e.g., mapping player sides directly to local human handlers or bot agents). This layout ensures local loops decoupled from networking interfaces can easily scale to accept remote stream players.
+
+## Implementation Notes
+- **BotDifficulty** type is defined in `botAgent.ts` and imported by the domain engine.
+- **ControllerType** is `"HUMAN" | "BOT"` and controls whether a player is human or bot-controlled.
+- **GameState** interface includes: `board`, `activePlayer`, `currentMove`, `move1LandingCount`, `selectedPiece`, `gameMode`, `playerSide`, `botDifficulty`, `move1MovedPieceId`, `history`, `config`, `showExtraTurnEffect`, `isExtraTurnActive`, `controllers`.
+- **GameEngine** class provides: `generateInitialState()`, `getValidTargets()`, `calculateScores()`, `isMatchFinished()`.

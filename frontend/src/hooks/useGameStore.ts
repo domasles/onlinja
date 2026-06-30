@@ -3,7 +3,7 @@ import { create } from "zustand"
 
 import { GameState, GameEngine, PlayerColor, ControllerType } from "../domain/engine"
 import { GameConfig, DEFAULT_LINJA_CONFIG, tutorialInfo } from "../utils/config"
-import { BotDifficulty } from "../components/MainMenuCard"
+import { BotDifficulty } from "../bot/botAgent"
 
 interface GameStore extends GameState {
     currentScreen: "MAIN_MENU" | "GAMEPLAY" | "TUTORIAL"
@@ -317,7 +317,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
         }
 
         if (state.isTutorialMode) {
-            const turnEndedOnMove1 = state.currentMove === 1 && resultingState.currentMove === 1 && resultingState.activePlayer !== state.activePlayer;
+            const turnEndedOnMove1 = state.currentMove === 1 && resultingState.currentMove === 1 && resultingState.activePlayer !== state.activePlayer
 
             if (state.currentMove === 2 || turnEndedOnMove1) {
                 setTimeout(() => { get().nextTutorialStep() }, 0)

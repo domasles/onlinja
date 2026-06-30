@@ -1,5 +1,5 @@
 import { GameConfig, DEFAULT_LINJA_CONFIG } from "../utils/config"
-import { BotDifficulty } from "../components/MainMenuCard"
+import { BotDifficulty } from "../bot/botAgent"
 
 export type PlayerColor = "WHITE" | "BLACK"
 export type ControllerType = "HUMAN" | "BOT"
