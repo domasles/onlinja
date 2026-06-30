@@ -3,13 +3,13 @@ import { View, Text, TouchableOpacity } from "react-native"
 import { useState } from "react"
 import { MotiView } from "moti"
 
-import { ScreenWrapper } from "../components/ScreenWrapper"
-import { MainMenuCard } from "../components/MainMenuCard"
+import { ScreenWrapper } from "../components/layout/ScreenWrapper"
+import { MainMenuCard } from "../components/cards/MainMenuCard"
 import { useGameStore } from "../hooks/useGameStore"
 
 export const MainMenuScreen = () => {
     const { initializeMatch, startTutorial } = useGameStore()
-    const [activeTab, setActiveTab] = useState<"BOT" | "LOCAL" | "TUTORIAL">("BOT")
+    const [activeTab, setActiveTab] = useState<"BOT" | "FRIEND" | "TUTORIAL">("BOT")
 
     const handleTutorialPress = async () => {
         setActiveTab("TUTORIAL")
@@ -45,7 +45,9 @@ export const MainMenuScreen = () => {
                     >
                         <Text
                             className={`text-center text-xs uppercase tracking-wider ${
-                                activeTab === "BOT" ? "text-black font-subheader-semibold" : "text-neutral-400 font-subheader"
+                                activeTab === "BOT"
+                                    ? "text-black font-subheader-semibold"
+                                    : "text-neutral-400 font-subheader"
                             }`}
                         >
                             VS Bot
@@ -54,17 +56,19 @@ export const MainMenuScreen = () => {
 
                     <TouchableOpacity
                         activeOpacity={0.9}
-                        onPress={() => setActiveTab("LOCAL")}
+                        onPress={() => setActiveTab("FRIEND")}
 
                         className={`px-4 py-2.5 rounded-t-2xl border-t border-x ${
-                            activeTab === "LOCAL" 
+                            activeTab === "FRIEND" 
                                 ? "bg-white border-neutral-200/80"
                                 : "bg-neutral-100 border-transparent"
                         }`}
                     >
                         <Text
                             className={`text-center text-xs uppercase tracking-wider ${
-                                activeTab === "LOCAL" ? "text-black font-subheader-semibold" : "text-neutral-400 font-subheader"
+                                activeTab === "FRIEND"
+                                    ? "text-black font-subheader-semibold"
+                                    : "text-neutral-400 font-subheader"
                             }`}
                         >
                             VS Friend

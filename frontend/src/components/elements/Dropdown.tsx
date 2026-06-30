@@ -11,40 +11,16 @@ interface DropdownProps<T extends string> {
     options: DropdownOption<T>[]
     selectedValue: T
     onSelect: (value: T) => void
-    onToggle?: (isOpen: boolean) => void
 }
 
-export const Dropdown = <T extends string>({ options, selectedValue, onSelect, onToggle }: DropdownProps<T>) => {
+export const Dropdown = <T extends string>({ options, selectedValue, onSelect }: DropdownProps<T>) => {
     const [isOpen, setIsOpen] = useState(false)
     const currentOption = options.find((opt) => opt.value === selectedValue)
     const { width, height } = useWindowDimensions()
 
-    const closeDropdown = () => {
-        setIsOpen(false)
-
-        if (onToggle) {
-            setTimeout(() => onToggle(false), 200)
-        }
-    }
-
-    const handleToggle = () => {
-        const nextState = !isOpen
-        setIsOpen(nextState)
-
-        if (onToggle) {
-            if (nextState) {
-                onToggle(true)
-            }
-
-            else {
-                setTimeout(() => onToggle(false), 200)
-            }
-        }
-    }
-
     const handleSelect = (value: T) => {
         onSelect(value)
-        closeDropdown()
+        setIsOpen(false)
     }
 
     return (
@@ -52,7 +28,7 @@ export const Dropdown = <T extends string>({ options, selectedValue, onSelect, o
             {isOpen && (
                 <TouchableOpacity
                     activeOpacity={1}
-                    onPress={closeDropdown}
+                    onPress={() => setIsOpen(false)}
 
                     style={{
                         position: "absolute",
@@ -68,7 +44,7 @@ export const Dropdown = <T extends string>({ options, selectedValue, onSelect, o
 
             <TouchableOpacity
                 activeOpacity={0.9}
-                onPress={handleToggle}
+                onPress={() => setIsOpen(!isOpen)}
                 className="w-full h-11 bg-neutral-100 border border-neutral-200 rounded-xl px-4 flex-row items-center justify-between z-50"
             >
                 <Text className="text-xs font-button text-neutral-800">

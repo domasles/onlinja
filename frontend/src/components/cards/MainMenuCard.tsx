@@ -2,14 +2,14 @@ import { MotiView, AnimatePresence } from "moti"
 import { View, Text } from "react-native"
 import { useState } from "react"
 
-import { PlayerColor, ControllerType } from "../domain/engine"
-import { BotDifficulty } from "../bot/botAgent"
-import { ActionSlider } from "./ActionSlider"
-import { GameButton } from "./GameButton"
-import { Dropdown } from "./Dropdown"
+import { PlayerColor, ControllerType } from "../../domain/engine"
+import { ActionSlider } from "../elements/ActionSlider"
+import { GameButton } from "../elements/GameButton"
+import { BotDifficulty } from "../../bot/botAgent"
+import { Dropdown } from "../elements/Dropdown"
 
 interface MainMenuCardProps {
-    activeTab: "BOT" | "LOCAL" | "TUTORIAL"
+    activeTab: "BOT" | "FRIEND" | "TUTORIAL"
 
     onStartGame: (
         mode: "STRATEGIC" | "AGGRESSIVE",
@@ -23,7 +23,6 @@ export const MainMenuCard = ({ activeTab, onStartGame }: MainMenuCardProps) => {
     const [selectedMode, setSelectedMode] = useState<"STRATEGIC" | "AGGRESSIVE">("STRATEGIC")
     const [selectedSide, setSelectedSide] = useState<PlayerColor>("WHITE")
     const [difficulty, setDifficulty] = useState<BotDifficulty>("RUNNER-UP")
-    const [isDropdownActive, setIsDropdownActive] = useState(false)
 
     const handlePressStart = () => {
         const controllers: Record<PlayerColor, ControllerType> = activeTab === "BOT"
@@ -38,7 +37,6 @@ export const MainMenuCard = ({ activeTab, onStartGame }: MainMenuCardProps) => {
 
     return (
         <MotiView
-            style={{ overflow: isDropdownActive ? ("visible" as const) : ("hidden" as const) }}
             className="w-full bg-white border border-neutral-200/80 p-8 rounded-b-3xl rounded-tr-3xl shadow-xl items-center z-30"
         >
             <View className="flex-row items-center space-x-2 gap-2 mb-2">
@@ -71,14 +69,14 @@ export const MainMenuCard = ({ activeTab, onStartGame }: MainMenuCardProps) => {
                         animate={{ opacity: 1, height: 160, marginBottom: 20 }}
                         exit={{ opacity: 0, height: 0, marginBottom: 0 }}
                         transition={{ type: "timing", duration: 220 }}
-                        style={{ width: "100%", overflow: isDropdownActive ? ("visible" as const) : ("hidden" as const), zIndex: 40 }}
+                        style={{ width: "100%", zIndex: 40 }}
                     >
                         <MotiView
                             from={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ type: "timing", duration: 150, delay: 50 }}
-                            style={{ width: "100%", overflow: isDropdownActive ? ("visible" as const) : ("hidden" as const) }}
+                            style={{ width: "100%"}}
                         >
                             <View className="w-full mb-5">
                                 <Text className="text-xs font-subheader text-neutral-400 uppercase tracking-widest mb-2 self-center">- Choose side -</Text>
@@ -104,7 +102,6 @@ export const MainMenuCard = ({ activeTab, onStartGame }: MainMenuCardProps) => {
 
                                     selectedValue={difficulty}
                                     onSelect={setDifficulty}
-                                    onToggle={setIsDropdownActive}
                                 />
                             </View>
                         </MotiView>

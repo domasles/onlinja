@@ -1,5 +1,5 @@
 import { View, Text } from "react-native"
-import { PlayerColor } from "../domain/engine"
+import { PlayerColor } from "../../domain/engine"
 
 interface ScoreHeaderProps {
     whiteScore: number

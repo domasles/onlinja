@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from "react"
 import { MotiView } from "moti"
 
-import { GameBoardCard } from "../components/GameBoardCard"
-import { ScreenWrapper } from "../components/ScreenWrapper"
-import { TutorialCard } from "../components/TutorialCard"
+import { ScreenWrapper } from "../components/layout/ScreenWrapper"
+import { GameBoardCard } from "../components/cards/GameBoardCard"
+import { TutorialCard } from "../components/cards/TutorialCard"
 import { useGameStore } from "../hooks/useGameStore"
 import { tutorialInfo } from "../utils/config"
 

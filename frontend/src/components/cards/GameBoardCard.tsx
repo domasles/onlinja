@@ -1,11 +1,11 @@
 import Animated, { LinearTransition, ZoomOut, ZoomIn, FadeOut, FadeIn } from "react-native-reanimated"
 import { View, TouchableOpacity, Text, ActivityIndicator } from "react-native"
 
-import { EASE_CURVE, tutorialInfo } from "../utils/config"
-import { GameEngine, PlayerColor } from "../domain/engine"
-import { useGameStore } from "../hooks/useGameStore"
-import { GamePiece, RenderItem } from "./GamePiece"
-import { StatusOverlay } from "./StatusOverlay"
+import { EASE_CURVE, tutorialInfo } from "../../utils/config"
+import { GameEngine, PlayerColor } from "../../domain/engine"
+import { GamePiece, RenderItem } from "../game/GamePiece"
+import { useGameStore } from "../../hooks/useGameStore"
+import { StatusOverlay } from "../game/StatusOverlay"
 
 interface GameBoardCardProps {
     state: ReturnType<typeof useGameStore.getState>

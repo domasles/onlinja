@@ -1,7 +1,7 @@
 import { View, Text } from "react-native"
 import { MotiView } from "moti"
 
-import { GameButton } from "./GameButton"
+import { GameButton } from "../elements/GameButton"
 
 interface GameOverCardProps {
     whiteScore: number
