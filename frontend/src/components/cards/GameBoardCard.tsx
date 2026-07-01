@@ -14,6 +14,7 @@ interface GameBoardCardProps {
 }
 
 export const GameBoardCard = ({ state, isThinking, isLocalHumanTurn }: GameBoardCardProps) => {
+    const highlightMode = useGameStore((s) => s.highlightMode)
     const totalLanes = state.isTutorialMode && state.board ? state.board.length : state.config.laneCount
 
     const laneIndices = Array.from({ length: totalLanes }, (_, i) => i)
@@ -102,8 +103,11 @@ export const GameBoardCard = ({ state, isThinking, isLocalHumanTurn }: GameBoard
 
                     let laneHighlightClass = "bg-white"
 
-                    if (h1 && h1.originLane === laneIdx) laneHighlightClass = "bg-yellow-500/10"
-                    if (h2 && h2.originLane === laneIdx) laneHighlightClass = "bg-emerald-500/10"
+                    if (highlightMode === "YES") {
+                        if (h1 && h1.originLane === laneIdx) laneHighlightClass = "bg-yellow-500/10"
+                        if (h2 && h2.originLane === laneIdx) laneHighlightClass = "bg-emerald-500/10"
+                    }
+
                     if (isTargetable) laneHighlightClass = "bg-neutral-100"
 
                     return (
@@ -115,10 +119,7 @@ export const GameBoardCard = ({ state, isThinking, isLocalHumanTurn }: GameBoard
                             <TouchableOpacity
                                 activeOpacity={0.9}
                                 onPress={() => state.selectTargetLane(laneIdx)}
-
-                                className={`flex-row items-center h-14 w-full px-4 rounded-xl ${
-                                    laneHighlightClass
-                                }`}
+                                className={`flex-row items-center h-14 w-full px-4 rounded-xl ${laneHighlightClass}`}
                             >
                                 <View className="flex-row items-center justify-center flex-1 h-full">
                                     {displayItems.map((item) => {
@@ -160,9 +161,9 @@ export const GameBoardCard = ({ state, isThinking, isLocalHumanTurn }: GameBoard
 
                                         let overlayRingStyle = isSelected
                                             ? "border-[4px] border-neutral-400 scale-full"
-                                            : item.allIds.some(id => h2 && h2.pieceId === id)
+                                            : highlightMode === "YES" && item.allIds.some(id => h2 && h2.pieceId === id)
                                             ? "border-[3px] border-emerald-400"
-                                            : item.allIds.some(id => h1 && h1.pieceId === id)
+                                            : highlightMode === "YES" && item.allIds.some(id => h1 && h1.pieceId === id)
                                             ? "border-[3px] border-amber-400"
                                             : `border-2 ${item.color === "WHITE" ? "border-black" : "border-neutral-800"}`
 

@@ -5,15 +5,31 @@ import { GameState, GameEngine, PlayerColor, ControllerType } from "../domain/en
 import { GameConfig, DEFAULT_LINJA_CONFIG, tutorialInfo } from "../utils/config"
 import { BotDifficulty } from "../bot/botAgent"
 
+export type HighlightMode = "YES" | "NO"
+export type GameModes = "STRATEGIC" | "AGGRESSIVE"
+export type Screens = "MAIN_MENU" | "GAMEPLAY" | "TUTORIAL"
+
 interface GameStore extends GameState {
-    currentScreen: "MAIN_MENU" | "GAMEPLAY" | "TUTORIAL"
+    currentScreen: Screens
     isTutorialMode: boolean
     currentTutorialStepIdx: number
 
-    navigateTo: (screen: "MAIN_MENU" | "GAMEPLAY" | "TUTORIAL") => void
+    isHydrated: boolean
+    highlightMode: HighlightMode
+    defaultGameMode: GameModes
+    defaultSide: PlayerColor
+    defaultDifficulty: BotDifficulty
+
+    loadSavedSettings: () => Promise<void>
+    setHighlightMode: (mode: HighlightMode) => void
+    setDefaultGameMode: (mode: GameModes) => void
+    setDefaultSide: (side: PlayerColor) => void
+    setDefaultDifficulty: (difficulty: BotDifficulty) => void
+
+    navigateTo: (screen: Screens) => void
 
     initializeMatch: (
-        mode: "AGGRESSIVE" | "STRATEGIC", 
+        mode: GameModes, 
         side: PlayerColor, 
         controllers?: Record<PlayerColor, ControllerType>,
         difficulty?: BotDifficulty,
@@ -35,6 +51,56 @@ export const useGameStore = create<GameStore>((set, get) => ({
     currentScreen: "MAIN_MENU",
     isTutorialMode: false,
     currentTutorialStepIdx: 0,
+
+    isHydrated: false,
+    highlightMode: "YES",
+    defaultGameMode: "STRATEGIC",
+    defaultSide: "WHITE",
+    defaultDifficulty: "ROOKIE",
+
+    loadSavedSettings: async () => {
+        try {
+            const [hMode, gMode, sMode, dMode] = await Promise.all([
+                AsyncStorage.getItem("onlinja_pref_highlight"),
+                AsyncStorage.getItem("onlinja_pref_gmode"),
+                AsyncStorage.getItem("onlinja_pref_side"),
+                AsyncStorage.getItem("onlinja_pref_difficulty")
+            ])
+
+            set({
+                highlightMode: (hMode as HighlightMode) || "YES",
+                defaultGameMode: (gMode as GameModes) || "STRATEGIC",
+                defaultSide: (sMode as PlayerColor) || "WHITE",
+                defaultDifficulty: (dMode as BotDifficulty) || "ROOKIE",
+                isHydrated: true
+            })
+        }
+
+        catch (e) {
+            console.warn("Could not read app local settings preferences:", e)
+            set({ isHydrated: true })
+        }
+    },
+
+    setHighlightMode: (mode) => set(() => {
+        AsyncStorage.setItem("onlinja_pref_highlight", mode).catch(() => {})
+        return { highlightMode: mode }
+    }),
+
+    setDefaultGameMode: (mode) => set(() => {
+        AsyncStorage.setItem("onlinja_pref_gmode", mode).catch(() => {})
+        return { defaultGameMode: mode }
+    }),
+
+    setDefaultSide: (side) => set(() => {
+        AsyncStorage.setItem("onlinja_pref_side", side).catch(() => {})
+        return { defaultSide: side }
+    }),
+
+    setDefaultDifficulty: (difficulty) => set(() => {
+        AsyncStorage.setItem("onlinja_pref_difficulty", difficulty).catch(() => {})
+        return { defaultDifficulty: difficulty }
+    }),
 
     navigateTo: (screen) => set(() => ({ currentScreen: screen })),
 

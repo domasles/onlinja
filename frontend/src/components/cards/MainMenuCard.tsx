@@ -2,17 +2,16 @@ import { useRef, useState, useEffect } from "react"
 import { MotiView, AnimatePresence } from "moti"
 import { View, Text } from "react-native"
 
+import { useGameStore, GameModes } from "../../hooks/useGameStore"
 import { PlayerColor, ControllerType } from "../../domain/engine"
 import { MainMenuTabs } from "../../screens/MainMenuScreen"
 import { BotDifficulty } from "../../bot/botAgent"
+import { SettingsTab } from "../tabs/SettingsTab"
 import { FriendsTab } from "../tabs/FriendsTab"
 import { BotTab } from "../tabs/BotTab"
 
-export type GameModes = "STRATEGIC" | "AGGRESSIVE"
-
 interface MainMenuCardProps {
     activeTab: MainMenuTabs
-
     onStartGame: (
         mode: GameModes,
         side: PlayerColor,
@@ -22,13 +21,31 @@ interface MainMenuCardProps {
 }
 
 export const MainMenuCard = ({ activeTab, onStartGame }: MainMenuCardProps) => {
-    const selectedMode = useRef<GameModes>("STRATEGIC")
-    const selectedSide = useRef<PlayerColor>("WHITE")
-    const difficulty = useRef<BotDifficulty>("RUNNER-UP")
-    const isFirstRender = useRef(true)
+    const defaultGameMode = useGameStore((state) => state.defaultGameMode)
+    const defaultSide = useGameStore((state) => state.defaultSide)
+    const defaultDifficulty = useGameStore((state) => state.defaultDifficulty)
+    const isHydrated = useGameStore((state) => state.isHydrated)
 
+    const selectedGameMode = useRef<GameModes>("STRATEGIC")
+    const selectedSide = useRef<PlayerColor>("WHITE")
+    const selectedDifficulty = useRef<BotDifficulty>("RUNNER-UP")
+
+    const isFirstRender = useRef(true)
+    const hasInitializedDefaults = useRef(false)
     const [isTransitioning, setIsTransitioning] = useState(false)
-    
+    const [isReadyToRenderTabs, setIsReadyToRenderTabs] = useState(false)
+
+    useEffect(() => {
+        if (isHydrated && !hasInitializedDefaults.current) {
+            selectedGameMode.current = defaultGameMode
+            selectedSide.current = defaultSide
+            selectedDifficulty.current = defaultDifficulty
+            hasInitializedDefaults.current = true
+
+            setIsReadyToRenderTabs(true)
+        }
+    }, [isHydrated, defaultGameMode, defaultSide, defaultDifficulty])
+
     useEffect(() => {
         if (isFirstRender.current) return
         setIsTransitioning(true)
@@ -40,9 +57,9 @@ export const MainMenuCard = ({ activeTab, onStartGame }: MainMenuCardProps) => {
     }
 
     const handlePressStart = () => {
-        const mode = selectedMode.current
+        const mode = selectedGameMode.current
         const side = selectedSide.current
-        const diff = difficulty.current
+        const difficulty = selectedDifficulty.current
 
         const controllers: Record<PlayerColor, ControllerType> = activeTab === "BOT"
             ? { 
@@ -51,7 +68,7 @@ export const MainMenuCard = ({ activeTab, onStartGame }: MainMenuCardProps) => {
               }
             : { WHITE: "HUMAN", BLACK: "HUMAN" }
 
-        onStartGame(mode, side, controllers, activeTab === "BOT" ? diff : undefined)
+        onStartGame(mode, side, controllers, activeTab === "BOT" ? difficulty : undefined)
     }
 
     return (
@@ -68,33 +85,43 @@ export const MainMenuCard = ({ activeTab, onStartGame }: MainMenuCardProps) => {
             <Text className="font-desc text-sm text-neutral-400 text-center mb-6 px-4">Your favorite abstract board game, but digital.</Text>
 
             <View className="w-full" style={{ overflow: "visible" }}>
-                <AnimatePresence exitBeforeEnter>
-                    {activeTab === "BOT" && (
-                        <BotTab 
-                            key="bot-tab"
-                            mode={selectedMode.current}
-                            side={selectedSide.current}
-                            difficulty={difficulty.current}
-                            isFirstLoad={isFirstRender.current}
-                            onModeChange={(val) => { selectedMode.current = val }}
-                            onSideChange={(val) => { selectedSide.current = val }}
-                            onDifficultyChange={(val) => { difficulty.current = val }}
-                            onPressPlay={handlePressStart}
-                            onMountComplete={handleInitialMountComplete}
-                        />
-                    )}
+                {isReadyToRenderTabs && (
+                    <AnimatePresence exitBeforeEnter>
+                        {activeTab === "BOT" && (
+                            <BotTab
+                                key="bot-tab"
+                                mode={selectedGameMode.current}
+                                side={selectedSide.current}
+                                difficulty={selectedDifficulty.current}
+                                isFirstLoad={isFirstRender.current}
+                                onModeChange={(val) => { selectedGameMode.current = val as GameModes }}
+                                onSideChange={(val) => { selectedSide.current = val as PlayerColor }}
+                                onDifficultyChange={(val) => { selectedDifficulty.current = val as BotDifficulty }}
+                                onPressPlay={handlePressStart}
+                                onMountComplete={handleInitialMountComplete}
+                            />
+                        )}
 
-                    {activeTab === "FRIEND" && (
-                        <FriendsTab 
-                            key="friends-tab"
-                            mode={selectedMode.current}
-                            isFirstLoad={isFirstRender.current}
-                            onModeChange={(val) => { selectedMode.current = val }}
-                            onPressPlay={handlePressStart}
-                            onMountComplete={handleInitialMountComplete}
-                        />
-                    )}
-                </AnimatePresence>
+                        {activeTab === "FRIEND" && (
+                            <FriendsTab
+                                key="friends-tab"
+                                mode={selectedGameMode.current}
+                                isFirstLoad={isFirstRender.current}
+                                onModeChange={(val) => { selectedGameMode.current = val as GameModes }}
+                                onPressPlay={handlePressStart}
+                                onMountComplete={handleInitialMountComplete}
+                            />
+                        )}
+
+                        {activeTab === "SETTINGS" && (
+                            <SettingsTab
+                                key="settings-tab"
+                                isFirstLoad={isFirstRender.current}
+                                onMountComplete={handleInitialMountComplete}
+                            />
+                        )}
+                    </AnimatePresence>
+                )}
             </View>
         </MotiView>
     )

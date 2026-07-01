@@ -2,14 +2,7 @@ import { GameState, GameEngine, PlayerColor } from "../domain/engine"
 import { EvaluationEngine } from "./evaluation"
 import { BotProfile } from "./botAgent"
 
-export interface BotAction {
-    type: "MOVE_1" | "MOVE_2"
-    laneIndex: number
-    pieceId: string
-    targetLaneIndex?: number
-}
-
-export interface UnifiedTurnAction {
+export interface TurnAction {
     p1Lane: number
     p1PieceId: string
     p1Target: number
@@ -26,8 +19,8 @@ export class Minimax {
         return new Promise((resolve) => setTimeout(resolve, 0))
     }
 
-    public static generateLegalActions(state: GameState): UnifiedTurnAction[] {
-        const moves: UnifiedTurnAction[] = []
+    public static generateLegalActions(state: GameState): TurnAction[] {
+        const moves: TurnAction[] = []
         const maxIdx = state.config.laneCount - 1
 
         for (let l1 = 0; l1 <= maxIdx; l1++) {
@@ -90,13 +83,13 @@ export class Minimax {
         return moves
     }
 
-    public static async optimize(state: GameState, profile: BotProfile): Promise<UnifiedTurnAction | null> {
+    public static async optimize(state: GameState, profile: BotProfile): Promise<TurnAction | null> {
         this.operationCount = 0
 
         const actions = this.generateLegalActions(state)
         if (actions.length === 0) return null
 
-        let bestAction: UnifiedTurnAction | null = null
+        let bestAction: TurnAction | null = null
         let bestScore = -Infinity
 
         const player = state.activePlayer
@@ -202,7 +195,7 @@ export class Minimax {
         }
     }
 
-    private static simulateFullMove(state: GameState, action: UnifiedTurnAction): GameState {
+    private static simulateFullMove(state: GameState, action: TurnAction): GameState {
         let ongoing = this.simulatedMove1(state, action.p1Lane, action.p1PieceId, action.p1Target)
 
         if (action.p2Lane === -1) {

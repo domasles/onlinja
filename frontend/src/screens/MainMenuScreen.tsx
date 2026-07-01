@@ -1,6 +1,5 @@
-import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useState, useEffect } from "react"
 import { View } from "react-native"
-import { useState } from "react"
 import { MotiView } from "moti"
 
 import { ScreenWrapper } from "../components/layout/ScreenWrapper"
@@ -8,24 +7,13 @@ import { TabIndicator } from "../components/elements/TabIndicator"
 import { MainMenuCard } from "../components/cards/MainMenuCard"
 import { useGameStore } from "../hooks/useGameStore"
 
-export type MainMenuTabs = "BOT" | "FRIEND" | "TUTORIAL"
+export type MainMenuTabs = "BOT" | "FRIEND" | "SETTINGS"
 
 export const MainMenuScreen = () => {
-    const { initializeMatch, startTutorial } = useGameStore()
+    const { initializeMatch, loadSavedSettings } = useGameStore()
     const [activeTab, setActiveTab] = useState<MainMenuTabs>("BOT")
 
-    const handleTutorialPress = async () => {
-        setActiveTab("TUTORIAL")
-
-        try {
-            await AsyncStorage.setItem("onlinja_tutorial_completed", "false")
-            startTutorial()
-        }
-
-        catch (error) {
-            console.warn("Could not write tutorial flag status to AsyncStorage:", error)
-        }
-    }
+    useEffect(() => { loadSavedSettings() }, [])
 
     return (
         <ScreenWrapper maxWidthClass="max-w-md">
@@ -52,9 +40,9 @@ export const MainMenuScreen = () => {
 
                     <TabIndicator
                         activeTab={activeTab}
-                        targetTab="TUTORIAL"
-                        label="Tutorial"
-                        onPress={handleTutorialPress}
+                        targetTab="SETTINGS"
+                        label="Settings"
+                        onPress={() => setActiveTab("SETTINGS")}
                     />
                 </View>
 

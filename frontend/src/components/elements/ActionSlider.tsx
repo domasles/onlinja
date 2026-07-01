@@ -1,4 +1,4 @@
-import Animated, { useAnimatedStyle, useDerivedValue, withTiming, Easing } from "react-native-reanimated"
+import Animated, { useAnimatedStyle, withTiming, Easing } from "react-native-reanimated"
 import { View, Text, TouchableOpacity } from "react-native"
 import { useState } from "react"
 
@@ -14,16 +14,17 @@ export const ActionSlider = <T extends string>({ options, defaultValue, classNam
 
     const activeIndex = options.findIndex(opt => opt.value === selectedValue)
     const validIndex = activeIndex >= 0 ? activeIndex : 0
-
-    const sliderOffset = useDerivedValue(() => {
-        return withTiming(validIndex * 100, {
-            duration: 150,
-            easing: Easing.out(Easing.quad)
-        })
-    }, [validIndex])
+    
+    const totalOptions = options.length
+    const pillWidthPercent = 100 / totalOptions
+    const targetLeftShift = validIndex * pillWidthPercent
 
     const animatedSliderStyle = useAnimatedStyle(() => ({
-        transform: [{ translateX: `${sliderOffset.value}%` }]
+        left: withTiming(`${targetLeftShift}%`, {
+            duration: 150,
+            easing: Easing.out(Easing.quad)
+        }),
+        width: `${pillWidthPercent}%`
     }))
 
     const handlePress = (value: T) => {
@@ -33,10 +34,12 @@ export const ActionSlider = <T extends string>({ options, defaultValue, classNam
 
     return (
         <View className={`flex-row bg-neutral-100 p-1 rounded-xl relative h-11 items-center ${className}`}>
-            <Animated.View
-                style={[animatedSliderStyle]}
-                className="absolute left-1 top-1 bottom-1 w-1/2 bg-black rounded-lg shadow-xl"
-            />
+            <View className="absolute left-1 right-1 top-1 bottom-1 flex-row">
+                <Animated.View
+                    style={[animatedSliderStyle]}
+                    className="h-full bg-black rounded-lg shadow-xl"
+                />
+            </View>
 
             {options.map((opt) => (
                 <TouchableOpacity

@@ -1,10 +1,12 @@
-import { Minimax, UnifiedTurnAction } from "./minimax"
+import { Minimax, TurnAction } from "./minimax"
 import { GameState } from "../domain/engine"
 import { Humanizer } from "./humanizer"
 
 export type BotDifficulty = "ROOKIE" | "RUNNER-UP" | "LEGEND"
 
 export interface BotProfile {
+    name: string
+
     // Search Architecture
     lookaheadTurns: number
     blunderRate: number
@@ -26,6 +28,7 @@ export interface BotProfile {
 
 export const BOT_PRESETS: Record<BotDifficulty, BotProfile> = {
     "ROOKIE": {
+        name: "ROOKIE",
         lookaheadTurns: 1,
         blunderRate: 0.65,
         extraTurnBonus: 10,
@@ -38,6 +41,7 @@ export const BOT_PRESETS: Record<BotDifficulty, BotProfile> = {
         enemyClusterPenalty: 1
     },
     "RUNNER-UP": {
+        name: "RUNNER-UP",
         lookaheadTurns: 2,
         blunderRate: 0.15,
         extraTurnBonus: 20,
@@ -50,6 +54,7 @@ export const BOT_PRESETS: Record<BotDifficulty, BotProfile> = {
         enemyClusterPenalty: 2
     },
     "LEGEND": {
+        name: "LEGEND",
         lookaheadTurns: 3,
         blunderRate: 0.0,
         extraTurnBonus: 30,
@@ -64,7 +69,7 @@ export const BOT_PRESETS: Record<BotDifficulty, BotProfile> = {
 }
 
 export class BotAgent {
-    public static async computeMove(state: GameState, profile: BotProfile): Promise<UnifiedTurnAction | null> {
+    public static async computeMove(state: GameState, profile: BotProfile): Promise<TurnAction | null> {
         const optimal = await Minimax.optimize(state, profile)
         if (!optimal) return null
 
