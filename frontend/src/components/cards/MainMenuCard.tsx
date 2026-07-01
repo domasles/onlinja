@@ -1,18 +1,20 @@
+import { useRef, useState, useEffect } from "react"
 import { MotiView, AnimatePresence } from "moti"
 import { View, Text } from "react-native"
-import { useState } from "react"
 
 import { PlayerColor, ControllerType } from "../../domain/engine"
-import { ActionSlider } from "../elements/ActionSlider"
-import { GameButton } from "../elements/GameButton"
+import { MainMenuTabs } from "../../screens/MainMenuScreen"
 import { BotDifficulty } from "../../bot/botAgent"
-import { Dropdown } from "../elements/Dropdown"
+import { FriendsTab } from "../tabs/FriendsTab"
+import { BotTab } from "../tabs/BotTab"
+
+export type GameModes = "STRATEGIC" | "AGGRESSIVE"
 
 interface MainMenuCardProps {
-    activeTab: "BOT" | "FRIEND" | "TUTORIAL"
+    activeTab: MainMenuTabs
 
     onStartGame: (
-        mode: "STRATEGIC" | "AGGRESSIVE",
+        mode: GameModes,
         side: PlayerColor,
         controllers: Record<PlayerColor, ControllerType>,
         difficulty?: BotDifficulty
@@ -20,24 +22,42 @@ interface MainMenuCardProps {
 }
 
 export const MainMenuCard = ({ activeTab, onStartGame }: MainMenuCardProps) => {
-    const [selectedMode, setSelectedMode] = useState<"STRATEGIC" | "AGGRESSIVE">("STRATEGIC")
-    const [selectedSide, setSelectedSide] = useState<PlayerColor>("WHITE")
-    const [difficulty, setDifficulty] = useState<BotDifficulty>("RUNNER-UP")
+    const selectedMode = useRef<GameModes>("STRATEGIC")
+    const selectedSide = useRef<PlayerColor>("WHITE")
+    const difficulty = useRef<BotDifficulty>("RUNNER-UP")
+    const isFirstRender = useRef(true)
+
+    const [isTransitioning, setIsTransitioning] = useState(false)
+    
+    useEffect(() => {
+        if (isFirstRender.current) return
+        setIsTransitioning(true)
+    }, [activeTab])
+
+    const handleInitialMountComplete = () => {
+        setIsTransitioning(false)
+        isFirstRender.current = false
+    }
 
     const handlePressStart = () => {
+        const mode = selectedMode.current
+        const side = selectedSide.current
+        const diff = difficulty.current
+
         const controllers: Record<PlayerColor, ControllerType> = activeTab === "BOT"
             ? { 
-                WHITE: selectedSide === "WHITE" ? "HUMAN" : "BOT", 
-                BLACK: selectedSide === "BLACK" ? "HUMAN" : "BOT" 
+                WHITE: side === "WHITE" ? "HUMAN" : "BOT",
+                BLACK: side === "BLACK" ? "HUMAN" : "BOT"
               }
             : { WHITE: "HUMAN", BLACK: "HUMAN" }
 
-        onStartGame(selectedMode, selectedSide, controllers, activeTab === "BOT" ? difficulty : undefined)
+        onStartGame(mode, side, controllers, activeTab === "BOT" ? diff : undefined)
     }
 
     return (
         <MotiView
-            className="w-full bg-white border border-neutral-200/80 p-8 rounded-b-3xl rounded-tr-3xl shadow-xl items-center z-30"
+            className="w-full bg-white border border-neutral-200/80 p-8 rounded-b-3xl rounded-tr-3xl shadow-xl items-center"
+            style={{ overflow: isTransitioning ? "hidden" : "visible" }}
         >
             <View className="flex-row items-center space-x-2 gap-2 mb-2">
                 <View className="w-6 h-6 rounded-full bg-black border border-black"/>
@@ -45,77 +65,36 @@ export const MainMenuCard = ({ activeTab, onStartGame }: MainMenuCardProps) => {
             </View>
 
             <Text className="w-full text-center font-logo text-5xl text-black tracking-tight leading-tight m-5 mt-3">Onlinja</Text>
-            <Text className="font-desc text-sm text-neutral-400 text-center mb-6 px-4">
-                Your favorite abstract board game, but digital.
-            </Text>
-            
-            <View className="w-full mb-5">
-                <Text className="text-xs font-subheader text-neutral-400 uppercase tracking-widest mb-2 self-center">- Choose mode -</Text>
-                <ActionSlider 
-                    options={[
-                        { label: "Strategic", value: "STRATEGIC" },
-                        { label: "Aggressive", value: "AGGRESSIVE" }
-                    ]}
+            <Text className="font-desc text-sm text-neutral-400 text-center mb-6 px-4">Your favorite abstract board game, but digital.</Text>
 
-                    selectedValue={selectedMode}
-                    onSelect={setSelectedMode}
-                />
-            </View>
+            <View className="w-full" style={{ overflow: "visible" }}>
+                <AnimatePresence exitBeforeEnter>
+                    {activeTab === "BOT" && (
+                        <BotTab 
+                            key="bot-tab"
+                            mode={selectedMode.current}
+                            side={selectedSide.current}
+                            difficulty={difficulty.current}
+                            isFirstLoad={isFirstRender.current}
+                            onModeChange={(val) => { selectedMode.current = val }}
+                            onSideChange={(val) => { selectedSide.current = val }}
+                            onDifficultyChange={(val) => { difficulty.current = val }}
+                            onPressPlay={handlePressStart}
+                            onMountComplete={handleInitialMountComplete}
+                        />
+                    )}
 
-            <AnimatePresence initial={false}>
-                {activeTab === "BOT" && (
-                    <MotiView
-                        from={{ opacity: 0, height: 0, marginBottom: 0 }}
-                        animate={{ opacity: 1, height: 160, marginBottom: 20 }}
-                        exit={{ opacity: 0, height: 0, marginBottom: 0 }}
-                        transition={{ type: "timing", duration: 220 }}
-                        style={{ width: "100%", zIndex: 40 }}
-                    >
-                        <MotiView
-                            from={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ type: "timing", duration: 150, delay: 50 }}
-                            style={{ width: "100%"}}
-                        >
-                            <View className="w-full mb-5">
-                                <Text className="text-xs font-subheader text-neutral-400 uppercase tracking-widest mb-2 self-center">- Choose side -</Text>
-                                <ActionSlider 
-                                    options={[
-                                        { label: "White", value: "WHITE" },
-                                        { label: "Black", value: "BLACK" }
-                                    ]}
-
-                                    selectedValue={selectedSide}
-                                    onSelect={setSelectedSide}
-                                />
-                            </View>
-
-                            <View className="w-full mb-6 items-center">
-                                <Text className="text-xs font-subheader text-neutral-400 uppercase tracking-widest mb-2 self-center">- Bot Difficulty -</Text>
-                                <Dropdown
-                                    options={[
-                                        { label: "Rookie", value: "ROOKIE" },
-                                        { label: "Runner-Up", value: "RUNNER-UP" },
-                                        { label: "Legend", value: "LEGEND" }
-                                    ]}
-
-                                    selectedValue={difficulty}
-                                    onSelect={setDifficulty}
-                                />
-                            </View>
-                        </MotiView>
-                    </MotiView>
-                )}
-            </AnimatePresence>
-
-            <View className="w-full mt-2 z-10">
-                <GameButton
-                    label={activeTab === "BOT" ? "Play vs Bot" : "Start Local Match"}
-                    onPress={handlePressStart}
-                    variant="primary"
-                    className="w-full h-12"
-                />
+                    {activeTab === "FRIEND" && (
+                        <FriendsTab 
+                            key="friends-tab"
+                            mode={selectedMode.current}
+                            isFirstLoad={isFirstRender.current}
+                            onModeChange={(val) => { selectedMode.current = val }}
+                            onPressPlay={handlePressStart}
+                            onMountComplete={handleInitialMountComplete}
+                        />
+                    )}
+                </AnimatePresence>
             </View>
         </MotiView>
     )

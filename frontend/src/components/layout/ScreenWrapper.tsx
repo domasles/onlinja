@@ -17,7 +17,7 @@ export const ScreenWrapper = ({ children, maxWidthClass = "max-w-xl" }: ScreenWr
             <MotiView
                 animate={{ opacity: 1 }}
                 transition={{ type: "timing", duration: 250 }}
-                className={`w-full ${maxWidthClass} z-10 flex-col items-center`}
+                className={`w-full ${maxWidthClass} flex-col items-center`}
             >
                 {children}
             </MotiView>

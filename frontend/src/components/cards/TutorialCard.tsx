@@ -24,7 +24,7 @@ export const TutorialCard = ({ currentStep, onNext, onSkip, onExitComplete }: Tu
         <MotiView
             animate={{ opacity: 1 }}
             transition={{ type: "timing", duration: 500 }}
-            className="w-full bg-white border border-neutral-200/80 p-8 rounded-3xl shadow-xl items-center z-30 overflow-hidden"
+            className="w-full bg-white border border-neutral-200/80 p-8 rounded-3xl shadow-xl items-center overflow-hidden"
         >
             <View className="flex-row items-center space-x-2 gap-2 mb-2">
                 <View className="w-6 h-6 rounded-full bg-black border border-black"/>

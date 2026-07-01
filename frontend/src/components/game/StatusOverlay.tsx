@@ -17,7 +17,7 @@ export const StatusOverlay = ({ isVisible, children }: StatusOverlayProps) => {
             entering={FadeIn.easing(EASE_CURVE).duration(250)}
             exiting={FadeOut.easing(EASE_CURVE).duration(200)}
             style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
-            className="bg-neutral-950/10 z-50 items-center justify-center backdrop-blur-[4px]"
+            className="bg-neutral-950/10 items-center justify-center backdrop-blur-[4px]"
             importantForAccessibility="no-hide-descendants"
         >
             <TouchableOpacity
@@ -28,7 +28,7 @@ export const StatusOverlay = ({ isVisible, children }: StatusOverlayProps) => {
             <Animated.View
                 entering={ZoomIn.easing(EASE_CURVE).duration(250)}
                 exiting={ZoomOut.easing(EASE_CURVE).duration(200)}
-                className="items-center justify-center gap-3 z-50"
+                className="items-center justify-center gap-3"
             >
                 {children}
             </Animated.View>

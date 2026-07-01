@@ -9,22 +9,26 @@ interface DropdownOption<T extends string> {
 
 interface DropdownProps<T extends string> {
     options: DropdownOption<T>[]
-    selectedValue: T
-    onSelect: (value: T) => void
+    defaultValue?: T
+    className?: string
+    onChange?: (value: T) => void
 }
 
-export const Dropdown = <T extends string>({ options, selectedValue, onSelect }: DropdownProps<T>) => {
+export const Dropdown = <T extends string>({ options, defaultValue, className = "", onChange }: DropdownProps<T>) => {
     const [isOpen, setIsOpen] = useState(false)
+    const [selectedValue, setSelectedValue] = useState<T>(defaultValue ?? options[0].value)
+    
     const currentOption = options.find((opt) => opt.value === selectedValue)
     const { width, height } = useWindowDimensions()
 
     const handleSelect = (value: T) => {
-        onSelect(value)
+        setSelectedValue(value)
+        onChange?.(value)
         setIsOpen(false)
     }
 
     return (
-        <View className="w-[280px] self-center relative z-50">
+        <View className={`${className}`}>
             {isOpen && (
                 <TouchableOpacity
                     activeOpacity={1}
@@ -45,7 +49,7 @@ export const Dropdown = <T extends string>({ options, selectedValue, onSelect }:
             <TouchableOpacity
                 activeOpacity={0.9}
                 onPress={() => setIsOpen(!isOpen)}
-                className="w-full h-11 bg-neutral-100 border border-neutral-200 rounded-xl px-4 flex-row items-center justify-between z-50"
+                className="w-full h-11 bg-neutral-100 border border-neutral-200 rounded-xl px-4 flex-row items-center justify-between"
             >
                 <Text className="text-xs font-button text-neutral-800">
                     {currentOption?.label || "Select Option"}
@@ -61,13 +65,14 @@ export const Dropdown = <T extends string>({ options, selectedValue, onSelect }:
 
             <AnimatePresence>
                 {isOpen && (
-                    <MotiView 
+                    <MotiView
                         key="dropdown-menu"
                         from={{ opacity: 0, translateY: -10 }}
                         animate={{ opacity: 1, translateY: 0 }}
                         exit={{ opacity: 0, translateY: -10 }}
                         transition={{ type: "timing", duration: 180 }}
-                        style={{ 
+
+                        style={{
                             position: "absolute",
                             top: 48,
                             left: 0,
