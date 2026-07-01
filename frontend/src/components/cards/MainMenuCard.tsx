@@ -15,7 +15,7 @@ interface MainMenuCardProps {
         mode: GameModes,
         side: PlayerColor,
         controllers: Record<PlayerColor, ControllerType>,
-        difficulty?: BotDifficulty
+        difficulty: BotDifficulty
     ) => void
 }
 
@@ -67,12 +67,12 @@ export const MainMenuCard = ({ activeTab, onStartGame }: MainMenuCardProps) => {
               }
             : { WHITE: "HUMAN", BLACK: "HUMAN" }
 
-        onStartGame(mode, side, controllers, activeTab === "BOT" ? difficulty : undefined)
+        onStartGame(mode, side, controllers, difficulty)
     }
 
     return (
         <MotiView
-            className="w-full bg-white border border-neutral-200/80 p-8 rounded-b-3xl rounded-tr-3xl shadow-xl items-center"
+            className="w-full bg-white border border-neutral-200/80 p-8 rounded-b-3xl shadow-xl items-center"
             style={{ overflow: isTransitioning ? "hidden" : "visible" }}
         >
             <View className="flex-row items-center space-x-2 gap-2 mb-2">
