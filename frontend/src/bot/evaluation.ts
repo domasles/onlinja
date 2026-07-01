@@ -1,4 +1,4 @@
-import { GameState, PlayerColor, GameEngine } from "../domain/engine"
+import { GameState, PlayerColor, GameRules } from "../domain"
 import { BotProfile } from "./botAgent"
 
 export class EvaluationEngine {
@@ -6,7 +6,7 @@ export class EvaluationEngine {
         const board = state.board
         const maxIdx = state.config.laneCount - 1
         const isWhite = player === "WHITE"
-        const scores = GameEngine.calculateScores(board, state.config)
+        const scores = GameRules.calculateScores(board, state.config)
 
         let evaluation = isWhite 
             ? scores.whiteScore - scores.blackScore 

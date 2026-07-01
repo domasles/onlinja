@@ -1,5 +1,5 @@
 import { Easing } from "react-native-reanimated"
-import { GamePiece, PlayerColor } from "../domain/engine"
+import { GamePiece, PlayerColor } from "../domain"
 
 export interface GameConfig {
     laneCount: number

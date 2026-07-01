@@ -3,15 +3,14 @@ import { MotiView, AnimatePresence } from "moti"
 import { View, Text } from "react-native"
 
 import { useGameStore, GameModes } from "../../hooks/useGameStore"
-import { PlayerColor, ControllerType } from "../../domain/engine"
-import { MainMenuTabs } from "../../screens/MainMenuScreen"
-import { BotDifficulty } from "../../bot/botAgent"
-import { SettingsTab } from "../tabs/SettingsTab"
-import { FriendsTab } from "../tabs/FriendsTab"
-import { BotTab } from "../tabs/BotTab"
+import { PlayerColor, ControllerType } from "../../domain"
+import { SettingsTab, FriendsTab, BotTab } from "../tabs"
+import { MainMenuTabs } from "../../screens"
+import { BotDifficulty } from "../../bot"
 
 interface MainMenuCardProps {
     activeTab: MainMenuTabs
+
     onStartGame: (
         mode: GameModes,
         side: PlayerColor,

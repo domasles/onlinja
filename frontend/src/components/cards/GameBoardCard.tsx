@@ -1,11 +1,10 @@
 import Animated, { LinearTransition, ZoomOut, ZoomIn, FadeOut, FadeIn } from "react-native-reanimated"
 import { View, TouchableOpacity, Text, ActivityIndicator } from "react-native"
 
+import { RenderItem, GamePiece, StatusOverlay } from "../game"
 import { EASE_CURVE, tutorialInfo } from "../../utils/config"
-import { GameEngine, PlayerColor } from "../../domain/engine"
-import { GamePiece, RenderItem } from "../game/GamePiece"
 import { useGameStore } from "../../hooks/useGameStore"
-import { StatusOverlay } from "../game/StatusOverlay"
+import { GameRules, PlayerColor } from "../../domain"
 
 interface GameBoardCardProps {
     state: ReturnType<typeof useGameStore.getState>
@@ -19,7 +18,7 @@ export const GameBoardCard = ({ state, isThinking, isLocalHumanTurn }: GameBoard
 
     const laneIndices = Array.from({ length: totalLanes }, (_, i) => i)
     const orderedLanes = state.playerSide === "BLACK" ? laneIndices : [...laneIndices].reverse()
-    const validTargets = state.selectedPiece ? GameEngine.getValidTargets(state, state.selectedPiece.laneIndex) : []
+    const validTargets = state.selectedPiece ? GameRules.getValidTargets(state, state.selectedPiece.laneIndex) : []
 
     const h1 = state.history.move1
     const h2 = state.history.move2
@@ -127,7 +126,7 @@ export const GameBoardCard = ({ state, isThinking, isLocalHumanTurn }: GameBoard
                                         const activeId = isSelected ? state.selectedPiece!.pieceId : item.pieceId
 
                                         const virtualState = { ...state, selectedPiece: { laneIndex: laneIdx, pieceId: activeId } }
-                                        const hasLegalMoves = GameEngine.getValidTargets(virtualState, laneIdx).length > 0
+                                        const hasLegalMoves = GameRules.getValidTargets(virtualState, laneIdx).length > 0
 
                                         let isSelectable = isLocalHumanTurn && item.color === state.activePlayer && laneIdx !== opponentHomeIndex && hasLegalMoves
 

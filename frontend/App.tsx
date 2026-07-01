@@ -4,10 +4,8 @@ import { StatusBar, } from "react-native"
 import { useFonts } from "expo-font"
 import { useEffect } from "react"
 
-import { MainMenuScreen } from "./src/screens/MainMenuScreen"
-import { TutorialScreen } from "./src/screens/TutorialScreen"
+import { MainMenuScreen, TutorialScreen, GameScreen } from "./src/screens"
 import { useGameStore } from "./src/hooks/useGameStore"
-import { GameScreen } from "./src/screens/GameScreen"
 
 import "./global.css"
 

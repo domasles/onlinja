@@ -2,10 +2,10 @@ import { useState, useEffect } from "react"
 import { View } from "react-native"
 import { MotiView } from "moti"
 
-import { ScreenWrapper } from "../components/layout/ScreenWrapper"
-import { TabIndicator } from "../components/elements/TabIndicator"
-import { MainMenuCard } from "../components/cards/MainMenuCard"
+import { TabIndicator } from "../components/elements"
 import { useGameStore } from "../hooks/useGameStore"
+import { ScreenWrapper } from "../components/layout"
+import { MainMenuCard } from "../components/cards"
 
 export type MainMenuTabs = "BOT" | "FRIEND" | "SETTINGS"
 

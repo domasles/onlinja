@@ -1,4 +1,4 @@
-import { GameState, GameEngine, PlayerColor } from "../domain/engine"
+import { GameState, GameRules, PlayerColor } from "../domain"
 import { EvaluationEngine } from "./evaluation"
 import { BotProfile } from "./botAgent"
 
@@ -35,7 +35,7 @@ export class Minimax {
                     selectedPiece: { laneIndex: l1, pieceId: p1.id }
                 }
 
-                const targets1 = GameEngine.getValidTargets(vState1, l1)
+                const targets1 = GameRules.getValidTargets(vState1, l1)
 
                 for (const t1 of targets1) {
                     if (t1 === l1) continue
@@ -63,7 +63,7 @@ export class Minimax {
                                 selectedPiece: { laneIndex: l2, pieceId: p2.id }
                             }
 
-                            const targets2 = GameEngine.getValidTargets(vState2, l2)
+                            const targets2 = GameRules.getValidTargets(vState2, l2)
 
                             for (const t2 of targets2) {
                                 if (t2 === l2) continue
@@ -123,7 +123,7 @@ export class Minimax {
             await this.yieldToMainThread()
         }
 
-        if (depth === 0 || GameEngine.isMatchFinished(state)) {
+        if (depth === 0 || GameRules.isMatchFinished(state)) {
             return EvaluationEngine.evaluate(state, player, profile)
         }
 

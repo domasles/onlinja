@@ -1,6 +1,6 @@
 import { Minimax, TurnAction } from "./minimax"
-import { GameState } from "../domain/engine"
 import { Humanizer } from "./humanizer"
+import { GameState } from "../domain"
 
 export type BotDifficulty = "ROOKIE" | "RUNNER-UP" | "LEGEND"
 

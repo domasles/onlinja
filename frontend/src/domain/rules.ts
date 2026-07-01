@@ -1,84 +1,7 @@
-import { GameConfig, DEFAULT_LINJA_CONFIG } from "../utils/config"
-import { BotDifficulty } from "../bot/botAgent"
+import { GamePiece, GameState } from "./types"
+import { GameConfig } from "../utils/config"
 
-export type PlayerColor = "WHITE" | "BLACK"
-export type ControllerType = "HUMAN" | "BOT"
-
-export interface GamePiece {
-    id: string
-    player: PlayerColor
-}
-
-export interface MoveHistory {
-    move1: { pieceId: string; originLane: number; targetLane: number } | null
-    move2: { pieceId: string; originLane: number; targetLane: number } | null
-}
-
-export interface GameState {
-    board: GamePiece[][]
-    activePlayer: PlayerColor
-    currentMove: 1 | 2
-    move1LandingCount: number
-    selectedPiece: { laneIndex: number; pieceId: string } | null
-    gameMode: "AGGRESSIVE" | "STRATEGIC"
-    playerSide: PlayerColor
-    botDifficulty: BotDifficulty
-    move1MovedPieceId: string | null
-    history: MoveHistory
-    config: GameConfig
-    showExtraTurnEffect: boolean
-    isExtraTurnActive: boolean
-
-    controllers: {
-        WHITE: ControllerType
-        BLACK: ControllerType
-    }
-}
-
-export class GameEngine {
-    static generateInitialState(
-        mode: "AGGRESSIVE" | "STRATEGIC" = "STRATEGIC",
-        side: PlayerColor = "WHITE",
-        config: GameConfig = DEFAULT_LINJA_CONFIG,
-        controllers?: { WHITE: ControllerType; BLACK: ControllerType },
-        difficulty: BotDifficulty = "RUNNER-UP"
-    ): GameState {
-        const board: GamePiece[][] = Array.from({ length: config.laneCount }, () => [])
-        let idCounter = 0
-
-        for (let i = 0; i < config.piecesPerBase; i++) {
-            board[0].push({ id: `p-${idCounter++}`, player: "WHITE" })
-            board[config.laneCount - 1].push({ id: `p-${idCounter++}`, player: "BLACK" })
-        }
-
-        for (let l = 1; l < config.laneCount - 1; l++) {
-            board[l].push({ id: `p-${idCounter++}`, player: "WHITE" })
-            board[l].push({ id: `p-${idCounter++}`, player: "BLACK" })
-        }
-
-        const resolvedControllers = controllers ?? {
-            WHITE: side === "WHITE" ? "HUMAN" : "BOT",
-            BLACK: side === "BLACK" ? "HUMAN" : "BOT",
-        }
-
-        return {
-            board,
-            activePlayer: "WHITE",
-            currentMove: 1,
-            move1LandingCount: 0,
-            selectedPiece: null,
-            gameMode: mode,
-            playerSide: side,
-            botDifficulty: difficulty,
-            move1MovedPieceId: null,
-            history: { move1: null, move2: null },
-            config,
-            showExtraTurnEffect: false,
-            isExtraTurnActive: false,
-            controllers: resolvedControllers
-        }
-    }
-
+export class GameRules {
     static getValidTargets(state: GameState, laneIndex: number): number[] {
         const maxIdx = state.config.laneCount - 1
         const piece = state.board[laneIndex].find(p => p.id === state.selectedPiece?.pieceId || p.id === state.move1MovedPieceId)
@@ -110,11 +33,7 @@ export class GameEngine {
             }
         }
 
-        while (
-            currentIndex > 0 &&
-            currentIndex < maxIdx &&
-            state.board[currentIndex].length >= maxCapacity
-        ) {
+        while (currentIndex > 0 && currentIndex < maxIdx && state.board[currentIndex].length >= maxCapacity) {
             currentIndex += direction
         }
 
@@ -127,6 +46,7 @@ export class GameEngine {
     static calculateScores(board: GamePiece[][], config: GameConfig) {
         let whiteScore = 0
         let blackScore = 0
+
         const maxIdx = config.laneCount - 1
 
         for (let l = 0; l <= maxIdx; l++) {
@@ -181,12 +101,12 @@ export class GameEngine {
         for (let l = 0; l <= maxIdx; l++) {
             for (const piece of board[l]) {
                 if (!whiteHasMoves && piece.player === "WHITE") {
-                    const targets = GameEngine.getValidTargets({ ...state, activePlayer: "WHITE", selectedPiece: { laneIndex: l, pieceId: piece.id } }, l)
+                    const targets = GameRules.getValidTargets({ ...state, activePlayer: "WHITE", selectedPiece: { laneIndex: l, pieceId: piece.id } }, l)
                     if (targets.length > 0) whiteHasMoves = true
                 }
 
                 if (!blackHasMoves && piece.player === "BLACK") {
-                    const targets = GameEngine.getValidTargets({ ...state, activePlayer: "BLACK", selectedPiece: { laneIndex: l, pieceId: piece.id } }, l)
+                    const targets = GameRules.getValidTargets({ ...state, activePlayer: "BLACK", selectedPiece: { laneIndex: l, pieceId: piece.id } }, l)
                     if (targets.length > 0) blackHasMoves = true
                 }
             }

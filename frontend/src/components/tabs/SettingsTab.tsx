@@ -1,12 +1,10 @@
 import { View, Text } from "react-native"
 
 import { useGameStore, HighlightMode, GameModes } from "../../hooks/useGameStore"
-import { ActionSlider } from "../elements/ActionSlider"
-import { GameButton } from "../elements/GameButton"
-import { BotDifficulty } from "../../bot/botAgent"
-import { TabWrapper } from "../layout/TabWrapper"
-import { PlayerColor } from "../../domain/engine"
-import { Dropdown } from "../elements/Dropdown"
+import { ActionSlider, GameButton, Dropdown } from "../elements"
+import { PlayerColor } from "../../domain"
+import { BotDifficulty } from "../../bot"
+import { TabWrapper } from "../layout"
 
 interface SettingsTabProps {
     isFirstLoad?: boolean

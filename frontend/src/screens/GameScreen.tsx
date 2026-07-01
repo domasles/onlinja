@@ -2,14 +2,13 @@ import { useEffect, useState, useRef } from "react"
 import { View } from "react-native"
 import { MotiView } from "moti"
 
-import { ScreenWrapper } from "../components/layout/ScreenWrapper"
-import { GameBoardCard } from "../components/cards/GameBoardCard"
-import { GameOverCard } from "../components/cards/GameOverCard"
-import { GameButton } from "../components/elements/GameButton"
-import { ScoreHeader } from "../components/game/ScoreHeader"
-import { BOT_PRESETS, BotAgent } from "../bot/botAgent"
+import { GameBoardCard, GameOverCard } from "../components/cards"
 import { useGameStore } from "../hooks/useGameStore"
-import { GameEngine } from "../domain/engine"
+import { ScreenWrapper } from "../components/layout"
+import { GameButton } from "../components/elements"
+import { ScoreHeader } from "../components/game"
+import { BOT_PRESETS, BotAgent } from "../bot"
+import { GameRules } from "../domain"
 
 export const GameScreen = () => {
     const state = useGameStore()
@@ -17,8 +16,8 @@ export const GameScreen = () => {
     const [resetNonce, setResetNonce] = useState(0)
     const turnIdRef = useRef(0)
     
-    const scores = GameEngine.calculateScores(state.board, state.config)
-    const isGameOver = GameEngine.isMatchFinished(state) && state.currentMove === 1 && !state.showExtraTurnEffect && !state.isExtraTurnActive
+    const scores = GameRules.calculateScores(state.board, state.config)
+    const isGameOver = GameRules.isMatchFinished(state) && state.currentMove === 1 && !state.showExtraTurnEffect && !state.isExtraTurnActive
 
     const activeControllerType = state.controllers?.[state.activePlayer] ?? "HUMAN"
     const isLocalHumanTurn = !isGameOver && activeControllerType === "HUMAN"

@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity } from "react-native"
 import { MotiView, AnimatePresence } from "moti"
 
 import { TutorialStepConfig, TutorialTextVariant } from "../../utils/config"
-import { GameButton } from "../elements/GameButton"
+import { GameButton } from "../elements"
 
 interface TutorialCardProps {
     currentStep: TutorialStepConfig

@@ -1,9 +1,8 @@
 import { View, Text } from "react-native"
 
-import { ActionSlider } from "../elements/ActionSlider"
-import { GameButton } from "../elements/GameButton"
-import { TabWrapper } from "../layout/TabWrapper"
-import { GameModes } from "../cards/MainMenuCard"
+import { ActionSlider, GameButton } from "../elements"
+import { GameModes } from "../../hooks/useGameStore"
+import { TabWrapper } from "../layout"
 
 interface FriendsTabProps {
     mode: GameModes
