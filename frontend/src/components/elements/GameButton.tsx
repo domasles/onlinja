@@ -8,7 +8,7 @@ interface GameButtonProps {
 }
 
 export const GameButton = ({ label, onPress, variant = "primary", className = "" }: GameButtonProps) => {
-    const baseStyles = "py-4 rounded-xl items-center justify-center shadow-xl text-xs tracking-wider border border-neutral-200"
+    const baseStyles = "rounded-xl items-center justify-center shadow-xl text-xs tracking-wider border border-neutral-200"
     const variantStyles = variant === "primary"
         ? "bg-black text-white"
         : "bg-white text-neutral-500"
