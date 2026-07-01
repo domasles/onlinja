@@ -22,7 +22,7 @@ export const TabWrapper = ({ children, height, isFirstLoad = false, onMountCompl
 
                 animate={{ opacity: 1, height }}
                 exit={{ opacity: 0, height: 0 }}
-                transition={{ type: "timing", duration: 220 }}
+                transition={{ type: "timing", duration: 270 }}
                 style={{ width: "100%" }}
 
                 onDidAnimate={(prop, finished) => {
