@@ -72,7 +72,7 @@ export const MainMenuCard = ({ activeTab, onStartGame }: MainMenuCardProps) => {
 
     return (
         <MotiView
-            className="w-full bg-white border border-neutral-200/80 p-8 rounded-b-3xl shadow-xl items-center"
+            className="w-full bg-white border border-neutral-200/80 p-8 rounded-b-3xl rounded-tr-3xl shadow-xl items-center"
             style={{ overflow: isTransitioning ? "hidden" : "visible" }}
         >
             <View className="flex-row items-center space-x-2 gap-2 mb-2">

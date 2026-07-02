@@ -2,12 +2,6 @@ import { View } from "react-native"
 
 export const BackgroundMatrix = () => {
     return (
-        <View
-            className="absolute inset-0 opacity-[0.04]"
-            style={{
-                backgroundImage: "radial-gradient(#000000 1.75px, transparent 1.75px)",
-                backgroundSize: "20px 20px" 
-            } as any}
-        />
+        <View className="absolute inset-0 opacity-[0.04] bg-[radial-gradient(#000000_1.75px,transparent_1.75px)] bg-[size:20px_20px]"/>
     )
 }

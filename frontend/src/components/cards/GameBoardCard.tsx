@@ -1,10 +1,8 @@
-import Animated, { LinearTransition, ZoomOut, ZoomIn, FadeOut, FadeIn } from "react-native-reanimated"
-import { View, TouchableOpacity, Text, ActivityIndicator } from "react-native"
+import { View, Text, ActivityIndicator } from "react-native"
 
-import { EASE_CURVE, tutorialInfo } from "../../utils/config"
 import { useGameStore } from "../../hooks/useGameStore"
-import { GameRules, PlayerColor } from "../../domain"
-import { RenderItem, GamePiece } from "../game"
+import { GameRules } from "../../domain"
+import { LaneRow } from "../elements"
 import { Overlay } from "../layout"
 
 interface GameBoardCardProps {
@@ -21,184 +19,27 @@ export const GameBoardCard = ({ state, isThinking, isLocalHumanTurn }: GameBoard
     const orderedLanes = state.playerSide === "BLACK" ? laneIndices : [...laneIndices].reverse()
     const validTargets = state.selectedPiece ? GameRules.getValidTargets(state, state.selectedPiece.laneIndex) : []
 
-    const h1 = state.history.move1
-    const h2 = state.history.move2
     const maxIdx = totalLanes - 1
     const opponentHomeIndex = state.activePlayer === "WHITE" ? maxIdx : 0
 
     return (
         <View style={{ position: "relative", overflow: "hidden" }} className="w-full bg-white border border-neutral-200/80 rounded-2xl p-4 shadow-xl flex-col">
             <View>
-                {orderedLanes.map((laneIdx, viewIdx) => {
-                    const lanePieces = state.board[laneIdx]
-                    const isTargetable = validTargets.includes(laneIdx)
-                    const isHomeLane = laneIdx === 0 || laneIdx === maxIdx
+                {orderedLanes.map((laneIdx, viewIdx) => (
+                    <View key={laneIdx} className="w-full flex-col">
+                        {viewIdx > 0 && (<View className="h-[1px] bg-neutral-200 w-[96%] self-center my-0.5"/>)}
 
-                    let displayItems: RenderItem[] = []
-
-                    if (isHomeLane) {
-                        const rawGroups: { color: PlayerColor; pieces: typeof lanePieces }[] = []
-
-                        lanePieces.forEach((p) => {
-                            const lastGroup = rawGroups[rawGroups.length - 1]
-
-                            if (lastGroup && lastGroup.color === p.player) {
-                                lastGroup.pieces.push(p)
-                            }
-
-                            else {
-                                rawGroups.push({ color: p.player, pieces: [p] })
-                            }
-                        })
-
-                        rawGroups.forEach((g) => {
-                            g.pieces.forEach((p) => {
-                                displayItems.push({
-                                    type: "SINGLE",
-                                    color: g.color,
-                                    count: 1,
-                                    pieceId: p.id,
-                                    allIds: [p.id]
-                                })
-                            })
-                        })
-
-                        const maxCap = state.config.maxLaneCapacity
-
-                        while (displayItems.length > maxCap) {
-                            let merged = false
-
-                            for (let i = 0; i < displayItems.length - 1; i++) {
-                                if (displayItems[i].color === displayItems[i + 1].color) {
-                                    displayItems[i] = {
-                                        type: "MERGED",
-                                        color: displayItems[i].color,
-                                        count: displayItems[i].count + displayItems[i + 1].count,
-                                        pieceId: displayItems[i].pieceId,
-                                        allIds: [...displayItems[i].allIds, ...displayItems[i + 1].allIds]
-                                    }
-
-                                    displayItems.splice(i + 1, 1)
-                                    merged = true
-
-                                    break
-                                }
-                            }
-
-                            if (!merged) break
-                        }
-                    }
-
-                    else {
-                        lanePieces.forEach((p) => {
-                            displayItems.push({
-                                type: "SINGLE",
-                                color: p.player,
-                                count: 1,
-                                pieceId: p.id,
-                                allIds: [p.id]
-                            })
-                        })
-                    }
-
-                    let laneHighlightClass = "bg-white"
-
-                    if (highlightMode === "YES") {
-                        if (h1 && h1.originLane === laneIdx) laneHighlightClass = "bg-yellow-500/10"
-                        if (h2 && h2.originLane === laneIdx) laneHighlightClass = "bg-emerald-500/10"
-                    }
-
-                    if (isTargetable) laneHighlightClass = "bg-neutral-100"
-
-                    return (
-                        <View key={laneIdx} className="w-full flex-col">
-                            {viewIdx > 0 && (
-                                <View className="h-[1px] bg-neutral-200 w-[96%] self-center my-0.5"/>
-                            )}
-
-                            <TouchableOpacity
-                                activeOpacity={0.9}
-                                onPress={() => state.selectTargetLane(laneIdx)}
-                                className={`flex-row items-center h-14 w-full px-4 rounded-xl ${laneHighlightClass}`}
-                            >
-                                <View className="flex-row items-center justify-center flex-1 h-full">
-                                    {displayItems.map((item) => {
-                                        const isSelected = state.selectedPiece && item.allIds.includes(state.selectedPiece.pieceId)
-                                        const activeId = isSelected ? state.selectedPiece!.pieceId : item.pieceId
-
-                                        const virtualState = { ...state, selectedPiece: { laneIndex: laneIdx, pieceId: activeId } }
-                                        const hasLegalMoves = GameRules.getValidTargets(virtualState, laneIdx).length > 0
-
-                                        let isSelectable = isLocalHumanTurn && item.color === state.activePlayer && laneIdx !== opponentHomeIndex && hasLegalMoves
-
-                                        if (state.isTutorialMode) {
-                                            const currentStep = tutorialInfo[state.currentTutorialStepIdx]
-
-                                            if (currentStep && currentStep.type === "INTERACTIVE_BOARD" && currentStep.boardSetup) {
-                                                const { allowedSourceLane, allowedPieceId } = currentStep.boardSetup
-                                                const isFirstMove = state.currentMove === 1
-
-                                                if (isFirstMove) {
-                                                    isSelectable = laneIdx === allowedSourceLane && item.allIds.includes(allowedPieceId || "")
-                                                }
-
-                                                else {
-                                                    if (state.gameMode === "AGGRESSIVE") {
-                                                        isSelectable = item.allIds.includes(state.move1MovedPieceId || "") && hasLegalMoves
-                                                    }
-
-                                                    else {
-                                                        const firstMovePieceId = state.history.move1?.pieceId
-                                                        isSelectable = item.color === state.activePlayer && !item.allIds.includes(firstMovePieceId || "") && hasLegalMoves
-                                                    }
-                                                }
-                                            }
-
-                                            else {
-                                                isSelectable = false
-                                            }
-                                        }
-
-                                        let overlayRingStyle = isSelected
-                                            ? "border-[4px] border-neutral-400 scale-full"
-                                            : highlightMode === "YES" && item.allIds.some(id => h2 && h2.pieceId === id)
-                                            ? "border-[3px] border-emerald-400"
-                                            : highlightMode === "YES" && item.allIds.some(id => h1 && h1.pieceId === id)
-                                            ? "border-[3px] border-amber-400"
-                                            : `border-2 ${item.color === "WHITE" ? "border-black" : "border-neutral-800"}`
-
-                                        return (
-                                            <Animated.View
-                                                key={item.pieceId}
-                                                layout={LinearTransition.easing(EASE_CURVE).duration(300)}
-                                                entering={ZoomIn.easing(EASE_CURVE).duration(300)}
-                                                exiting={ZoomOut.easing(EASE_CURVE).duration(300)}
-                                                className="justify-center"
-                                            >
-                                                <Animated.View
-                                                    entering={FadeIn.easing(EASE_CURVE).duration(300)}
-                                                    exiting={FadeOut.easing(EASE_CURVE).duration(300)}
-                                                >
-                                                    <GamePiece
-                                                        item={item}
-                                                        isSelected={isSelected}
-                                                        isSelectable={isSelectable}
-                                                        overlayRingStyle={overlayRingStyle}
-
-                                                        onPress={(e) => {
-                                                            e.stopPropagation()
-                                                            state.selectPiece(laneIdx, activeId)
-                                                        }}
-                                                    />
-                                                </Animated.View>
-                                            </Animated.View>
-                                        )
-                                    })}
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                    )
-                })}
+                        <LaneRow
+                            laneIdx={laneIdx}
+                            state={state}
+                            isLocalHumanTurn={isLocalHumanTurn}
+                            isTargetable={validTargets.includes(laneIdx)}
+                            opponentHomeIndex={opponentHomeIndex}
+                            maxIdx={maxIdx}
+                            highlightMode={highlightMode}
+                        />
+                    </View>
+                ))}
             </View>
 
             {(state.showTurnChangeEffect && !state.isTutorialMode) && (

@@ -1,4 +1,4 @@
-import Animated, { useSharedValue, useAnimatedStyle, withSequence, withTiming } from "react-native-reanimated"
+import Animated, { useSharedValue, useAnimatedStyle, withSequence, withTiming, LinearTransition, ZoomOut, ZoomIn, FadeOut, FadeIn } from "react-native-reanimated"
 import { Pressable, Text } from "react-native"
 import { useEffect } from "react"
 
@@ -15,7 +15,7 @@ export interface RenderItem {
 
 interface GamePieceProps {
     item: RenderItem
-    isSelected: boolean | null
+    isSelected: boolean
     isSelectable: boolean
     overlayRingStyle: string
     onPress: (e: any) => void
@@ -49,20 +49,29 @@ export const GamePiece = ({ item, isSelected, isSelectable, overlayRingStyle, on
     }
 
     return (
-        <AnimatedPressable
-            disabled={!isSelectable}
-            onPress={handlePress}
-            style={[squishStyle]}
-
-            className={`w-9 h-9 rounded-full mx-1 shadow-xl items-center justify-center ${
-                item.color === "WHITE" ? "bg-white" : "bg-black"
-            } ${overlayRingStyle}`}
+        <Animated.View
+            layout={LinearTransition.easing(EASE_CURVE).duration(300)}
+            entering={ZoomIn.easing(EASE_CURVE).duration(300)}
+            exiting={ZoomOut.easing(EASE_CURVE).duration(300)}
+            className="justify-center"
         >
-            {item.type === "MERGED" && (
-                <Text className={`font-label text-xs ${item.color === "WHITE" ? "text-neutral-900" : "text-white"}`}>
-                    +{item.count}
-                </Text>
-            )}
-        </AnimatedPressable>
+            <AnimatedPressable
+                disabled={!isSelectable}
+                onPress={handlePress}
+                style={[squishStyle]}
+                className={`w-9 h-9 rounded-full mx-1 shadow-xl items-center justify-center ${item.color === "WHITE" ? "bg-white" : "bg-black"} ${overlayRingStyle}`}
+            >
+                <Animated.View
+                    entering={FadeIn.easing(EASE_CURVE).duration(300)}
+                    exiting={FadeOut.easing(EASE_CURVE).duration(300)}
+                >
+                    {item.type === "MERGED" && (
+                        <Text className={`font-label text-xs ${item.color === "WHITE" ? "text-neutral-900" : "text-white"}`}>
+                            +{item.count}
+                        </Text>
+                    )}
+                </Animated.View>
+            </AnimatedPressable>
+        </Animated.View>
     )
 }
