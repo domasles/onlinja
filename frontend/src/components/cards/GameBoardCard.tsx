@@ -201,7 +201,7 @@ export const GameBoardCard = ({ state, isThinking, isLocalHumanTurn }: GameBoard
                 })}
             </View>
 
-            {state.showTurnChangeEffect && (
+            {(state.showTurnChangeEffect && !state.isTutorialMode) && (
                 <Overlay isVisible={state.showTurnChangeEffect}>
                     <View className="flex-row items-center gap-3 bg-white px-3 py-1.5 rounded-full shadow-xl border border-neutral-200/50">
                         <Text className="text-sm font-desc text-neutral-800">

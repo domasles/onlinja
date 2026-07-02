@@ -21,11 +21,7 @@ export const TutorialCard = ({ currentStep, onNext, onSkip, onExitComplete }: Tu
     const isInteractiveBoard = currentStep.type === "INTERACTIVE_BOARD"
 
     return (
-        <MotiView
-            animate={{ opacity: 1 }}
-            transition={{ type: "timing", duration: 500 }}
-            className="w-full bg-white border border-neutral-200/80 p-8 rounded-3xl shadow-xl items-center overflow-hidden"
-        >
+        <View className="w-full bg-white border border-neutral-200/80 p-8 rounded-3xl shadow-xl items-center overflow-hidden">
             <View className="flex-row items-center space-x-2 gap-2 mb-2">
                 <View className="w-6 h-6 rounded-full bg-black border border-black"/>
                 <View className="w-6 h-6 rounded-full bg-white border border-neutral-300"/>
@@ -38,7 +34,7 @@ export const TutorialCard = ({ currentStep, onNext, onSkip, onExitComplete }: Tu
                         from={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        transition={{ type: "timing", duration: 200 }}
+                        transition={{ type: "timing", duration: 300 }}
                         style={{ width: "100%" }}
                     >
                         <View className="w-full items-center">
@@ -66,7 +62,7 @@ export const TutorialCard = ({ currentStep, onNext, onSkip, onExitComplete }: Tu
                                             key={`${currentStep.id}-line-${idx}`}
                                             from={{ opacity: 0, translateY: -10 }}
                                             animate={{ opacity: 1, translateY: 0 }}
-                                            transition={{ type: "timing", duration: 200, delay: idx * 80 }}
+                                            transition={{ type: "timing", duration: 300, delay: idx * 80 }}
                                             style={{ width: "100%" }}
                                         >
                                             <Text className={`${variantClass} text-center -mb-0.5 w-full`}>
@@ -101,6 +97,6 @@ export const TutorialCard = ({ currentStep, onNext, onSkip, onExitComplete }: Tu
                     </MotiView>
                 </AnimatePresence>
             </View>
-        </MotiView>
+        </View>
     )
 }

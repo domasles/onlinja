@@ -120,6 +120,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
     }),
 
     startTutorial: () => set(() => {
+        AsyncStorage.setItem("onlinja_tutorial_completed", "false").catch(() => {})
+    
         const firstStep = tutorialInfo[0]
         const baseState = GameMutations.generateInitialState(firstStep.gameMode, "WHITE", DEFAULT_LINJA_CONFIG)
         const runtimeLaneCount = firstStep.boardSetup?.board?.length || DEFAULT_LINJA_CONFIG.laneCount

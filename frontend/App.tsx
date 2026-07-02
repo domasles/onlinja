@@ -26,16 +26,10 @@ export const App = () => {
 
     useEffect(() => {
         const checkTutorialStatus = async () => {
-            try {
-                const hasCompleted = await AsyncStorage.getItem("onlinja_tutorial_completed")
+            const hasCompleted = await AsyncStorage.getItem("onlinja_tutorial_completed").catch(() => {})
 
-                if (!hasCompleted || hasCompleted === "false") {
-                    startTutorial()
-                }
-            }
-
-            catch (error) {
-                console.warn("Could not load stored tutorial flag status:", error)
+            if (!hasCompleted || hasCompleted === "false") {
+                startTutorial()
             }
         }
 

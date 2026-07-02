@@ -30,21 +30,7 @@ export const SettingsTab = ({
     return (
         <TabWrapper height={365} onMountComplete={onMountComplete} isFirstLoad={isFirstLoad}>
             <View className="w-full mb-4 items-center self-center">
-                <Text className="text-xs font-subheader text-neutral-400 uppercase tracking-widest mb-2 self-center">- Highlight Lanes -</Text>
-                <ActionSlider
-                    options={[
-                        { label: "Yes", value: "YES" },
-                        { label: "No", value: "NO" }
-                    ]}
-
-                    defaultValue={highlightMode}
-                    className="w-75/100"
-                    onChange={(val) => setHighlightMode(val as HighlightMode)}
-                />
-            </View>
-
-            <View className="w-full mb-4 items-center self-center">
-                <Text className="text-xs font-subheader text-neutral-400 uppercase tracking-widest mb-2 self-center">- Default Game Mode -</Text>
+                <Text className="text-xs font-subheader text-neutral-400 uppercase tracking-widest mb-2 self-center">- Default Mode -</Text>
                 <ActionSlider
                     options={[
                         { label: "Strategic", value: "STRATEGIC" },
@@ -68,6 +54,20 @@ export const SettingsTab = ({
                     defaultValue={defaultSide}
                     className="w-75/100"
                     onChange={(val) => setDefaultSide(val as PlayerColor)}
+                />
+            </View>
+
+            <View className="w-full mb-4 items-center self-center">
+                <Text className="text-xs font-subheader text-neutral-400 uppercase tracking-widest mb-2 self-center">- Highlight Lanes -</Text>
+                <ActionSlider
+                    options={[
+                        { label: "Yes", value: "YES" },
+                        { label: "No", value: "NO" }
+                    ]}
+
+                    defaultValue={highlightMode}
+                    className="w-75/100"
+                    onChange={(val) => setHighlightMode(val as HighlightMode)}
                 />
             </View>
 
