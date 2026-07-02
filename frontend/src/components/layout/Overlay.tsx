@@ -4,12 +4,12 @@ import React from "react"
 
 import { EASE_CURVE } from "../../utils/config"
 
-interface StatusOverlayProps {
+interface OverlayProps {
     isVisible: boolean
     children: React.ReactNode
 }
 
-export const StatusOverlay = ({ isVisible, children }: StatusOverlayProps) => {
+export const Overlay = ({ isVisible, children }: OverlayProps) => {
     if (!isVisible) return null
 
     return (
@@ -25,6 +25,7 @@ export const StatusOverlay = ({ isVisible, children }: StatusOverlayProps) => {
                 style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
                 onPress={(e) => e.stopPropagation()}
             />
+
             <Animated.View
                 entering={ZoomIn.easing(EASE_CURVE).duration(250)}
                 exiting={ZoomOut.easing(EASE_CURVE).duration(200)}

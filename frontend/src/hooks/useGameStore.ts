@@ -38,7 +38,8 @@ interface GameStore extends GameState {
 
     selectPiece: (laneIndex: number, pieceId: string) => void
     selectTargetLane: (targetLaneIndex: number) => void
-    clearExtraTurnEffect: () => void
+    setShowExtraTurnEffect: (show: boolean) => void
+    setTurnChangeEffect: (show: boolean) => void
     resetGame: () => void
 
     startTutorial: () => void
@@ -213,6 +214,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
         )
     }),
 
-    clearExtraTurnEffect: () => set(() => ({ showExtraTurnEffect: false })),
+    setShowExtraTurnEffect: (show: boolean) => set(() => ({ showExtraTurnEffect: show })),
+    setTurnChangeEffect: (show) => set(() => ({ showTurnChangeEffect: show })),
     resetGame: () => set((state) => GameMutations.generateInitialState(state.gameMode, state.playerSide, state.config))
 }))

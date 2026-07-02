@@ -27,6 +27,7 @@ export interface GameState {
     history: MoveHistory
     config: GameConfig
     showExtraTurnEffect: boolean
+    showTurnChangeEffect: boolean
     isExtraTurnActive: boolean
 
     controllers: {

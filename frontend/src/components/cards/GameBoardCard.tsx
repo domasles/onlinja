@@ -1,10 +1,11 @@
 import Animated, { LinearTransition, ZoomOut, ZoomIn, FadeOut, FadeIn } from "react-native-reanimated"
 import { View, TouchableOpacity, Text, ActivityIndicator } from "react-native"
 
-import { RenderItem, GamePiece, StatusOverlay } from "../game"
 import { EASE_CURVE, tutorialInfo } from "../../utils/config"
 import { useGameStore } from "../../hooks/useGameStore"
 import { GameRules, PlayerColor } from "../../domain"
+import { RenderItem, GamePiece } from "../game"
+import { Overlay } from "../layout"
 
 interface GameBoardCardProps {
     state: ReturnType<typeof useGameStore.getState>
@@ -27,7 +28,7 @@ export const GameBoardCard = ({ state, isThinking, isLocalHumanTurn }: GameBoard
 
     return (
         <View style={{ position: "relative", overflow: "hidden" }} className="w-full bg-white border border-neutral-200/80 rounded-2xl p-4 shadow-xl flex-col">
-            <View style={{ pointerEvents: isLocalHumanTurn && !isThinking ? "auto" : "none" }}>
+            <View>
                 {orderedLanes.map((laneIdx, viewIdx) => {
                     const lanePieces = state.board[laneIdx]
                     const isTargetable = validTargets.includes(laneIdx)
@@ -200,28 +201,35 @@ export const GameBoardCard = ({ state, isThinking, isLocalHumanTurn }: GameBoard
                 })}
             </View>
 
-            {isThinking && (
-                <StatusOverlay isVisible={isThinking}>
+            {state.showTurnChangeEffect && (
+                <Overlay isVisible={state.showTurnChangeEffect}>
                     <View className="flex-row items-center gap-3 bg-white px-3 py-1.5 rounded-full shadow-xl border border-neutral-200/50">
-                        <ActivityIndicator size="small" color="#262626" />
+                        <Text className="text-sm font-desc text-neutral-800">
+                            {state.activePlayer === "WHITE" ? "White's turn" : "Black's turn"}
+                        </Text>
+                    </View>
+                </Overlay>
+            )}
+
+            {(isThinking && !state.showTurnChangeEffect) && (
+                <Overlay isVisible={isThinking}>
+                    <View className="flex-row items-center gap-3 bg-white px-3 py-1.5 rounded-full shadow-xl border border-neutral-200/50">
+                        <ActivityIndicator size="small" color="#262626"/>
                         <Text className="text-sm font-desc text-neutral-800">Bot thinking...</Text>
                     </View>
-                </StatusOverlay>
+                </Overlay>
             )}
 
             {state.showExtraTurnEffect && (
-                <StatusOverlay isVisible={state.showExtraTurnEffect}>
-                    <Animated.View
-                        layout={LinearTransition.springify()}
-                        className="bg-white w-20 h-20 rounded-full items-center justify-center border-4 border-emerald-500 shadow-md relative"
-                    >
+                <Overlay isVisible={state.showExtraTurnEffect}>
+                    <View className="bg-white w-20 h-20 rounded-full items-center justify-center border-4 border-emerald-500 shadow-md relative">
                         <View className="w-6 h-1 bg-emerald-500 rounded-full absolute"/>
                         <View className="w-1 h-6 bg-emerald-500 rounded-full absolute"/>
-                    </Animated.View>
+                    </View>
                     <Text className="text-sm font-desc text-neutral-800 bg-white px-3 py-1.5 rounded-full shadow-xl border border-neutral-200/50">
                         Extra turn awarded to player {state.activePlayer === "WHITE" ? "White" : "Black"}
                     </Text>
-                </StatusOverlay>
+                </Overlay>
             )}
         </View>
     )

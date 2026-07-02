@@ -42,16 +42,17 @@ export class GameMutations {
             history: { move1: null, move2: null },
             config,
             showExtraTurnEffect: false,
+            showTurnChangeEffect: false,
             isExtraTurnActive: false,
             controllers: resolvedControllers
         }
     }
 
     static selectPiece(
-        state: GameState, 
-        laneIndex: number, 
-        pieceId: string, 
-        isTutorialMode: boolean, 
+        state: GameState,
+        laneIndex: number,
+        pieceId: string,
+        isTutorialMode: boolean,
         currentTutorialStepIdx: number
     ): Partial<GameState> {
         if (isTutorialMode) {
@@ -59,10 +60,13 @@ export class GameMutations {
             if (step && step.type === "INTERACTIVE_BOARD" && step.boardSetup) {
                 if (state.currentMove === 1) {
                     const { allowedSourceLane, allowedPieceId } = step.boardSetup
+
                     if (allowedSourceLane !== undefined && allowedSourceLane !== laneIndex) return {}
                     if (allowedPieceId !== undefined && allowedPieceId !== pieceId) return {}
                 }
-            } else {
+            }
+
+            else {
                 return {} 
             }
         }
@@ -94,8 +98,8 @@ export class GameMutations {
     }
 
     static selectTargetLane(
-        state: GameState, 
-        targetLaneIndex: number, 
+        state: GameState,
+        targetLaneIndex: number,
         isTutorialMode: boolean,
         onAdvanceTutorial: () => void
     ): Partial<GameState> {
@@ -136,9 +140,12 @@ export class GameMutations {
                     move1MovedPieceId: null,
                     history: cleanHistory,
                     activePlayer: state.activePlayer === "WHITE" ? "BLACK" : "WHITE",
+                    showTurnChangeEffect: true,
                     isExtraTurnActive: false
                 }
-            } else {
+            }
+
+            else {
                 const proposedState = {
                     ...state,
                     board: nextBoard,
@@ -149,19 +156,23 @@ export class GameMutations {
                 }
 
                 let holdsAnyLegalMove2 = false
+
                 for (let l = 0; l <= maxIdx; l++) {
                     if (!nextBoard[l]) continue
+
                     for (const p of nextBoard[l]) {
                         if (p.player !== state.activePlayer) continue
                         if (state.gameMode === "AGGRESSIVE" && p.id !== movingPiece.id) continue
                         if (state.gameMode === "STRATEGIC" && p.id === movingPiece.id) continue
 
                         const testState = { ...proposedState, selectedPiece: { laneIndex: l, pieceId: p.id } }
+
                         if (GameRules.getValidTargets(testState, l).length > 0) {
                             holdsAnyLegalMove2 = true
                             break
                         }
                     }
+
                     if (holdsAnyLegalMove2) break
                 }
 
@@ -174,9 +185,12 @@ export class GameMutations {
                         move1MovedPieceId: null,
                         history: cleanHistory,
                         activePlayer: state.activePlayer === "WHITE" ? "BLACK" : "WHITE",
+                        showTurnChangeEffect: true,
                         isExtraTurnActive: false
                     }
-                } else {
+                }
+
+                else {
                     resultingState = {
                         board: nextBoard,
                         selectedPiece: null,
@@ -188,7 +202,9 @@ export class GameMutations {
                     }
                 }
             }
-        } else if (state.currentMove === 2) {
+        }
+
+        else if (state.currentMove === 2) {
             if (isTargetEmptyPrior && !isHomeBase && !state.isExtraTurnActive) {
                 resultingState = {
                     board: nextBoard,
@@ -196,25 +212,32 @@ export class GameMutations {
                     currentMove: 1,
                     move1LandingCount: 0,
                     move1MovedPieceId: null,
+
                     history: {
                         ...state.history,
                         move2: { pieceId: movingPiece.id, originLane: laneIndex, targetLane: targetLaneIndex }
                     },
+
                     showExtraTurnEffect: true,
                     isExtraTurnActive: true
                 }
-            } else {
+            }
+
+            else {
                 resultingState = {
                     board: nextBoard,
                     selectedPiece: null,
                     currentMove: 1,
                     move1LandingCount: 0,
                     move1MovedPieceId: null,
+
                     history: {
                         ...state.history,
                         move2: { pieceId: movingPiece.id, originLane: laneIndex, targetLane: targetLaneIndex }
                     },
+
                     activePlayer: state.activePlayer === "WHITE" ? "BLACK" : "WHITE",
+                    showTurnChangeEffect: true,
                     isExtraTurnActive: false
                 }
             }
@@ -222,6 +245,7 @@ export class GameMutations {
 
         if (isTutorialMode) {
             const turnEndedOnMove1 = state.currentMove === 1 && resultingState.currentMove === 1 && resultingState.activePlayer !== state.activePlayer
+
             if (state.currentMove === 2 || turnEndedOnMove1) {
                 setTimeout(() => { onAdvanceTutorial() }, 0)
             }

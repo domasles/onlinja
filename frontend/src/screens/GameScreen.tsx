@@ -24,7 +24,25 @@ export const GameScreen = () => {
     const isBotTurn = !isGameOver && activeControllerType === "BOT"
 
     useEffect(() => {
-        if (!isBotTurn || state.currentMove !== 1 || state.showExtraTurnEffect) return
+        if (isGameOver) return
+
+        if (state.showTurnChangeEffect) {
+            const timer = setTimeout(() => { state.setTurnChangeEffect(false) }, 1000)
+            return () => clearTimeout(timer)
+        }
+    }, [state.showTurnChangeEffect, isGameOver])
+
+    useEffect(() => {
+        if (isGameOver) return
+
+        if (state.showExtraTurnEffect) {
+            const timer = setTimeout(() => { state.setShowExtraTurnEffect(false) }, 1500)
+            return () => clearTimeout(timer)
+        }
+    }, [state.showExtraTurnEffect, isGameOver])
+
+    useEffect(() => {
+        if (!isBotTurn || state.currentMove !== 1 || state.showExtraTurnEffect || state.showTurnChangeEffect) return
 
         turnIdRef.current += 1
         const currentTurnId = turnIdRef.current
@@ -57,18 +75,8 @@ export const GameScreen = () => {
         }
 
         executeBotTurn()
-
-        return () => {
-            turnIdRef.current += 1
-        }
-    }, [isBotTurn, state.activePlayer, state.isExtraTurnActive, state.showExtraTurnEffect, resetNonce])
-
-    useEffect(() => {
-        if (state.showExtraTurnEffect) {
-            const timer = setTimeout(() => { state.clearExtraTurnEffect() }, 1500)
-            return () => clearTimeout(timer)
-        }
-    }, [state.showExtraTurnEffect])
+        return () => { turnIdRef.current += 1 }
+    }, [isBotTurn, state.activePlayer, state.isExtraTurnActive, state.showExtraTurnEffect, state.showTurnChangeEffect, resetNonce])
 
     const handleRestart = () => {
         const savedDiff = state.botDifficulty
