@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from "react"
 import { MotiView, AnimatePresence } from "moti"
 import { View, Text } from "react-native"
 
-import { useGameStore, GameModes } from "../../hooks/useGameStore"
+import { useGameStore, GameModes } from "../../hooks"
 import { PlayerColor, ControllerType } from "../../domain"
 import { SettingsTab, FriendsTab, BotTab } from "../tabs"
 import { MainMenuTabs } from "../../screens"

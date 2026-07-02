@@ -1,14 +1,14 @@
 import { View, Text } from "react-native"
 import { PlayerColor } from "../../domain"
 
-interface ScoreHeaderProps {
+interface GameHeaderProps {
     whiteScore: number
     blackScore: number
     currentMove: number
     activePlayer: PlayerColor
 }
 
-export const ScoreHeader = ({ whiteScore, blackScore, currentMove, activePlayer }: ScoreHeaderProps) => {
+export const GameHeader = ({ whiteScore, blackScore, currentMove, activePlayer }: GameHeaderProps) => {
     return (
         <View className="w-full flex-row justify-between items-center bg-white p-4 rounded-2xl shadow-xl border border-neutral-200/60 mb-4">
             <View className="items-start m-1">

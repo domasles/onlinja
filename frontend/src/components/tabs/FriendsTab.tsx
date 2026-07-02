@@ -1,7 +1,7 @@
 import { View, Text } from "react-native"
 
 import { ActionSlider, GameButton } from "../elements"
-import { GameModes } from "../../hooks/useGameStore"
+import { GameModes } from "../../hooks"
 import { TabWrapper } from "../layout"
 
 interface FriendsTabProps {

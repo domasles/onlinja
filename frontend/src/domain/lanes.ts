@@ -1,7 +1,7 @@
 import { GamePiece as DomainPiece, PlayerColor } from "./types";
-import { useGameStore } from "../hooks/useGameStore";
 import { RenderItem } from "../components/game";
 import { tutorialInfo } from "../utils/config";
+import { useGameStore } from "../hooks";
 
 export class GameLanes {
     static groupLanePieces(

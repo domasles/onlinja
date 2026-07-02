@@ -1,9 +1,9 @@
 import { View, Text } from "react-native"
 
 import { ActionSlider, GameButton, Dropdown } from "../elements"
-import { GameModes } from "../../hooks/useGameStore"
-import { PlayerColor } from "../../domain"
 import { BotDifficulty } from "../../bot"
+import { PlayerColor } from "../../domain"
+import { GameModes } from "../../hooks"
 import { TabWrapper } from "../layout"
 
 interface BotTabProps {

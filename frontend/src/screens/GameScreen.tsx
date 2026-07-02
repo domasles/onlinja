@@ -1,13 +1,9 @@
-import { View } from "react-native"
 import { useState } from "react"
 
+import { useTurnEffects, useBotTurn, useGameStore } from "../hooks"
 import { GameBoardCard, GameOverCard } from "../components/cards"
-import { useTurnEffects } from "../hooks/useTurnEffects"
-import { useGameStore } from "../hooks/useGameStore"
+import { GameFooter, GameHeader } from "../components/game"
 import { ScreenWrapper } from "../components/layout"
-import { GameButton } from "../components/elements"
-import { ScoreHeader } from "../components/game"
-import { useBotTurn } from "../hooks/useBotTurn"
 import { GameRules } from "../domain"
 
 export const GameScreen = () => {
@@ -54,7 +50,7 @@ export const GameScreen = () => {
                 />
             ) : (
                 <>
-                    <ScoreHeader
+                    <GameHeader
                         whiteScore={scores.whiteScore}
                         blackScore={scores.blackScore}
                         currentMove={state.currentMove}
@@ -67,20 +63,10 @@ export const GameScreen = () => {
                         isLocalHumanTurn={isLocalHumanTurn}
                     />
 
-                    <View className="w-full flex-row space-x-3 gap-3 mt-4">
-                        <GameButton
-                            label="Leave Match"
-                            onPress={handleLeave}
-                            variant="secondary"
-                            className="flex-1 w-full h-12"
-                        />
-                        <GameButton
-                            label="Reset"
-                            onPress={handleRestart}
-                            variant="primary"
-                            className="flex-1 w-full h-12"
-                        />
-                    </View>
+                    <GameFooter
+                        onRestart={handleRestart}
+                        onLeave={handleLeave}
+                    />
                 </>
             )}
         </ScreenWrapper>

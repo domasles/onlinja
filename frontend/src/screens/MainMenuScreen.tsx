@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react"
 import { View } from "react-native"
-import { MotiView } from "moti"
 
 import { TabIndicator } from "../components/elements"
-import { useGameStore } from "../hooks/useGameStore"
 import { ScreenWrapper } from "../components/layout"
 import { MainMenuCard } from "../components/cards"
+import { useGameStore } from "../hooks"
 
 export type MainMenuTabs = "BOT" | "FRIEND" | "SETTINGS"
 

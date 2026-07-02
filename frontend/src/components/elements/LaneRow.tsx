@@ -1,8 +1,8 @@
 import { View, TouchableOpacity } from "react-native"
 
-import { useGameStore } from "../../hooks/useGameStore"
 import { GameLanes, GameRules } from "../../domain"
 import { GamePiece } from "../game/GamePiece"
+import { useGameStore } from "../../hooks"
 
 interface LaneRowProps {
     laneIdx: number

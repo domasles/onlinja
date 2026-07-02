@@ -1,6 +1,6 @@
 import { View, Text, ActivityIndicator } from "react-native"
 
-import { useGameStore } from "../../hooks/useGameStore"
+import { useGameStore } from "../../hooks"
 import { GameRules } from "../../domain"
 import { LaneRow } from "../elements"
 import { Overlay } from "../layout"

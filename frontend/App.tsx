@@ -5,7 +5,7 @@ import { useFonts } from "expo-font"
 import { useEffect } from "react"
 
 import { MainMenuScreen, TutorialScreen, GameScreen } from "./src/screens"
-import { useGameStore } from "./src/hooks/useGameStore"
+import { useGameStore } from "./src/hooks"
 
 import "./global.css"
 

@@ -1,2 +1,3 @@
 export { RenderItem, GamePiece } from "./GamePiece"
-export { ScoreHeader } from "./ScoreHeader"
+export { GameFooter } from "./GameFooter"
+export { GameHeader } from "./GameHeader"

@@ -2,9 +2,9 @@ import { useState, useEffect, useRef } from "react"
 import { MotiView } from "moti"
 
 import { GameBoardCard, TutorialCard } from "../components/cards"
-import { useGameStore } from "../hooks/useGameStore"
 import { ScreenWrapper } from "../components/layout"
 import { tutorialInfo } from "../utils/config"
+import { useGameStore } from "../hooks"
 
 export const TutorialScreen = () => {
     const state = useGameStore()

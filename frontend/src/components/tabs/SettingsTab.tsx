@@ -1,6 +1,6 @@
 import { View, Text } from "react-native"
 
-import { useGameStore, HighlightMode, GameModes } from "../../hooks/useGameStore"
+import { useGameStore, HighlightMode, GameModes } from "../../hooks"
 import { ActionSlider, GameButton, Dropdown } from "../elements"
 import { PlayerColor } from "../../domain"
 import { BotDifficulty } from "../../bot"
