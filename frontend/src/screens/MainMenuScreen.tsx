@@ -17,40 +17,33 @@ export const MainMenuScreen = () => {
 
     return (
         <ScreenWrapper maxWidthClass="max-w-md">
-            <MotiView
-                from={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ type: "timing", duration: 200 }}
-                className="w-full"
-            >
-                <View className="w-full flex-row justify-start px-4 -mb-[1px] gap-1">
-                    <TabIndicator
-                        activeTab={activeTab}
-                        targetTab="BOT"
-                        label="VS Bot"
-                        onPress={() => setActiveTab("BOT")}
-                    />
-
-                    <TabIndicator
-                        activeTab={activeTab}
-                        targetTab="FRIEND"
-                        label="VS Friend"
-                        onPress={() => setActiveTab("FRIEND")}
-                    />
-
-                    <TabIndicator
-                        activeTab={activeTab}
-                        targetTab="SETTINGS"
-                        label="Settings"
-                        onPress={() => setActiveTab("SETTINGS")}
-                    />
-                </View>
-
-                <MainMenuCard
+            <View className="w-full flex-row justify-start px-4 -mb-[1px] gap-1">
+                <TabIndicator
                     activeTab={activeTab}
-                    onStartGame={(mode, side, controllers, difficulty) => {initializeMatch(mode, side, controllers, difficulty)}}
+                    targetTab="BOT"
+                    label="VS Bot"
+                    onPress={() => setActiveTab("BOT")}
                 />
-            </MotiView>
+
+                <TabIndicator
+                    activeTab={activeTab}
+                    targetTab="FRIEND"
+                    label="VS Friend"
+                    onPress={() => setActiveTab("FRIEND")}
+                />
+
+                <TabIndicator
+                    activeTab={activeTab}
+                    targetTab="SETTINGS"
+                    label="Settings"
+                    onPress={() => setActiveTab("SETTINGS")}
+                />
+            </View>
+
+            <MainMenuCard
+                activeTab={activeTab}
+                onStartGame={(mode, side, controllers, difficulty) => {initializeMatch(mode, side, controllers, difficulty)}}
+            />
         </ScreenWrapper>
     )
 }

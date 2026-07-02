@@ -107,12 +107,7 @@ export const GameScreen = () => {
                     onLeave={handleLeave}
                 />
             ) : (
-                <MotiView
-                    from={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ type: "timing", duration: 200 }}
-                    className="w-full flex-col relative"
-                >
+                <>
                     <ScoreHeader
                         whiteScore={scores.whiteScore}
                         blackScore={scores.blackScore}
@@ -140,7 +135,7 @@ export const GameScreen = () => {
                             className="flex-1 w-full h-12"
                         />
                     </View>
-                </MotiView>
+                </>
             )}
         </ScreenWrapper>
     )

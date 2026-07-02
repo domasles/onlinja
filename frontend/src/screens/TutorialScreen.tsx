@@ -32,40 +32,32 @@ export const TutorialScreen = () => {
 
     return (
         <ScreenWrapper maxWidthClass="max-w-md">
-            <MotiView
-                from={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ type: "timing", duration: 200 }}
-                className="w-full items-center gap-6"
-            >
-                <TutorialCard
-                    currentStep={currentStep}
-                    onNext={state.nextTutorialStep}
-                    onSkip={state.exitTutorial}
-                    onExitComplete={handleExitComplete}
-                />
+            <TutorialCard
+                currentStep={currentStep}
+                onNext={state.nextTutorialStep}
+                onSkip={state.exitTutorial}
+                onExitComplete={handleExitComplete}
+            />
 
-                {shouldRenderBoard && (
-                    <MotiView
-                        from={{ opacity: 0, scale: 0.95 }}
+            {shouldRenderBoard && (
+                <MotiView
+                    from={{ opacity: 0, scale: 0.95 }}
 
-                        animate={{
-                            opacity: currentStep.type === "INTERACTIVE_BOARD" ? 1 : 0,
-                            scale: currentStep.type === "INTERACTIVE_BOARD" ? 1 : 0.95
-                        }}
+                    animate={{
+                        opacity: currentStep.type === "INTERACTIVE_BOARD" ? 1 : 0,
+                        scale: currentStep.type === "INTERACTIVE_BOARD" ? 1 : 0.95
+                    }}
 
-                        transition={{ type: "timing", duration: 250 }}
-                        className="w-full mt-2"
-                        style={{ pointerEvents: currentStep.type === "INTERACTIVE_BOARD" ? "auto" : "none" }}
-                    >
-                        <GameBoardCard
-                            state={state}
-                            isThinking={false}
-                            isLocalHumanTurn={true}
-                        />
-                    </MotiView>
-                )}
-            </MotiView>
+                    transition={{ type: "timing", duration: 250 }}
+                    className="w-full mt-8"
+                >
+                    <GameBoardCard
+                        state={state}
+                        isThinking={false}
+                        isLocalHumanTurn={true}
+                    />
+                </MotiView>
+            )}
         </ScreenWrapper>
     )
 }
