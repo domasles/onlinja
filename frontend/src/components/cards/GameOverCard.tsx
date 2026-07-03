@@ -16,12 +16,10 @@ interface GameOverCardProps {
 export const GameOverCard = ({ whiteScore, blackScore, onRestart, onLeave }: GameOverCardProps) => {
     const [showStats, setShowStats] = useState(false)
 
-    const whiteTurns = useGameStore((s) => s.whiteTurns ?? 0)
-    const blackTurns = useGameStore((s) => s.blackTurns ?? 0)
+    const whiteMoves = useGameStore((s) => s.whiteMoves ?? 0)
+    const blackMoves = useGameStore((s) => s.blackMoves ?? 0)
     const whiteExtraTurns = useGameStore((s) => s.whiteExtraTurns ?? 0)
     const blackExtraTurns = useGameStore((s) => s.blackExtraTurns ?? 0)
-    const whiteEscapes = useGameStore((s) => s.whiteEscapes ?? 0)
-    const blackEscapes = useGameStore((s) => s.blackEscapes ?? 0)
     const whiteHomeRuns = useGameStore((s) => s.whiteHomeRuns ?? 0)
     const blackHomeRuns = useGameStore((s) => s.blackHomeRuns ?? 0)
 
@@ -80,30 +78,22 @@ export const GameOverCard = ({ whiteScore, blackScore, onRestart, onLeave }: Gam
                 activeOpacity={0.7}
                 className="flex-row items-center justify-center"
             >
-                <Text className="text-xs font-subheader text-neutral-500 border-b border-neutral-300 tracking-wider mr-2 uppercase">
+                <Text className="text-xs font-subheader text-neutral-500 border-b border-neutral-300 tracking-wider uppercase">
                     {showStats ? "Hide Match Statistics" : "Show Match Statistics"}
                 </Text>
-                <MotiView
-                    animate={{ rotate: showStats ? "90deg" : "0deg" }}
-                    transition={{ type: "timing", duration: 200 }}
-                >
-                    <Text className="text-sm font-subheader text-neutral-400">&gt;</Text>
-                </MotiView>
             </TouchableOpacity>
 
             <MotiView
                 from={{ height: 0, marginTop: 0 }}
-                animate={{ height: showStats ? 230 : 0 }}
+                animate={{ height: showStats ? 170 : 0 }}
                 transition={{ type: "timing", duration: 300 }}
                 style={{ width: "100%", overflow: "hidden" }}
             >
                 <Stats 
-                    whiteTurns={whiteTurns}
-                    blackTurns={blackTurns}
+                    whiteMoves={whiteMoves}
+                    blackMoves={blackMoves}
                     whiteExtraTurns={whiteExtraTurns}
                     blackExtraTurns={blackExtraTurns}
-                    whiteEscapes={whiteEscapes}
-                    blackEscapes={blackEscapes}
                     whiteHomeRuns={whiteHomeRuns}
                     blackHomeRuns={blackHomeRuns}
                 />

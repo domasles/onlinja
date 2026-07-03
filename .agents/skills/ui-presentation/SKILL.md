@@ -57,9 +57,9 @@ This skill guides visual rendering inside the presentation components folder.
 - **Tab Navigation Logic:** Three main tabs (`BotTab`, `FriendsTab`, `SettingsTab`) manage game configuration. Tabs communicate with global store through `currentScreen` state. Bot difficulty dropdown is conditionally hidden when "LOCAL" tab is active.
 
 ## Game Statistics Display
-- **Stats Component:** Central game statistics display showing turns, extra turns, escapes, and home runs. Uses `StatsRow` subcomponents for individual stat display. Primarily used in `GameOverCard` for post-match statistics review.
+- **Stats Component:** Central game statistics display showing moves (NOT turns), extra turns, and home runs. Uses `StatsRow` subcomponents for individual stat display. Primarily used in `GameOverCard` for post-match statistics review.
 - **StatsRow Component:** Individual stat row with white and black player values. Features label in middle with `font-subheader text-neutral-500`. White and black values use `font-score text-black font-semibold`. Responsive layout with proper spacing and borders.
-- **Statistics Placement:** Stats displayed in `GameOverCard` as expandable section below match results. Provides comprehensive post-match analysis including turn counts, extra turns, escapes, and home runs.
+- **Statistics Placement:** Stats displayed in `GameOverCard` as expandable section below match results. Provides comprehensive post-match analysis including move counts, extra turns, and home runs.
 
 ## Turn Indication Overlay
 - **Turn Change Animations:** Visual feedback for turn transitions using `Overlay` component with `EASE_CURVE` animations. Move 1 highlights use `bg-yellow-500/10`, Move 2 paths use `bg-emerald-500/10`, valid targets use `bg-neutral-100`.

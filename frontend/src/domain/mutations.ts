@@ -45,12 +45,10 @@ export class GameMutations {
             showTurnChangeEffect: false,
             isExtraTurnActive: false,
             controllers: resolvedControllers,
-            whiteTurns: 0,
-            blackTurns: 0,
+            whiteMoves: 0,
+            blackMoves: 0,
             whiteExtraTurns: 0,
             blackExtraTurns: 0,
-            whiteEscapes: 0,
-            blackEscapes: 0,
             whiteHomeRuns: 0,
             blackHomeRuns: 0
         }
@@ -176,8 +174,6 @@ export class GameMutations {
                     activePlayer: state.activePlayer === "WHITE" ? "BLACK" : "WHITE",
                     showTurnChangeEffect: true,
                     isExtraTurnActive: false,
-                    whiteTurns: state.whiteTurns + (state.activePlayer === "WHITE" ? 1 : 0),
-                    blackTurns: state.blackTurns + (state.activePlayer === "BLACK" ? 1 : 0)
                 }
             }
 
@@ -223,8 +219,6 @@ export class GameMutations {
                         activePlayer: state.activePlayer === "WHITE" ? "BLACK" : "WHITE",
                         showTurnChangeEffect: true,
                         isExtraTurnActive: false,
-                        whiteTurns: state.whiteTurns + (state.activePlayer === "WHITE" ? 1 : 0),
-                        blackTurns: state.blackTurns + (state.activePlayer === "BLACK" ? 1 : 0)
                     }
                 }
 
@@ -279,14 +273,13 @@ export class GameMutations {
                     activePlayer: state.activePlayer === "WHITE" ? "BLACK" : "WHITE",
                     showTurnChangeEffect: true,
                     isExtraTurnActive: false,
-                    whiteTurns: state.whiteTurns + (state.activePlayer === "WHITE" ? 1 : 0),
-                    blackTurns: state.blackTurns + (state.activePlayer === "BLACK" ? 1 : 0)
                 }
             }
         }
 
-        resultingState.whiteEscapes = (state.whiteEscapes || 0) + escapeDeltaWhite
-        resultingState.blackEscapes = (state.blackEscapes || 0) + escapeDeltaBlack
+        resultingState.whiteMoves = state.whiteMoves + (state.activePlayer === "WHITE" ? 1 : 0)
+        resultingState.blackMoves = state.blackMoves + (state.activePlayer === "BLACK" ? 1 : 0)
+
         resultingState.whiteHomeRuns = (state.whiteHomeRuns || 0) + runDeltaWhite
         resultingState.blackHomeRuns = (state.blackHomeRuns || 0) + runDeltaBlack
 

@@ -29,12 +29,10 @@ export interface GameState {
     showExtraTurnEffect: boolean
     showTurnChangeEffect: boolean
     isExtraTurnActive: boolean
-    whiteTurns: number
-    blackTurns: number
+    whiteMoves: number
+    blackMoves: number
     whiteExtraTurns: number
     blackExtraTurns: number
-    whiteEscapes: number
-    blackEscapes: number
     whiteHomeRuns: number
     blackHomeRuns: number
 
