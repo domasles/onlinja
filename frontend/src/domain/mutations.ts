@@ -44,7 +44,15 @@ export class GameMutations {
             showExtraTurnEffect: false,
             showTurnChangeEffect: false,
             isExtraTurnActive: false,
-            controllers: resolvedControllers
+            controllers: resolvedControllers,
+            whiteTurns: 0,
+            blackTurns: 0,
+            whiteExtraTurns: 0,
+            blackExtraTurns: 0,
+            whiteEscapes: 0,
+            blackEscapes: 0,
+            whiteHomeRuns: 0,
+            blackHomeRuns: 0
         }
     }
 
@@ -57,6 +65,7 @@ export class GameMutations {
     ): Partial<GameState> {
         if (isTutorialMode) {
             const step = tutorialInfo[currentTutorialStepIdx]
+
             if (step && step.type === "INTERACTIVE_BOARD" && step.boardSetup) {
                 if (state.currentMove === 1) {
                     const { allowedSourceLane, allowedPieceId } = step.boardSetup
@@ -120,6 +129,31 @@ export class GameMutations {
         const maxIdx = state.config.laneCount - 1
         const isHomeBase = targetLaneIndex === 0 || targetLaneIndex === maxIdx
 
+        let escapeDeltaWhite = 0
+        let escapeDeltaBlack = 0
+        let runDeltaWhite = 0
+        let runDeltaBlack = 0
+
+        if (movingPiece.player === "WHITE") {
+            if (laneIndex === 0 && targetLaneIndex !== 0) {
+                escapeDeltaWhite = 1
+            }
+
+            if (targetLaneIndex === maxIdx && laneIndex !== maxIdx) {
+                runDeltaWhite = 1
+            }
+        }
+
+        else if (movingPiece.player === "BLACK") {
+            if (laneIndex === maxIdx && targetLaneIndex !== maxIdx) {
+                escapeDeltaBlack = 1
+            }
+
+            if (targetLaneIndex === 0 && laneIndex !== 0) {
+                runDeltaBlack = 1
+            }
+        }
+
         let resultingState: Partial<GameState> = {}
 
         if (state.currentMove === 1) {
@@ -141,7 +175,9 @@ export class GameMutations {
                     history: cleanHistory,
                     activePlayer: state.activePlayer === "WHITE" ? "BLACK" : "WHITE",
                     showTurnChangeEffect: true,
-                    isExtraTurnActive: false
+                    isExtraTurnActive: false,
+                    whiteTurns: state.whiteTurns + (state.activePlayer === "WHITE" ? 1 : 0),
+                    blackTurns: state.blackTurns + (state.activePlayer === "BLACK" ? 1 : 0)
                 }
             }
 
@@ -186,7 +222,9 @@ export class GameMutations {
                         history: cleanHistory,
                         activePlayer: state.activePlayer === "WHITE" ? "BLACK" : "WHITE",
                         showTurnChangeEffect: true,
-                        isExtraTurnActive: false
+                        isExtraTurnActive: false,
+                        whiteTurns: state.whiteTurns + (state.activePlayer === "WHITE" ? 1 : 0),
+                        blackTurns: state.blackTurns + (state.activePlayer === "BLACK" ? 1 : 0)
                     }
                 }
 
@@ -219,7 +257,9 @@ export class GameMutations {
                     },
 
                     showExtraTurnEffect: true,
-                    isExtraTurnActive: true
+                    isExtraTurnActive: true,
+                    whiteExtraTurns: state.whiteExtraTurns + (state.activePlayer === "WHITE" ? 1 : 0),
+                    blackExtraTurns: state.blackExtraTurns + (state.activePlayer === "BLACK" ? 1 : 0)
                 }
             }
 
@@ -238,10 +278,17 @@ export class GameMutations {
 
                     activePlayer: state.activePlayer === "WHITE" ? "BLACK" : "WHITE",
                     showTurnChangeEffect: true,
-                    isExtraTurnActive: false
+                    isExtraTurnActive: false,
+                    whiteTurns: state.whiteTurns + (state.activePlayer === "WHITE" ? 1 : 0),
+                    blackTurns: state.blackTurns + (state.activePlayer === "BLACK" ? 1 : 0)
                 }
             }
         }
+
+        resultingState.whiteEscapes = (state.whiteEscapes || 0) + escapeDeltaWhite
+        resultingState.blackEscapes = (state.blackEscapes || 0) + escapeDeltaBlack
+        resultingState.whiteHomeRuns = (state.whiteHomeRuns || 0) + runDeltaWhite
+        resultingState.blackHomeRuns = (state.blackHomeRuns || 0) + runDeltaBlack
 
         if (isTutorialMode) {
             const turnEndedOnMove1 = state.currentMove === 1 && resultingState.currentMove === 1 && resultingState.activePlayer !== state.activePlayer

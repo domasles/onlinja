@@ -1,7 +1,10 @@
-import { View, Text } from "react-native"
+import { View, Text, TouchableOpacity } from "react-native"
+import { useState } from "react"
 import { MotiView } from "moti"
 
+import { useGameStore } from "../../hooks/useGameStore"
 import { GameButton } from "../elements"
+import { Stats } from "../game"
 
 interface GameOverCardProps {
     whiteScore: number
@@ -11,6 +14,17 @@ interface GameOverCardProps {
 }
 
 export const GameOverCard = ({ whiteScore, blackScore, onRestart, onLeave }: GameOverCardProps) => {
+    const [showStats, setShowStats] = useState(false)
+
+    const whiteTurns = useGameStore((s) => s.whiteTurns ?? 0)
+    const blackTurns = useGameStore((s) => s.blackTurns ?? 0)
+    const whiteExtraTurns = useGameStore((s) => s.whiteExtraTurns ?? 0)
+    const blackExtraTurns = useGameStore((s) => s.blackExtraTurns ?? 0)
+    const whiteEscapes = useGameStore((s) => s.whiteEscapes ?? 0)
+    const blackEscapes = useGameStore((s) => s.blackEscapes ?? 0)
+    const whiteHomeRuns = useGameStore((s) => s.whiteHomeRuns ?? 0)
+    const blackHomeRuns = useGameStore((s) => s.blackHomeRuns ?? 0)
+
     const getWinnerLabel = () => {
         if (whiteScore > blackScore) return "WHITE WINS!"
         if (blackScore > whiteScore) return "BLACK WINS!"
@@ -46,7 +60,7 @@ export const GameOverCard = ({ whiteScore, blackScore, onRestart, onLeave }: Gam
                 </View>
             </View>
 
-            <View className="w-full flex-col space-y-3 gap-3">
+            <View className="w-full flex-col space-y-3 gap-3 mb-6">
                 <GameButton 
                     label="Play Again"
                     onPress={onRestart}
@@ -60,6 +74,40 @@ export const GameOverCard = ({ whiteScore, blackScore, onRestart, onLeave }: Gam
                     className="w-full h-12"
                 />
             </View>
+
+            <TouchableOpacity 
+                onPress={() => setShowStats(!showStats)}
+                activeOpacity={0.7}
+                className="flex-row items-center justify-center"
+            >
+                <Text className="text-xs font-subheader text-neutral-500 border-b border-neutral-300 tracking-wider mr-2 uppercase">
+                    {showStats ? "Hide Match Statistics" : "Show Match Statistics"}
+                </Text>
+                <MotiView
+                    animate={{ rotate: showStats ? "90deg" : "0deg" }}
+                    transition={{ type: "timing", duration: 200 }}
+                >
+                    <Text className="text-sm font-subheader text-neutral-400">&gt;</Text>
+                </MotiView>
+            </TouchableOpacity>
+
+            <MotiView
+                from={{ height: 0, marginTop: 0 }}
+                animate={{ height: showStats ? 230 : 0 }}
+                transition={{ type: "timing", duration: 300 }}
+                style={{ width: "100%", overflow: "hidden" }}
+            >
+                <Stats 
+                    whiteTurns={whiteTurns}
+                    blackTurns={blackTurns}
+                    whiteExtraTurns={whiteExtraTurns}
+                    blackExtraTurns={blackExtraTurns}
+                    whiteEscapes={whiteEscapes}
+                    blackEscapes={blackEscapes}
+                    whiteHomeRuns={whiteHomeRuns}
+                    blackHomeRuns={blackHomeRuns}
+                />
+            </MotiView>
         </MotiView>
     )
 }

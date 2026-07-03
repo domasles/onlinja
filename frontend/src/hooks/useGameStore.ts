@@ -115,7 +115,15 @@ export const useGameStore = create<GameStore>((set, get) => ({
             isTutorialMode: false,
             currentTutorialStepIdx: 0,
             ...(controllers && { controllers }),
-            ...(difficulty && { botDifficulty: difficulty })
+            ...(difficulty && { botDifficulty: difficulty }),
+            whiteTurns: 0,
+            blackTurns: 0,
+            whiteExtraTurns: 0,
+            blackExtraTurns: 0,
+            whiteEscapes: 0,
+            blackEscapes: 0,
+            whiteHomeRuns: 0,
+            blackHomeRuns: 0
         }
     }),
 
@@ -132,6 +140,14 @@ export const useGameStore = create<GameStore>((set, get) => ({
             isTutorialMode: true,
             currentTutorialStepIdx: 0,
             controllers: { WHITE: "HUMAN", BLACK: "BOT" },
+            whiteTurns: 0,
+            blackTurns: 0,
+            whiteExtraTurns: 0,
+            blackExtraTurns: 0,
+            whiteEscapes: 0,
+            blackEscapes: 0,
+            whiteHomeRuns: 0,
+            blackHomeRuns: 0,
 
             config: {
                 ...baseState.config,
@@ -193,7 +209,15 @@ export const useGameStore = create<GameStore>((set, get) => ({
             isTutorialMode: false,
             currentTutorialStepIdx: 0,
             currentScreen: "MAIN_MENU",
-            ...GameMutations.generateInitialState()
+            ...GameMutations.generateInitialState(),
+            whiteTurns: 0,
+            blackTurns: 0,
+            whiteExtraTurns: 0,
+            blackExtraTurns: 0,
+            whiteEscapes: 0,
+            blackEscapes: 0,
+            whiteHomeRuns: 0,
+            blackHomeRuns: 0
         }))
     },
 
@@ -218,5 +242,28 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
     setShowExtraTurnEffect: (show: boolean) => set(() => ({ showExtraTurnEffect: show })),
     setTurnChangeEffect: (show) => set(() => ({ showTurnChangeEffect: show })),
-    resetGame: () => set((state) => GameMutations.generateInitialState(state.gameMode, state.playerSide, state.config))
+    resetGame: () => set((state) => {
+        const initialState = GameMutations.generateInitialState(
+            state.gameMode,
+            state.playerSide,
+            state.config,
+            state.controllers,
+            state.botDifficulty
+        )
+
+        return {
+            ...initialState,
+            currentScreen: "GAMEPLAY",
+            isTutorialMode: false,
+            currentTutorialStepIdx: 0,
+            whiteTurns: 0,
+            blackTurns: 0,
+            whiteExtraTurns: 0,
+            blackExtraTurns: 0,
+            whiteEscapes: 0,
+            blackEscapes: 0,
+            whiteHomeRuns: 0,
+            blackHomeRuns: 0
+        }
+    })
 }))
