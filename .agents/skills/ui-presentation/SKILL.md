@@ -50,3 +50,38 @@ This skill guides visual rendering inside the presentation components folder.
 - **Token Compression:** Lanes packed to baseline limits combine tokens visually into a single node with a numeric tracking indicator (+count).
 - **Extra Turn Interrupt:** When `isExtraTurnActive` triggers, a layer interceptor locks screen navigation using pointer events. Renders a translucent canvas overlay using `backdrop-blur-[4px]` around a structured notification container.
 - **Transitions:** Layout alterations, piece reposition paths, and modal screens utilize the consistent `EASE_CURVE` easing function defined in `config.ts`.
+
+## Tab System Architecture
+- **TabIndicator Component:** Individual tab triggers with active state management. Uses `bg-white border-neutral-200/80` for active tabs and `bg-neutral-100 border-transparent` for inactive tabs. Active tabs use `text-black font-subheader-semibold` while inactive use `text-neutral-400 font-subheader`. Handles press events through `onPress` callback.
+- **TabWrapper Component:** Container for tab content with mount animations and height management. Supports `isFirstLoad` prop for initial animation control and `onMountComplete` callback for animation completion. Height is configurable via `height` prop.
+- **Tab Navigation Logic:** Three main tabs (`BotTab`, `FriendsTab`, `SettingsTab`) manage game configuration. Tabs communicate with global store through `currentScreen` state. Bot difficulty dropdown is conditionally hidden when "LOCAL" tab is active.
+
+## Game Statistics Display
+- **Stats Component:** Central game statistics display showing turns, extra turns, escapes, and home runs. Uses `StatsRow` subcomponents for individual stat display. Primarily used in `GameOverCard` for post-match statistics review.
+- **StatsRow Component:** Individual stat row with white and black player values. Features label in middle with `font-subheader text-neutral-500`. White and black values use `font-score text-black font-semibold`. Responsive layout with proper spacing and borders.
+- **Statistics Placement:** Stats displayed in `GameOverCard` as expandable section below match results. Provides comprehensive post-match analysis including turn counts, extra turns, escapes, and home runs.
+
+## Turn Indication Overlay
+- **Turn Change Animations:** Visual feedback for turn transitions using `Overlay` component with `EASE_CURVE` animations. Move 1 highlights use `bg-yellow-500/10`, Move 2 paths use `bg-emerald-500/10`, valid targets use `bg-neutral-100`.
+- **Post-Turn Indicators:** After turn completion, displays move results and updates game state. Shows piece movements and lane occupancy changes with smooth transitions.
+- **Extra Turn Visuals:** When `isExtraTurnActive` triggers, renders translucent overlay with `backdrop-blur-[4px]` and structured notification container. Locks screen navigation during extra turn processing.
+- **Move Validation Feedback:** Real-time visual highlighting of legal moves based on `getValidTargets()` results. Provides immediate user feedback during piece selection and movement.
+
+## Component Integration
+- **GameBoardCard:** Main game board component with lane rows, turn change overlays, bot thinking indicators, and extra turn effects
+- **GameHeader:** Score display and turn information (Move X - Player's Turn)
+- **GameFooter:** Restart and leave match controls
+- **LaneRow:** Individual lane display with piece visualization and highlighting
+- **Overlay:** Generic overlay component used for turn changes, bot thinking, and extra turns
+- **Stats:** Game statistics display used primarily in `GameOverCard`
+- **TabIndicator:** Individual tab components for main menu navigation
+- **TabWrapper:** Container for tab content with mount animations
+- **ActionSlider:** Configuration options for game mode, side selection, and bot difficulty
+- **GameButton:** Primary and secondary action buttons throughout the application
+
+## Component Dependencies
+- **Stats** depends on `StatsRow` for individual stat display
+- **GameBoardCard** integrates `LaneRow`, `Overlay`, and game state management
+- **GameOverCard** combines score display, action buttons, and expandable statistics
+- **Tab components** work together with global store for navigation and configuration
+- **Overlay** is reused across multiple components for consistent visual feedback

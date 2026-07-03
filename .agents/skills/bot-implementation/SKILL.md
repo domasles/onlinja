@@ -35,6 +35,121 @@ export interface BotProfile {
 }
 ```
 
+### Heuristic Weight Explanations
+
+**Home Base Clearance Weight (`homeBaseClearanceWeight`)**
+- Formula: `(12 - basePiecesCount) * weight`
+- Purpose: Rewards clearing opponent bases and penalizes blocking your own base
+- Impact: Higher weight = more aggressive base clearance strategy
+- Example: With weight 1.5 and 8 pieces in opponent base: `(12-8) * 1.5 = 6` points bonus
+
+**Midfield Empty Lane Penalty (`midfieldEmptyLanePenalty`)**
+- Formula: `-profile.midfieldEmptyLanePenalty`
+- Purpose: Penalizes leaving central lanes empty, encouraging board control
+- Impact: Higher penalty = bot avoids creating empty lanes in midfield
+- Example: With penalty 4, empty lane in midfield = -4 points
+
+**Full Lane Trap Bonus (`fullLaneTrapBonus`)**
+- Formula: `(targetLandedCount === 1) ? profile.fullLaneTrapBonus : ...`
+- Purpose: Rewards successful traps where exactly 1 piece lands in next lane
+- Impact: Encourages precise trap execution
+- Example: With bonus 10, perfect trap = +10 points
+
+**Full Lane Backfire Penalty (`fullLaneBackfirePenalty`)
+- Formula: `(targetLandedCount >= 4 ? -profile.fullLaneBackfirePenalty : 0)`
+- Purpose: Penalizes failed traps where 4+ pieces land in next lane
+- Impact: Discourages overfilled trap attempts
+- Example: With penalty 8, failed trap with 4+ pieces = -8 points
+
+**Friendly Cluster Bonus (`friendlyClusterBonus`)**
+- Formula: `(allyCanUse ? profile.friendlyClusterBonus : 0)`
+- Purpose: Rewards launching from friendly-occupied lanes (cluster advantage)
+- Impact: Higher bonus = more aggressive cluster-based tactics
+- Example: With bonus 4, launching from friendly cluster = +4 points
+
+**Enemy Cluster Penalty (`enemyClusterPenalty`)**
+- Formula: `-(enemyCanUse ? profile.enemyClusterPenalty : 0)`
+- Purpose: Penalizes launching toward enemy-occupied lanes (vulnerable positions)
+- Impact: Higher penalty = more defensive positioning
+- Example: With penalty 3, launching toward enemy cluster = -3 points
+
+**Extra Turn Bonus (`extraTurnBonus`)**
+- Formula: `profile.extraTurnBonus`
+- Purpose: Rewards for getting extra turns (game-changing advantage)
+- Impact: Higher bonus = more aggressive play to secure extra turns
+- Example: With bonus 30, extra turn = +30 points
+
+**Aggressive Mode Multiplier (`aggressiveModeMultiplier`)**
+- Formula: `profile.aggressiveModeMultiplier`
+- Purpose: Amplifies cluster bonuses in aggressive mode
+- Impact: Higher multiplier = more aggressive cluster tactics
+- Example: With multiplier 2.0, friendly cluster bonus = doubled
+
+### BotDifficulty Presets
+
+**ROOKIE (Easy)**
+- `lookaheadTurns: 1` - Shallow lookahead, limited planning
+- `blunderRate: 0.65` - 65% chance of random mistakes
+- `extraTurnBonus: 10` - Moderate extra turn value
+- `aggressiveModeMultiplier: 1.0` - No aggressive bonus
+- `homeBaseClearanceWeight: 0.5` - Conservative base strategy
+- `midfieldEmptyLanePenalty: 2` - Mild penalty for empty lanes
+- `fullLaneTrapBonus: 3` - Small trap rewards
+- `fullLaneBackfirePenalty: 2` - Mild backfire penalty
+- `friendlyClusterBonus: 1` - Small cluster bonus
+- `enemyClusterPenalty: 1` - Mild enemy cluster penalty
+
+**RUNNER-UP (Medium)**
+- `lookaheadTurns: 2` - Deeper lookahead, better planning
+- `blunderRate: 0.15` - 15% chance of random mistakes
+- `extraTurnBonus: 20` - High extra turn value
+- `aggressiveModeMultiplier: 1.5` - Moderate aggressive bonus
+- `homeBaseClearanceWeight: 1.0` - Balanced base strategy
+- `midfieldEmptyLanePenalty: 4` - Strong penalty for empty lanes
+- `fullLaneTrapBonus: 6` - Medium trap rewards
+- `fullLaneBackfirePenalty: 5` - Medium backfire penalty
+- `friendlyClusterBonus: 2` - Medium cluster bonus
+- `enemyClusterPenalty: 2` - Medium enemy cluster penalty
+
+**LEGEND (Hard)**
+- `lookaheadTurns: 3` - Deep lookahead, excellent planning
+- `blunderRate: 0.0` - No random mistakes
+- `extraTurnBonus: 30` - Maximum extra turn value
+- `aggressiveModeMultiplier: 2.0` - Maximum aggressive bonus
+- `homeBaseClearanceWeight: 1.5` - Aggressive base strategy
+- `midfieldEmptyLanePenalty: 6` - Strongest penalty for empty lanes
+- `fullLaneTrapBonus: 10` - Maximum trap rewards
+- `fullLaneBackfirePenalty: 8` - Strongest backfire penalty
+- `friendlyClusterBonus: 4` - Maximum cluster bonus
+- `enemyClusterPenalty: 3` - Strongest enemy cluster penalty
+
+### Async Patterns & UI Coordination
+
+**Frame Yield Mechanism**
+```typescript
+private static async yieldToMainThread(): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, 0));
+}
+```
+
+**Why Frame Yields Are Needed**
+- React Native is single-threaded
+- Deep minimax searches could block UI for seconds
+- `setTimeout(resolve, 0)` yields to main thread after current call stack
+- Allows UI to remain responsive during bot calculations
+
+**Async Minimax Pattern**
+1. `optimize()` calls `generateLegalActions()` synchronously for immediate UI response
+2. Then runs async `minimax()` with periodic yields
+3. Each recursive call includes `await this.yieldToMainThread()`
+4. Prevents UI freezing during deep lookahead searches
+
+**Operation Count Management**
+- `YIELD_THRESHOLD = 400` operations per yield
+- Tracks `operationCount` to control yield frequency
+- Balances search depth with UI responsiveness
+- Ensures smooth gameplay even with complex bot calculations
+
 ### Step 2: Implement EvaluationEngine
 ```typescript
 import { GameState, PlayerColor } from "../domain/engine"
