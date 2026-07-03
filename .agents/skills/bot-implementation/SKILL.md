@@ -128,7 +128,7 @@ export interface BotProfile {
 **Frame Yield Mechanism**
 ```typescript
 private static async yieldToMainThread(): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, 0));
+    return new Promise((resolve) => setTimeout(resolve, 0))
 }
 ```
 

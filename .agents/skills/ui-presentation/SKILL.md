@@ -14,7 +14,7 @@ This skill guides visual rendering inside the presentation components folder.
 
 ## Screen & Flow State Management
 - **Screen Router Navigation:** View progression relies entirely on the global store's `currentScreen` state `"MAIN_MENU" | "TUTORIAL" | "GAMEPLAY"`. Transitioning between top-level layouts runs through the `navigateTo()` action in the store.
-  - **Player Onboarding Flow:** Tutorial status is checked on app initialization via `startTutorial()` action in the store. It checks whether `onlinja_tutorial_completed` flag is set in AsyncStorage. Tutorial is configured via the main config file with the following parameters:
+  - **Player Onboarding Flow:** Tutorial status is checked on app initialization via `startTutorial()` action in the store. It checks whether `onlinja_tutorial_completed` flag is set in AsyncStorage. The exact stage of the tutorial is determined by `currentTutorialStep` state which ensures that even if the app crashes, the tutorial can resume from the last saved point. Tutorial is configured via the main config file with the following parameters:
     ```typescript
     export interface TutorialStepConfig {
         id: string

@@ -8,8 +8,8 @@ import { useGameStore } from "../hooks"
 
 export const TutorialScreen = () => {
     const state = useGameStore()
-    const currentStep = tutorialInfo[state.currentTutorialStepIdx]
-    const [shouldRenderBoard, setShouldRenderBoard] = useState(false)
+    const currentStep = tutorialInfo[state.currentTutorialStep]
+    const [shouldRenderBoard, setShouldRenderBoard] = useState(currentStep.type === "INTERACTIVE_BOARD")
     const prevTypeRef = useRef(currentStep.type)
 
     useEffect(() => {
@@ -18,7 +18,7 @@ export const TutorialScreen = () => {
         }
 
         prevTypeRef.current = currentStep.type
-    }, [state.currentTutorialStepIdx])
+    }, [state.currentTutorialStep])
 
     const handleExitComplete = () => {
         if (currentStep.type === "INTERACTIVE_BOARD") {
@@ -48,7 +48,7 @@ export const TutorialScreen = () => {
                         scale: currentStep.type === "INTERACTIVE_BOARD" ? 1 : 0.95
                     }}
 
-                    transition={{ type: "timing", duration: 250 }}
+                    transition={{ type: "timing", duration: 300 }}
                     className="w-full mt-8"
                 >
                     <GameBoardCard

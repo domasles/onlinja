@@ -1,31 +1,32 @@
-import { GamePiece as DomainPiece, PlayerColor } from "./types";
-import { RenderItem } from "../components/game";
-import { tutorialInfo } from "../utils/config";
-import { useGameStore } from "../hooks";
+import { GamePiece as DomainPiece, PlayerColor } from "./types"
+import { RenderItem } from "../components/game"
+import { tutorialInfo } from "../utils/config"
+import { useGameStore } from "../hooks"
 
 export class GameLanes {
     static groupLanePieces(
-        lanePieces: DomainPiece[], 
-        laneIdx: number, 
-        maxIdx: number, 
+        lanePieces: DomainPiece[],
+        laneIdx: number,
+        maxIdx: number,
         maxCap: number
     ): RenderItem[] {
-        const isHomeLane = laneIdx === 0 || laneIdx === maxIdx;
-        let displayItems: RenderItem[] = [];
+        const isHomeLane = laneIdx === 0 || laneIdx === maxIdx
+        let displayItems: RenderItem[] = []
 
         if (isHomeLane) {
-            const rawGroups: { color: PlayerColor; pieces: DomainPiece[] }[] = [];
+            const rawGroups: { color: PlayerColor; pieces: DomainPiece[] }[] = []
+
             lanePieces.forEach((p) => {
-                const lastGroup = rawGroups[rawGroups.length - 1];
+                const lastGroup = rawGroups[rawGroups.length - 1]
 
                 if (lastGroup && lastGroup.color === p.player) {
-                    lastGroup.pieces.push(p);
+                    lastGroup.pieces.push(p)
                 }
 
                 else {
-                    rawGroups.push({ color: p.player, pieces: [p] });
+                    rawGroups.push({ color: p.player, pieces: [p] })
                 }
-            });
+            })
 
             rawGroups.forEach((g) => {
                 g.pieces.forEach((p) => {
@@ -35,12 +36,12 @@ export class GameLanes {
                         count: 1,
                         pieceId: p.id,
                         allIds: [p.id]
-                    });
-                });
-            });
+                    })
+                })
+            })
 
             while (displayItems.length > maxCap) {
-                let merged = false;
+                let merged = false
 
                 for (let i = 0; i < displayItems.length - 1; i++) {
                     if (displayItems[i].color === displayItems[i + 1].color) {
@@ -50,16 +51,16 @@ export class GameLanes {
                             count: displayItems[i].count + displayItems[i + 1].count,
                             pieceId: displayItems[i].pieceId,
                             allIds: [...displayItems[i].allIds, ...displayItems[i + 1].allIds]
-                        };
+                        }
 
-                        displayItems.splice(i + 1, 1);
-                        merged = true;
+                        displayItems.splice(i + 1, 1)
+                        merged = true
 
-                        break;
+                        break
                     }
                 }
 
-                if (!merged) break;
+                if (!merged) break
             }
         }
 
@@ -71,11 +72,11 @@ export class GameLanes {
                     count: 1,
                     pieceId: p.id,
                     allIds: [p.id]
-                });
-            });
+                })
+            })
         }
 
-        return displayItems;
+        return displayItems
     }
 
     static determineIsSelectable(
@@ -86,35 +87,35 @@ export class GameLanes {
         hasLegalMoves: boolean,
         isLocalHumanTurn: boolean
     ): boolean {
-        let isSelectable = isLocalHumanTurn && item.color === state.activePlayer && laneIdx !== opponentHomeIndex && hasLegalMoves;
+        let isSelectable = isLocalHumanTurn && item.color === state.activePlayer && laneIdx !== opponentHomeIndex && hasLegalMoves
 
         if (state.isTutorialMode) {
-            const currentStep = tutorialInfo[state.currentTutorialStepIdx];
+            const currentStep = tutorialInfo[state.currentTutorialStep]
 
             if (currentStep && currentStep.type === "INTERACTIVE_BOARD" && currentStep.boardSetup) {
-                const { allowedSourceLane, allowedPieceId } = currentStep.boardSetup;
+                const { allowedSourceLane, allowedPieceId } = currentStep.boardSetup
 
                 if (state.currentMove === 1) {
-                    isSelectable = laneIdx === allowedSourceLane && item.allIds.includes(allowedPieceId || "");
+                    isSelectable = laneIdx === allowedSourceLane && item.allIds.includes(allowedPieceId || "")
                 }
 
                 else {
                     if (state.gameMode === "AGGRESSIVE") {
-                        isSelectable = item.allIds.includes(state.move1MovedPieceId || "") && hasLegalMoves;
+                        isSelectable = item.allIds.includes(state.move1MovedPieceId || "") && hasLegalMoves
                     }
 
                     else {
-                        const firstMovePieceId = state.history.move1?.pieceId;
-                        isSelectable = item.color === state.activePlayer && !item.allIds.includes(firstMovePieceId || "") && hasLegalMoves;
+                        const firstMovePieceId = state.history.move1?.pieceId
+                        isSelectable = item.color === state.activePlayer && !item.allIds.includes(firstMovePieceId || "") && hasLegalMoves
                     }
                 }
             }
 
             else {
-                isSelectable = false;
+                isSelectable = false
             }
         }
 
-        return isSelectable;
+        return isSelectable
     }
 }

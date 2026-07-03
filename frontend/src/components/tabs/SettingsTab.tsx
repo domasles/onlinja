@@ -61,8 +61,8 @@ export const SettingsTab = ({
                 <Text className="text-xs font-subheader text-neutral-400 uppercase tracking-widest mb-2 self-center">- Highlight Lanes -</Text>
                 <ActionSlider
                     options={[
-                        { label: "Yes", value: "YES" },
-                        { label: "No", value: "NO" }
+                        { label: "Yes", value: "true" },
+                        { label: "No", value: "false" }
                     ]}
 
                     defaultValue={highlightMode}

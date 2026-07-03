@@ -37,7 +37,7 @@ This skill guides the implementation of the core stateless rule engine in the ga
 **Sliding Evaluation Mechanics**
 ```typescript
 while (currentIndex > 0 && currentIndex < maxIdx && state.board[currentIndex].length >= maxCapacity) {
-    currentIndex += direction;
+    currentIndex += direction
 }
 ```
 
@@ -74,8 +74,8 @@ while (currentIndex > 0 && currentIndex < maxIdx && state.board[currentIndex].le
 // Before changing state properties to currentMove: 2
 const testState = { ...proposedState, selectedPiece: { laneIndex: l, pieceId: p.id } }
 if (GameRules.getValidTargets(testState, l).length > 0) {
-    holdsAnyLegalMove2 = true;
-    break;
+    holdsAnyLegalMove2 = true
+    break
 }
 ```
 
@@ -99,7 +99,7 @@ if (GameRules.getValidTargets(testState, l).length > 0) {
 
 **Controller Type System**
 ```typescript
-export type ControllerType = "HUMAN" | "BOT";
+export type ControllerType = "HUMAN" | "BOT"
 ```
 
 **Controller Roles**
@@ -111,7 +111,7 @@ export type ControllerType = "HUMAN" | "BOT";
 const resolvedControllers = controllers ?? {
     WHITE: side === "WHITE" ? "HUMAN" : "BOT",
     BLACK: side === "BLACK" ? "HUMAN" : "BOT",
-};
+}
 ```
 
 **Controller-Specific Behavior**

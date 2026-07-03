@@ -1,18 +1,19 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { create } from "zustand"
 
+import { GameConfig, DEFAULT_LINJA_CONFIG, tutorialInfo, TutorialStepConfig } from "../utils/config"
 import { GameState, GameMutations, PlayerColor, ControllerType } from "../domain"
-import { GameConfig, DEFAULT_LINJA_CONFIG, tutorialInfo } from "../utils/config"
 import { BotDifficulty } from "../bot"
 
-export type HighlightMode = "YES" | "NO"
+export type HighlightMode = "true" | "false"
 export type GameModes = "STRATEGIC" | "AGGRESSIVE"
 export type Screens = "MAIN_MENU" | "GAMEPLAY" | "TUTORIAL"
 
 interface GameStore extends GameState {
     currentScreen: Screens
     isTutorialMode: boolean
-    currentTutorialStepIdx: number
+    currentTutorialStep: number
+    isTutorialCompleted: boolean
 
     isHydrated: boolean
     highlightMode: HighlightMode
@@ -47,32 +48,69 @@ interface GameStore extends GameState {
     exitTutorial: () => void
 }
 
+const getTutorialBoardUpdates = (step: TutorialStepConfig) => {
+    if (step.boardSetup && step.boardSetup.board && step.boardSetup.board.length > 0) {
+        return {
+            board: step.boardSetup.board.map(lane => [...lane]),
+            activePlayer: step.boardSetup.activePlayer,
+            playerSide: step.boardSetup.playerSide,
+            currentMove: 1 as const,
+            selectedPiece: null,
+            move1MovedPieceId: null,
+            history: { move1: null, move2: null },
+            isExtraTurnActive: false,
+            showExtraTurnEffect: false
+        }
+    }
+
+    return {}
+}
+
 export const useGameStore = create<GameStore>((set, get) => ({
     ...GameMutations.generateInitialState(),
     currentScreen: "MAIN_MENU",
     isTutorialMode: false,
-    currentTutorialStepIdx: 0,
+    currentTutorialStep: 0,
+    isTutorialCompleted: false,
 
     isHydrated: false,
-    highlightMode: "YES",
+    highlightMode: "true",
     defaultGameMode: "STRATEGIC",
     defaultSide: "WHITE",
-    defaultDifficulty: "ROOKIE",
+    defaultDifficulty: "RUNNER-UP",
 
     loadSavedSettings: async () => {
         try {
-            const [hMode, gMode, sMode, dMode] = await Promise.all([
+            const [hMode, gMode, sMode, dMode, tStep, tComp] = await Promise.all([
                 AsyncStorage.getItem("onlinja_pref_highlight"),
-                AsyncStorage.getItem("onlinja_pref_gmode"),
+                AsyncStorage.getItem("onlinja_pref_gamemode"),
                 AsyncStorage.getItem("onlinja_pref_side"),
-                AsyncStorage.getItem("onlinja_pref_difficulty")
+                AsyncStorage.getItem("onlinja_pref_difficulty"),
+                AsyncStorage.getItem("onlinja_tutorial_step"),
+                AsyncStorage.getItem("onlinja_tutorial_completed")
             ])
 
+            const resolvedHighlight = (hMode as HighlightMode) || "true"
+            const resolvedGMode = (gMode as GameModes) || "STRATEGIC"
+            const resolvedSide = (sMode as PlayerColor) || "WHITE"
+            const resolvedDifficulty = (dMode as BotDifficulty) || "RUNNER-UP"
+            const resolvedTStep = tStep ? parseInt(tStep, 10) : 0
+            const resolvedTComp = tComp === "true"
+
+            AsyncStorage.setItem("onlinja_pref_highlight", resolvedHighlight)
+            AsyncStorage.setItem("onlinja_pref_gamemode", resolvedGMode)
+            AsyncStorage.setItem("onlinja_pref_side", resolvedSide)
+            AsyncStorage.setItem("onlinja_pref_difficulty", resolvedDifficulty)
+            AsyncStorage.setItem("onlinja_tutorial_step", resolvedTStep.toString())
+            AsyncStorage.setItem("onlinja_tutorial_completed", String(resolvedTComp))
+
             set({
-                highlightMode: (hMode as HighlightMode) || "YES",
-                defaultGameMode: (gMode as GameModes) || "STRATEGIC",
-                defaultSide: (sMode as PlayerColor) || "WHITE",
-                defaultDifficulty: (dMode as BotDifficulty) || "ROOKIE",
+                highlightMode: resolvedHighlight,
+                defaultGameMode: resolvedGMode,
+                defaultSide: resolvedSide,
+                defaultDifficulty: resolvedDifficulty,
+                currentTutorialStep: resolvedTStep,
+                isTutorialCompleted: resolvedTComp,
                 isHydrated: true
             })
         }
@@ -89,7 +127,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     }),
 
     setDefaultGameMode: (mode) => set(() => {
-        AsyncStorage.setItem("onlinja_pref_gmode", mode).catch(() => {})
+        AsyncStorage.setItem("onlinja_pref_gamemode", mode).catch(() => {})
         return { defaultGameMode: mode }
     }),
 
@@ -113,7 +151,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
             currentScreen: "GAMEPLAY",
             playerSide: side,
             isTutorialMode: false,
-            currentTutorialStepIdx: 0,
+            currentTutorialStep: 0,
             ...(controllers && { controllers }),
             ...(difficulty && { botDifficulty: difficulty }),
             whiteTurns: 0,
@@ -127,18 +165,24 @@ export const useGameStore = create<GameStore>((set, get) => ({
         }
     }),
 
-    startTutorial: () => set(() => {
+    startTutorial: () => set((state) => {
         AsyncStorage.setItem("onlinja_tutorial_completed", "false").catch(() => {})
-    
-        const firstStep = tutorialInfo[0]
-        const baseState = GameMutations.generateInitialState(firstStep.gameMode, "WHITE", DEFAULT_LINJA_CONFIG)
-        const runtimeLaneCount = firstStep.boardSetup?.board?.length || DEFAULT_LINJA_CONFIG.laneCount
+        let stepIdx = state.currentTutorialStep
+
+        if (stepIdx >= tutorialInfo.length) {
+            stepIdx = 0
+        }
+
+        const currentStep = tutorialInfo[stepIdx]
+        const baseState = GameMutations.generateInitialState(currentStep.gameMode, "WHITE", DEFAULT_LINJA_CONFIG)
+        const runtimeLaneCount = currentStep.boardSetup?.board?.length || DEFAULT_LINJA_CONFIG.laneCount
 
         return {
             ...baseState,
             currentScreen: "TUTORIAL",
             isTutorialMode: true,
-            currentTutorialStepIdx: 0,
+            currentTutorialStep: stepIdx,
+            isTutorialCompleted: false,
             controllers: { WHITE: "HUMAN", BLACK: "BOT" },
             whiteTurns: 0,
             blackTurns: 0,
@@ -148,6 +192,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
             blackEscapes: 0,
             whiteHomeRuns: 0,
             blackHomeRuns: 0,
+            ...getTutorialBoardUpdates(currentStep),
 
             config: {
                 ...baseState.config,
@@ -157,57 +202,45 @@ export const useGameStore = create<GameStore>((set, get) => ({
     }),
 
     nextTutorialStep: () => set((state) => {
-        const nextIdx = state.currentTutorialStepIdx + 1
+        const nextIdx = state.currentTutorialStep + 1
 
         if (nextIdx >= tutorialInfo.length) {
             AsyncStorage.setItem("onlinja_tutorial_completed", "true").catch(() => {})
-            return { isTutorialMode: false, currentScreen: "MAIN_MENU" }
+            AsyncStorage.setItem("onlinja_tutorial_step", "0").catch(() => {})
+
+            return {
+                isTutorialMode: false,
+                currentScreen: "MAIN_MENU",
+                currentTutorialStep: 0,
+                isTutorialCompleted: true
+            }
         }
+
+        AsyncStorage.setItem("onlinja_tutorial_step", nextIdx.toString()).catch(() => {})
 
         const nextStep = tutorialInfo[nextIdx]
-        let boardUpdates = {}
-
-        if (nextStep.boardSetup && nextStep.boardSetup.board && nextStep.boardSetup.board.length > 0) {
-            const runtimeLaneCount = nextStep.boardSetup.board.length
-
-            boardUpdates = {
-                board: nextStep.boardSetup.board.map(lane => [...lane]),
-
-                config: {
-                    ...state.config,
-                    laneCount: runtimeLaneCount
-                },
-
-                activePlayer: nextStep.boardSetup.activePlayer,
-                playerSide: nextStep.boardSetup.playerSide,
-                gameMode: nextStep.gameMode,
-                currentMove: 1 as const,
-                selectedPiece: null,
-                move1MovedPieceId: null,
-                history: { move1: null, move2: null },
-                isExtraTurnActive: false,
-                showExtraTurnEffect: false
-            }
-        }
-
-        else {
-            boardUpdates = {
-                gameMode: nextStep.gameMode
-            }
-        }
+        const runtimeLaneCount = nextStep.boardSetup?.board?.length || state.config.laneCount
 
         return {
-            currentTutorialStepIdx: nextIdx,
-            ...boardUpdates
+            currentTutorialStep: nextIdx,
+            gameMode: nextStep.gameMode,
+            ...getTutorialBoardUpdates(nextStep),
+
+            config: {
+                ...state.config,
+                laneCount: runtimeLaneCount
+            }
         }
     }),
 
     exitTutorial: () => {
         AsyncStorage.setItem("onlinja_tutorial_completed", "true").catch(() => {})
+        AsyncStorage.setItem("onlinja_tutorial_step", "0").catch(() => {})
 
         set(() => ({
             isTutorialMode: false,
-            currentTutorialStepIdx: 0,
+            currentTutorialStep: 0,
+            isTutorialCompleted: true,
             currentScreen: "MAIN_MENU",
             ...GameMutations.generateInitialState(),
             whiteTurns: 0,
@@ -227,7 +260,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
             laneIndex,
             pieceId,
             state.isTutorialMode,
-            state.currentTutorialStepIdx
+            state.currentTutorialStep
         )
     }),
 
@@ -242,6 +275,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
     setShowExtraTurnEffect: (show: boolean) => set(() => ({ showExtraTurnEffect: show })),
     setTurnChangeEffect: (show) => set(() => ({ showTurnChangeEffect: show })),
+
     resetGame: () => set((state) => {
         const initialState = GameMutations.generateInitialState(
             state.gameMode,
@@ -255,7 +289,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
             ...initialState,
             currentScreen: "GAMEPLAY",
             isTutorialMode: false,
-            currentTutorialStepIdx: 0,
+            currentTutorialStep: 0,
             whiteTurns: 0,
             blackTurns: 0,
             whiteExtraTurns: 0,

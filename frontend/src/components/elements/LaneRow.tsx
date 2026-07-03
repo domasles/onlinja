@@ -31,9 +31,9 @@ export const LaneRow = ({
 
     let laneHighlightClass = "bg-white"
 
-    if (highlightMode === "YES") {
-        if (h1 && h1.originLane === laneIdx) laneHighlightClass = "bg-yellow-500/10"
-        if (h2 && h2.originLane === laneIdx) laneHighlightClass = "bg-emerald-500/10"
+    if (state.isTutorialMode || highlightMode === "true") {
+        if (h1?.originLane === laneIdx) laneHighlightClass = "bg-yellow-500/10"
+        if (h2?.originLane === laneIdx) laneHighlightClass = "bg-emerald-500/10"
     }
 
     if (isTargetable) laneHighlightClass = "bg-neutral-100"
@@ -56,9 +56,9 @@ export const LaneRow = ({
 
                     const overlayRingStyle = isSelected
                         ? "border-[4px] border-neutral-400 scale-full"
-                        : highlightMode === "YES" && item.allIds.some(id => h2 && h2.pieceId === id)
+                        : highlightMode === "true" && item.allIds.some(id => h2 && h2.pieceId === id)
                         ? "border-[3px] border-emerald-400"
-                        : highlightMode === "YES" && item.allIds.some(id => h1 && h1.pieceId === id)
+                        : highlightMode === "true" && item.allIds.some(id => h1 && h1.pieceId === id)
                         ? "border-[3px] border-amber-400"
                         : `border-2 ${item.color === "WHITE" ? "border-black" : "border-neutral-800"}`
 

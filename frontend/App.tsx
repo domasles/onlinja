@@ -1,6 +1,5 @@
-import AsyncStorage from "@react-native-async-storage/async-storage"
 import { SafeAreaProvider } from "react-native-safe-area-context"
-import { StatusBar, } from "react-native"
+import { StatusBar } from "react-native"
 import { useFonts } from "expo-font"
 import { useEffect } from "react"
 
@@ -12,6 +11,9 @@ import "./global.css"
 export const App = () => {
     const currentScreen = useGameStore((state) => state.currentScreen)
     const startTutorial = useGameStore((state) => state.startTutorial)
+    const loadSavedSettings = useGameStore((state) => state.loadSavedSettings)
+    const isHydrated = useGameStore((state) => state.isHydrated)
+    const isTutorialCompleted = useGameStore((state) => state.isTutorialCompleted)
 
     useFonts({
         "Inter-Regular": require("./assets/fonts/inter/Inter-Regular.ttf"),
@@ -25,16 +27,18 @@ export const App = () => {
     })
 
     useEffect(() => {
-        const checkTutorialStatus = async () => {
-            const hasCompleted = await AsyncStorage.getItem("onlinja_tutorial_completed").catch(() => {})
+        loadSavedSettings()
+    }, [loadSavedSettings])
 
-            if (!hasCompleted || hasCompleted === "false") {
-                startTutorial()
-            }
+    useEffect(() => {
+        if (!isHydrated) return
+
+        if (!isTutorialCompleted) {
+            startTutorial()
         }
+    }, [isHydrated, isTutorialCompleted, startTutorial])
 
-        checkTutorialStatus()
-    }, [startTutorial])
+    if (!isHydrated) return null
 
     return (
         <SafeAreaProvider className="flex-1 bg-neutral-50">

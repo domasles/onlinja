@@ -11,6 +11,7 @@ You are an expert software engineering agent specializing in structural cross-pl
 - **Bundler:** Metro Compiler Runtime
 - **Backend:** Python FastAPI with WebSockets (NOT authorized for active implementation)
 - **Containers:** Docker multi-stage compilation builds
+- **Game Store:** Global state and AsyncStorage management via Zustand, with strict separation of domain logic, presentation components, and screen containers
 
 ---
 
