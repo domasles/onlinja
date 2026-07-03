@@ -1,5 +1,5 @@
+import { StatusBar, ActivityIndicator, View } from "react-native"
 import { SafeAreaProvider } from "react-native-safe-area-context"
-import { StatusBar } from "react-native"
 import { useFonts } from "expo-font"
 import { useEffect } from "react"
 
@@ -15,7 +15,7 @@ export const App = () => {
     const isHydrated = useGameStore((state) => state.isHydrated)
     const isTutorialCompleted = useGameStore((state) => state.isTutorialCompleted)
 
-    useFonts({
+    const [fontsLoaded, fontError] = useFonts({
         "Inter-Regular": require("./assets/fonts/inter/Inter-Regular.ttf"),
         "Inter-Medium": require("./assets/fonts/inter/Inter-Medium.ttf"),
         "Inter-SemiBold": require("./assets/fonts/inter/Inter-SemiBold.ttf"),
@@ -38,7 +38,14 @@ export const App = () => {
         }
     }, [isHydrated, isTutorialCompleted, startTutorial])
 
-    if (!isHydrated) return null
+    if (!isHydrated || (!fontsLoaded && !fontError)) {
+        return (
+            <View className="flex-1 items-center justify-center bg-neutral-50">
+                <StatusBar barStyle="dark-content" />
+                <ActivityIndicator size="large" color="#171717" />
+            </View>
+        )
+    }
 
     return (
         <SafeAreaProvider className="flex-1 bg-neutral-50">
