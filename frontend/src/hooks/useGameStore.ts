@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { create } from "zustand"
 
-import { GameConfig, DEFAULT_LINJA_CONFIG, tutorialInfo, TutorialStepConfig } from "../utils/config"
+import { DEFAULT_LINJA_CONFIG, GameConfig, tutorialInfo, TutorialStepConfig } from "../config"
 import { GameState, GameMutations, PlayerColor, ControllerType } from "../domain"
 import { BotDifficulty } from "../bot"
 

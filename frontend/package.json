@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.2.0",
-    "expo": "~56.0.12",
+    "expo": "~56.0.14",
     "expo-font": "~56.0.7",
     "expo-status-bar": "~56.0.4",
     "moti": "^0.30.0",

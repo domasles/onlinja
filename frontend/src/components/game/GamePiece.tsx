@@ -2,8 +2,8 @@ import Animated, { useSharedValue, useAnimatedStyle, withSequence, withTiming, L
 import { Pressable, Text } from "react-native"
 import { useEffect } from "react"
 
-import { EASE_CURVE } from "../../utils/config"
 import { PlayerColor } from "../../domain"
+import { EASE_CURVE } from "../../config"
 
 export interface RenderItem {
     type: "SINGLE" | "MERGED"

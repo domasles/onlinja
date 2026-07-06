@@ -2,7 +2,7 @@ import Animated, { ZoomIn, ZoomOut, FadeIn, FadeOut } from "react-native-reanima
 import { TouchableOpacity } from "react-native"
 import React from "react"
 
-import { EASE_CURVE } from "../../utils/config"
+import { EASE_CURVE } from "../../config"
 
 interface OverlayProps {
     isVisible: boolean

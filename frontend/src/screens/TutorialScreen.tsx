@@ -3,7 +3,7 @@ import { MotiView } from "moti"
 
 import { GameBoardCard, TutorialCard } from "../components/cards"
 import { ScreenWrapper } from "../components/layout"
-import { tutorialInfo } from "../utils/config"
+import { tutorialInfo } from "../config"
 import { useGameStore } from "../hooks"
 
 export const TutorialScreen = () => {

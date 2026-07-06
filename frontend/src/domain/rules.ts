@@ -1,5 +1,5 @@
 import { GamePiece, GameState } from "./types"
-import { GameConfig } from "../utils/config"
+import { GameConfig } from "../config"
 
 export class GameRules {
     static getValidTargets(state: GameState, laneIndex: number): number[] {

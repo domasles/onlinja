@@ -1,6 +1,6 @@
 import { GamePiece as DomainPiece, PlayerColor } from "./types"
 import { RenderItem } from "../components/game"
-import { tutorialInfo } from "../utils/config"
+import { tutorialInfo } from "../config"
 import { useGameStore } from "../hooks"
 
 export class GameLanes {

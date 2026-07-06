@@ -1,5 +1,5 @@
-import { GameConfig, DEFAULT_LINJA_CONFIG, tutorialInfo } from "../utils/config"
 import { GameState, GamePiece, PlayerColor, ControllerType } from "./types"
+import { DEFAULT_LINJA_CONFIG, GameConfig, tutorialInfo } from "../config"
 import { BotDifficulty } from "../bot"
 import { GameRules } from "./rules"
 

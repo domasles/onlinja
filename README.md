@@ -112,11 +112,12 @@ frontend/
 ├── Dockerfile     # Multi-stage Alpine-Node and Nginx build manifest
 ├── package.json   # Dependency definitions
 └── src/
+    ├── bot/         # Bot logic for the game
     ├── components/  # UI elements
     ├── domain/      # Core engine math
     ├── hooks/       # Global state hooks and store
     ├── screens/     # UI elements that house components
-    └── utils/       # Game and tutorial configuration
+    └── config/      # Game and tutorial configuration
 
 docker-compose.yml
 ```

@@ -1,5 +1,5 @@
-import { GameConfig } from "../utils/config"
 import { BotDifficulty } from "../bot"
+import { GameConfig } from "../config"
 
 export type PlayerColor = "WHITE" | "BLACK"
 export type ControllerType = "HUMAN" | "BOT"
