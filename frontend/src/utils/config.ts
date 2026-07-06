@@ -57,7 +57,7 @@ export const tutorialInfo: TutorialStepConfig[] = [
         gameMode: "STRATEGIC"
     },
     {
-        id: "rules_intro_1",
+        id: "rules_header",
         type: "TEXT_ONLY",
         showLogo: false,
         title: "The Basics",
@@ -69,7 +69,7 @@ export const tutorialInfo: TutorialStepConfig[] = [
         gameMode: "STRATEGIC"
     },
     {
-        id: "rules_intro_2",
+        id: "rules_intro",
         type: "TEXT_ONLY",
         showLogo: false,
         title: "The Basics",
@@ -78,7 +78,7 @@ export const tutorialInfo: TutorialStepConfig[] = [
             "The board consists of 8 lanes.",
             "Your must race your pieces to the opponent's home base first.",
             "Game ends when all white pieces surpass all black pieces, or vice versa.",
-            "*White starts first. Always."
+            "*White starts first, pieces move forward. Always."
         ],
         primaryButtonText: "Next",
         gameMode: "STRATEGIC"
@@ -126,7 +126,7 @@ export const tutorialInfo: TutorialStepConfig[] = [
             "Green indicates your second move's starting point.",
         ],
         primaryButtonText: "Next",
-        gameMode: "STRATEGIC"
+        gameMode: "AGGRESSIVE"
     },
     {
         id: "aggressive_demo",
@@ -175,7 +175,7 @@ export const tutorialInfo: TutorialStepConfig[] = [
         title: "Try Strategic Mode",
         lineVariants: ["large", "base", "base"],
         textLines: [
-            "Move your piece at Lane 1 forwards.",
+            "Move your piece at Lane 1 forward.",
             "Because this is Strategic Mode, choose any OTHER piece to make the second move!"
         ],
         primaryButtonText: "Next",
@@ -194,7 +194,22 @@ export const tutorialInfo: TutorialStepConfig[] = [
         }
     },
     {
-        id: "jump_rules",
+        id: "scoring_rules",
+        type: "TEXT_ONLY",
+        showLogo: false,
+        title: "Score Counting",
+        lineVariants: ["large", "base", "base", "base"],
+        textLines: [
+            "There would be no purpose without points.",
+            "Each piece is worth 0, 1, 2, 3, or 5 points.",
+            "If a piece stands in the opponent's home base, it's worth the maximum.",
+            "Lane below opponent's home awards you 3 points, then 2, then 1, and finally 0 for any lane below."
+        ],
+        primaryButtonText: "Next",
+        gameMode: "STRATEGIC"
+    },
+    {
+        id: "jumping_rules",
         type: "TEXT_ONLY",
         showLogo: false,
         title: "Lanes Capacity & Jumping",
@@ -208,13 +223,13 @@ export const tutorialInfo: TutorialStepConfig[] = [
         gameMode: "STRATEGIC"
     },
     {
-        id: "jump_over_demo",
+        id: "jumping_demo",
         type: "INTERACTIVE_BOARD",
         showLogo: false,
         title: "Try Jumping Over a Full Lane",
         lineVariants: ["large", "base", "small"],
         textLines: [
-            "Try to move your piece at Lane 1 forwards.",
+            "Try to move your piece at Lane 1 forward.",
             "Lane 2 has 6 pieces, so you'll be forced to jump over it.",
             "*This works with both moves of a turn."
         ],
@@ -262,7 +277,7 @@ export const tutorialInfo: TutorialStepConfig[] = [
         gameMode: "STRATEGIC"
     },
     {
-        id: "final_outro",
+        id: "outro",
         type: "TEXT_ONLY",
         showLogo: true,
         lineVariants: ["large", "base", "small"],
