@@ -9,7 +9,7 @@ export interface TutorialStepConfig {
     title?: string
     textLines: string[]
     lineVariants?: TutorialTextVariant[]
-    primaryButtonText: "Next" | "Finish"
+    primaryButtonText: "Next" | "Finish" | "Try it out"
     gameMode: "AGGRESSIVE" | "STRATEGIC"
     boardSetup?: {
         board: GamePiece[][]
@@ -110,7 +110,7 @@ export const tutorialInfo: TutorialStepConfig[] = [
             "Yellow highlights where the first piece was moved from.",
             "Green indicates your second move's starting point.",
         ],
-        primaryButtonText: "Next",
+        primaryButtonText: "Try it out",
         gameMode: "AGGRESSIVE"
     },
     {
@@ -150,7 +150,7 @@ export const tutorialInfo: TutorialStepConfig[] = [
             "However, your second move MUST be performed using a completely different piece.",
             "This spreads your power out dynamically across the field."
         ],
-        primaryButtonText: "Next",
+        primaryButtonText: "Try it out",
         gameMode: "STRATEGIC"
     },
     {
@@ -204,7 +204,7 @@ export const tutorialInfo: TutorialStepConfig[] = [
             "If your move distance forces a piece to land precisely on a full lane...",
             "The piece completely leaps over, directly into the next non-full lane!"
         ],
-        primaryButtonText: "Next",
+        primaryButtonText: "Try it out",
         gameMode: "STRATEGIC"
     },
     {

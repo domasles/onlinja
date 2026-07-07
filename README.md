@@ -92,11 +92,14 @@ cd onlinja
     **Way 2**: Using `npx expo start` (recommended for development)
     ```bash
     cd frontend
+    npm install --legacy-peer-deps
     npx expo start --web
     ```
 
 3. **Verify the client**:
-Open your browser (will open automatically if using `npx expo start`), navigate to `http://localhost:8080` (if using Docker) to interact with the frontend app.
+Open your browser (will open automatically if using `npx expo start --web`), navigate to `http://localhost:8080` (if using Docker) to interact with the frontend app.
+
+> NOTE: If testing a standalone build for mobile, you can also use the **Expo Go** app. While the primary target is web, code is mostly friendly to mobile builds with subtle styling issues. Make sure to use `Expo Go 57`, otherwise you will encounter an error.
 
 ## Architecture
 
