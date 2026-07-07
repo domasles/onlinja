@@ -1,5 +1,7 @@
+export { LineSeparator } from "./LineSeparator"
 export { ActionSlider } from "./ActionSlider"
 export { TabIndicator } from "./TabIndicator"
 export { GameButton } from "./GameButton"
 export { Dropdown } from "./Dropdown"
+export { LinkText } from "./LinkText"
 export { LaneRow } from "./LaneRow"

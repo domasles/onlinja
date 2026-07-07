@@ -11,10 +11,7 @@ interface SettingsTabProps {
     onMountComplete?: () => void
 }
 
-export const SettingsTab = ({
-    isFirstLoad = false,
-    onMountComplete
-}: SettingsTabProps) => {
+export const SettingsTab = ({ isFirstLoad = false, onMountComplete }: SettingsTabProps) => {
     const highlightMode = useGameStore((state) => state.highlightMode)
     const defaultGameMode = useGameStore((state) => state.defaultGameMode)
     const defaultSide = useGameStore((state) => state.defaultSide)
@@ -28,7 +25,7 @@ export const SettingsTab = ({
     const startTutorial = useGameStore((state) => state.startTutorial)
 
     return (
-        <TabWrapper height={365} onMountComplete={onMountComplete} isFirstLoad={isFirstLoad}>
+        <TabWrapper onMountComplete={onMountComplete} isFirstLoad={isFirstLoad}>
             <View className="w-full mb-4 items-center self-center">
                 <Text className="text-xs font-subheader text-neutral-400 uppercase tracking-widest mb-2 self-center">- Default Mode -</Text>
                 <ActionSlider

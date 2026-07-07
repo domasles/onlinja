@@ -6,7 +6,7 @@ import { ScreenWrapper } from "../components/layout"
 import { MainMenuCard } from "../components/cards"
 import { useGameStore } from "../hooks"
 
-export type MainMenuTabs = "BOT" | "FRIEND" | "SETTINGS"
+export type MainMenuTabs = "BOT" | "FRIEND" | "SETTINGS" | "CREDITS"
 
 export const MainMenuScreen = () => {
     const { initializeMatch, loadSavedSettings } = useGameStore()
@@ -36,6 +36,13 @@ export const MainMenuScreen = () => {
                     targetTab="SETTINGS"
                     label="Settings"
                     onPress={() => setActiveTab("SETTINGS")}
+                />
+
+                <TabIndicator
+                    activeTab={activeTab}
+                    targetTab="CREDITS"
+                    label="Credits"
+                    onPress={() => setActiveTab("CREDITS")}
                 />
             </View>
 

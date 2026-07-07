@@ -30,7 +30,7 @@ export const BotTab = ({
     onMountComplete
 }: BotTabProps) => {
     return (
-        <TabWrapper height={280} onMountComplete={onMountComplete} isFirstLoad={isFirstLoad}>
+        <TabWrapper onMountComplete={onMountComplete} isFirstLoad={isFirstLoad}>
             <View className="w-full mb-4 items-center self-center">
                 <Text className="text-xs font-subheader text-neutral-400 uppercase tracking-widest mb-2">- Choose mode -</Text>
                 <ActionSlider

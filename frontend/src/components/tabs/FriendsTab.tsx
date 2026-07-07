@@ -14,7 +14,7 @@ interface FriendsTabProps {
 
 export const FriendsTab = ({ mode, isFirstLoad = false, onModeChange, onPressPlay, onMountComplete }: FriendsTabProps) => {
     return (
-        <TabWrapper height={115} onMountComplete={onMountComplete} isFirstLoad={isFirstLoad}>
+        <TabWrapper onMountComplete={onMountComplete} isFirstLoad={isFirstLoad}>
             <View className="w-full mb-4 items-center self-center">
                 <Text className="text-xs font-subheader text-neutral-400 uppercase tracking-widest mb-2 self-center">- Choose mode -</Text>
                 <ActionSlider

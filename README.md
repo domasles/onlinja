@@ -6,7 +6,7 @@ Your favorite abstract board game, but digital.
 
 ## What is it?
 
-Onlinja is a digital, modern board game adaptation, inspired by [Linja](https://steffen-spiele.com/products/linja).
+Onlinja is a digital, modern board game adaptation, inspired by [Linja](https://steffen-spiele.com/products/linja), made by [Steffen Mühlhäuser](https://steffen-spiele.com).
 
 Built to provide a highly interactive experience available instantly, this game challenges players with forward-thinking moments, while balancing positioning across multiple parallel lanes.
 
@@ -62,6 +62,8 @@ If the first move lands on a lane with **0 pieces** or the opponent's **home bas
 ### Special Conditions
 - **Lanes Capacity & Jumping:** Non-home lanes have a maximum capacity of **6 pieces**. If a move forces a piece to land precisely on a full lane, it completely leaps over it and lands in the next available non-full lane.
 - **Empty Lane Bonus:** If the **second move** of your turn lands exactly in a completely empty lane, you are immediately awarded an **extra turn** (limited to one extra turn per round).
+
+---
 
 ## Requirements to Run Onlinja
 

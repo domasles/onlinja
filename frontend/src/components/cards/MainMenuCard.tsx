@@ -2,9 +2,9 @@ import { useRef, useState, useEffect } from "react"
 import { MotiView, AnimatePresence } from "moti"
 import { View, Text } from "react-native"
 
-import { useGameStore, GameModes } from "../../hooks"
+import { SettingsTab, CreditsTab, FriendsTab, BotTab } from "../tabs"
 import { PlayerColor, ControllerType } from "../../domain"
-import { SettingsTab, FriendsTab, BotTab } from "../tabs"
+import { useGameStore, GameModes } from "../../hooks"
 import { MainMenuTabs } from "../../screens"
 import { BotDifficulty } from "../../bot"
 
@@ -115,6 +115,14 @@ export const MainMenuCard = ({ activeTab, onStartGame }: MainMenuCardProps) => {
                         {activeTab === "SETTINGS" && (
                             <SettingsTab
                                 key="settings-tab"
+                                isFirstLoad={isFirstRender.current}
+                                onMountComplete={handleInitialMountComplete}
+                            />
+                        )}
+
+                        {activeTab === "CREDITS" && (
+                            <CreditsTab
+                                key="credits-tab"
                                 isFirstLoad={isFirstRender.current}
                                 onMountComplete={handleInitialMountComplete}
                             />
