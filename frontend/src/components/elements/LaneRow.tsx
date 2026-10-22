@@ -32,11 +32,11 @@ export const LaneRow = ({
     let laneHighlightClass = "bg-white"
 
     if (state.isTutorialMode || highlightMode === "true") {
-        if (h1?.originLane === laneIdx) laneHighlightClass = "bg-yellow-500/10"
-        if (h2?.originLane === laneIdx) laneHighlightClass = "bg-emerald-500/10"
+        if (h1?.originLane === laneIdx) laneHighlightClass = "bg-yellow-500/20"
+        if (h2?.originLane === laneIdx) laneHighlightClass = "bg-emerald-500/20"
     }
 
-    if (isTargetable) laneHighlightClass = "bg-neutral-100"
+    if (isTargetable) laneHighlightClass = "bg-neutral-300/50"
 
     return (
         <TouchableOpacity
